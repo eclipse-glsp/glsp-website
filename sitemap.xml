@@ -3,39 +3,39 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>http://example.org/categories/</loc>
+    <loc>https://www.eclipse.org/glsp/categories/</loc>
   </url>
   
   <url>
-    <loc>http://example.org/contact/</loc>
+    <loc>https://www.eclipse.org/glsp/contact/</loc>
   </url>
   
   <url>
-    <loc>http://example.org/documentation/</loc>
+    <loc>https://www.eclipse.org/glsp/documentation/</loc>
   </url>
   
   <url>
-    <loc>http://example.org/</loc>
+    <loc>https://www.eclipse.org/glsp/</loc>
   </url>
   
   <url>
-    <loc>http://example.org/gettinginvolved/</loc>
+    <loc>https://www.eclipse.org/glsp/gettinginvolved/</loc>
   </url>
   
   <url>
-    <loc>http://example.org/</loc>
+    <loc>https://www.eclipse.org/glsp/</loc>
   </url>
   
   <url>
-    <loc>http://example.org/support/</loc>
+    <loc>https://www.eclipse.org/glsp/support/</loc>
   </url>
   
   <url>
-    <loc>http://example.org/tags/</loc>
+    <loc>https://www.eclipse.org/glsp/tags/</loc>
   </url>
   
   <url>
-    <loc>http://example.org/team/</loc>
+    <loc>https://www.eclipse.org/glsp/team/</loc>
   </url>
   
 </urlset>
