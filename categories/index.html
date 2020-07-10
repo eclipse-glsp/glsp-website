@@ -4,7 +4,7 @@
 
 <head>
   <meta name="theme" content="Syna">
-  <meta name="theme-version" content="v0.16.2">
+  <meta name="theme-version" content="v0.17.2">
   <meta name="theme-url" content="https://syna.okkur.org">
   <meta name="theme-description" content="Highly customizable open source theme for Hugo based static websites">
   <meta name="theme-author" content="Okkur Labs">
@@ -378,8 +378,8 @@ html {
   align-self: stretch !important; }
 </style>
 
-  <link href="/glsp/style.min.97fd59ead90e7d268b3459fd7135011ea1052fbce399d5f2be161dfd1bfa3b29.css" rel="stylesheet">
-      <link rel="shortcut icon" type="image/x-icon" href="/glsp/favicon.ico">
+  <link href="/glsp/style.min.e2354432174957f539ad115c62393dfe6dc91bbbedfb3f8d1134bc39e9581b29.css" rel="stylesheet">
+      <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
       <link rel="icon" sizes="16x16 32x32" type="image/x-icon" href="/glsp/favicon.ico">
       <link rel="icon" href="/glsp/favicon.png">
       <link rel="apple-touch-icon-precomposed" href="/glsp/favicon.png">
@@ -444,7 +444,9 @@ html {
         <img
           class="hero-image overlay img-fluid"
           src="/glsp/images/diagramanimated.gif"
-          alt="Grahpical Language Server Platform (GLSP)" height="150px" width="500px"></img>
+          alt="Grahpical Language Server Platform (GLSP)"
+          style="width: 600px !important;"
+        ></img>
       </div>
       <div class="hero-subtitle-container row justify-content-center align-items-start">
         <h1 class="hero-subtitle overlay jumbotron-heading my-4 text-white">Diagram editors in the web/cloud with GLSP!</h1>
@@ -460,14 +462,13 @@ html {
       </a>
   </div>
   </div>
-</header>
-<script>
-  var fragmentName = "hero";window.syna.api.register("hero", "hero-" + fragmentName, {
-    selector: "hero-particles-js",
-    config: null,
-  });
-</script>
-
+</header><script>
+    var fragmentName = "hero";window.syna.api.register("hero", "hero-" + fragmentName, {
+      selector: "hero-particles-js",
+      config: null,
+    });
+  </script>
+  
 <!-- Content -->
 <section id="overview" class="fragment content-fragment">
     <div class="container-fluid bg-white overlay">
@@ -748,6 +749,7 @@ GLSP is an extensible open source framework to build custom diagram editors in t
     <!-- Theme Code -->
       <script async defer src="/glsp/scripts/syna-main.min.68ae1ae47948304c9c224cfc1a97ffe16c57514bc587dd6140dcb82389a8d299.js"></script>
       <script async defer src="/glsp/scripts/syna-hero.min.97a3fff0c67d9da74ebdd6af2640d8a9cde6200539e8c3b2c091b7fc6644420e.js"></script>
+      <script async defer src="/glsp/scripts/syna-content.min.bf537eb5ace369e45e8b4ed41b8d235a65db92236a400ed5659f7a3c41d0f221.js"></script>
 <script type="application/javascript">
 var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
 var doNotTrack = (dnt == "1" || dnt == "yes");
