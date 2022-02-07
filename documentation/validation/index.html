@@ -14,28 +14,24 @@
   <meta name="google" content="notranslate" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="description" content="The Graphical Language Server Platform (GLSP) provides extensible components for the development of diagram editors including edit functionality in (distributed) web-applications via a client-server protocol. To learn more about the architecture, concepts, and code examples for typical diagram editor scenarios, please use the table of contents on the left to navigate through the documentation pages.
-A great starting point is the overview &amp; architecture.
-GLSP clients are implemented in TypeScript. GLSP servers can actually be implemented in any language.">
-  <meta property="og:title" content="Documentation" />
-<meta property="og:description" content="Eclipse Grapical Language Server Platform" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://www.eclipse.org/glsp/documentation/" />
+  <meta name="description" content="Validation rules for the source and/or graphical model are typically implemented on the GLSP server, as only the server has the full knowledge of the underlying model. Model validation rules are by nature specific to the underlying modeling language and therefore have to be provided by the specific server implementation. The interface to be implemented is called ModelValidator. The ModelValidator is invoked for a set of model elements and creates issue markers for them.">
+  <meta property="og:title" content="Model Validation" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.eclipse.org/glsp/documentation/validation/" />
 
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Documentation &amp;middot; Eclipse Graphical Language Server Platform" />
-  <meta name="twitter:description" content="The Graphical Language Server Platform (GLSP) provides extensible components for the development of diagram editors including edit functionality in (distributed) web-applications via a client-server protocol. To learn more about the architecture, concepts, and code examples for typical diagram editor scenarios, please use the table of contents on the left to navigate through the documentation pages.
-A great starting point is the overview &amp; architecture.
-GLSP clients are implemented in TypeScript. GLSP servers can actually be implemented in any language.">
-  <meta name="twitter:url" content="https://www.eclipse.org/glsp/documentation/" />
+  <meta name="twitter:title" content="Model Validation &amp;middot; Eclipse Graphical Language Server Platform" />
+  <meta name="twitter:description" content="Validation rules for the source and/or graphical model are typically implemented on the GLSP server, as only the server has the full knowledge of the underlying model. Model validation rules are by nature specific to the underlying modeling language and therefore have to be provided by the specific server implementation. The interface to be implemented is called ModelValidator. The ModelValidator is invoked for a set of model elements and creates issue markers for them.">
+  <meta name="twitter:url" content="https://www.eclipse.org/glsp/documentation/validation/" />
         <meta property="og:image" content="">
         <meta name="twitter:image" content="">
   <meta name="author" content="Eclipse Foundation">
 
   <meta name="generator" content="Hugo 0.78.1" />
 
-  <title>Documentation &middot; Eclipse Graphical Language Server Platform</title>
+  <title>Model Validation &middot; Eclipse Graphical Language Server Platform</title>
 
   <!-- Theme Styles -->
   <style>
@@ -602,11 +598,11 @@ html {
                 <div class="col-12 pl-0 pb-1 text-body">
                   <div data-toggle="collapse" data-target="#list-page-validation .collapse" data-add-collapse="#list-page-validation .article-title"
                     class="row align-items-center justify-content-between mx-0 article-title">
-                      <h5 class="col px-0 m-0">
+                      <h5 class="col px-0 m-0 active-page">
                         <a href="https://www.eclipse.org/glsp/documentation/validation/">Model Validation</a>
                       </h5>
                   </div>
-                </div><div class="collapse"></div>
+                </div><div class="collapse show"></div>
         </article><article id="list-page-actionhandler"
           class="col-12 px-0 mb-2">
                 <div class="col-12 pl-0 pb-1 text-body">
@@ -670,16 +666,96 @@ html {
       <article class="col-md-9">
   <div class="title-container row mx-0">
     <div class="title col px-0 text-center text-body">
-      <h2>Documentation</h2>
+      <h2>Model Validation</h2>
     </div>
   </div>
-<div class="content-body col-12 content px-0 text-body"><p>The Graphical Language Server Platform (GLSP) provides extensible components for the development of diagram editors including edit functionality in (distributed) web-applications via a client-server protocol.
-To learn more about the architecture, concepts, and code examples for typical diagram editor scenarios, please use the table of contents on the left to navigate through the documentation pages.</p>
-<p>A great starting point is the <a href="/glsp/documentation/architecture/">overview &amp; architecture</a>.</p>
-<p>GLSP clients are implemented in TypeScript. GLSP servers can actually be implemented in any language. However, we provide two server frameworks that can be used to efficiently implement GLSP servers in Java or TypeScript. Thus, the documentations provides code examples for those two frameworks in Java and TypeScript for any server-related topics.</p>
-<p>For more information on building and running GLSP, please also visit the <a href="https://github.com/eclipse-glsp/glsp">GLSP GitHub page</a> and the <a href="https://github.com/eclipse-glsp/glsp-examples">GLSP example repository</a>. Also check out the <a href="/glsp/documentation/additionals/">additional external articles and videos about GLSP</a>.</p>
-<p>We are continiously working on improving this documentation. If you feel something is missing, please file an issue and open a PR at the <a href="https://github.com/eclipsesource/graphical-lsp-website">documentation repository</a>.</p>
-<p>If you need more help, please have a look at our <a href="/glsp/support/">available support options</a>.</p>
+<div class="content-body col-12 content px-0 text-body"><p>Validation rules for the source and/or graphical model are typically implemented on the GLSP server, as only the server has the full knowledge of the underlying model.
+Model validation rules are by nature specific to the underlying modeling language and therefore have to be provided by the specific server implementation.
+The interface to be implemented is called <code>ModelValidator</code>. The <code>ModelValidator</code> is invoked for a set of model elements and creates issue markers for them.</p>
+<p>In many scenarios, the ModelValidator implementation delegates to another component, such as EMF validation, etc.</p>
+<p>Let&rsquo;s have a look at a simple example implementation of a model validator:</p>
+<details open><summary>Java Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CustomModelValidator</span> <span style="color:#66d9ef">implements</span> ModelValidator <span style="color:#f92672">{</span>
+
+   <span style="color:#a6e22e">@Override</span>
+   <span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>Marker<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">validate</span><span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> GModelElement<span style="color:#f92672">...</span> elements<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+      List<span style="color:#f92672">&lt;</span>Marker<span style="color:#f92672">&gt;</span> markers <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
+      <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>GModelElement element <span style="color:#f92672">:</span> elements<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+         <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>element <span style="color:#66d9ef">instanceof</span> GNode<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            markers<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>validateGNode<span style="color:#f92672">((</span>GNode<span style="color:#f92672">)</span> element<span style="color:#f92672">));</span>
+         <span style="color:#f92672">}</span>
+         element<span style="color:#f92672">.</span><span style="color:#a6e22e">getChildren</span><span style="color:#f92672">().</span><span style="color:#a6e22e">forEach</span><span style="color:#f92672">(</span>child <span style="color:#f92672">-&gt;</span> markers<span style="color:#f92672">.</span><span style="color:#a6e22e">addAll</span><span style="color:#f92672">(</span>validate<span style="color:#f92672">(</span>child<span style="color:#f92672">)));</span>
+      <span style="color:#f92672">}</span>
+      <span style="color:#66d9ef">return</span> markers<span style="color:#f92672">;</span>
+   <span style="color:#f92672">}</span>
+
+   <span style="color:#66d9ef">protected</span> Marker <span style="color:#a6e22e">validateGNode</span><span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> GNode element<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+      <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Marker<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Node&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;This graphical element is a node&#34;</span><span style="color:#f92672">,</span> element<span style="color:#f92672">.</span><span style="color:#a6e22e">getId</span><span style="color:#f92672">(),</span>
+       MarkerKind<span style="color:#f92672">.</span><span style="color:#a6e22e">INFO</span><span style="color:#f92672">);</span>
+   <span style="color:#f92672">}</span>
+
+<span style="color:#f92672">}</span>
+</code></pre></div></details>
+<details><summary>Node Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">@injectable</span>()
+<span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CustomModelValidator</span> <span style="color:#66d9ef">implements</span> <span style="color:#a6e22e">ModelValidator</span> {
+    <span style="color:#66d9ef">@inject</span>(<span style="color:#a6e22e">GModelState</span>)
+    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">readonly</span> <span style="color:#a6e22e">modelState</span>: <span style="color:#66d9ef">GModelState</span>;
+
+    <span style="color:#a6e22e">validate</span>(<span style="color:#a6e22e">elements</span>: <span style="color:#66d9ef">GModelElement</span>[])<span style="color:#f92672">:</span> <span style="color:#a6e22e">Marker</span>[] {
+        <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">markers</span>: <span style="color:#66d9ef">Marker</span>[] <span style="color:#f92672">=</span> [];
+        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">element</span> <span style="color:#66d9ef">of</span> <span style="color:#a6e22e">elements</span>) {
+            <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">element</span> <span style="color:#66d9ef">instanceof</span> <span style="color:#a6e22e">GNode</span>) {
+                <span style="color:#a6e22e">markers</span>.<span style="color:#a6e22e">push</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">validateGNode</span>(<span style="color:#a6e22e">element</span>));
+            }
+            <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">element</span>.<span style="color:#a6e22e">children</span>) {
+                <span style="color:#a6e22e">markers</span>.<span style="color:#a6e22e">push</span>(...<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">validate</span>(<span style="color:#a6e22e">element</span>.<span style="color:#a6e22e">children</span>));
+            }
+        }
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">markers</span>;
+    }
+
+    <span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">validateGNode</span>(<span style="color:#a6e22e">element</span>: <span style="color:#66d9ef">GNode</span>)<span style="color:#f92672">:</span> <span style="color:#a6e22e">Marker</span> {
+        <span style="color:#66d9ef">return</span> {
+            <span style="color:#a6e22e">kind</span>: <span style="color:#66d9ef">MarkerKind.INFO</span>,
+            <span style="color:#a6e22e">description</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;This graphical element is a node&#39;</span>,
+            <span style="color:#a6e22e">elementId</span>: <span style="color:#66d9ef">element.id</span>,
+            <span style="color:#a6e22e">label</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;Node&#39;</span>
+        };
+    }
+}
+</code></pre></div></details>
+</br>
+<p>This validator iterates over the given model elements and their children and creates a new info marker for each element that is an instance of GNode.
+An issue marker is associated with a graphical element via its “id”.
+In addition, the marker has a label, an issue description and a kind indicating its severity.
+The severity can either be “INFO”,”WARN” or “ERROR”.
+The created markers are then propagated to the client via a <a href="https://github.com/eclipse-glsp/glsp/blob/master/PROTOCOL.md#2102-setmarkersaction">SetMarkersAction</a>.</p>
+<p>To enable the custom model validator, it has to be bound in the diagram module.</p>
+<details open><summary>Java Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Override</span>
+<span style="color:#66d9ef">protected</span> Class<span style="color:#f92672">&lt;?</span> <span style="color:#66d9ef">extends</span> ModelValidator<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">bindModelValidator</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">return</span> CustomModelValidator<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></details>
+<details><summary>Node Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts">    <span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">configure</span>(<span style="color:#a6e22e">bind</span>: <span style="color:#66d9ef">interfaces.Bind</span>, <span style="color:#a6e22e">unbind</span>: <span style="color:#66d9ef">interfaces.Unbind</span>, <span style="color:#a6e22e">isBound</span>: <span style="color:#66d9ef">interfaces.IsBound</span>, <span style="color:#a6e22e">rebind</span>: <span style="color:#66d9ef">interfaces.Rebind</span>)<span style="color:#f92672">:</span> <span style="color:#66d9ef">void</span> {
+        <span style="color:#66d9ef">super</span>.<span style="color:#a6e22e">configure</span>(<span style="color:#a6e22e">bind</span>, <span style="color:#a6e22e">unbind</span>, <span style="color:#a6e22e">isBound</span>, <span style="color:#a6e22e">rebind</span>);
+        <span style="color:#a6e22e">bind</span>(<span style="color:#a6e22e">ModelValidator</span>).<span style="color:#a6e22e">to</span>(<span style="color:#a6e22e">CustomModelValidator</span>).<span style="color:#a6e22e">inSingletonScope</span>();
+    }
+</code></pre></div></details>
+</br>
+<p>Validation is typically triggered by the client via a <a href="https://github.com/eclipse-glsp/glsp/blob/master/PROTOCOL.md#2101-requestmarkersaction">RequestMarkersAction</a> – e.g., by clicking the validation button in the tool palette.
+In addition, the server can also send a <a href="https://github.com/eclipse-glsp/glsp/blob/master/PROTOCOL.md#2102-setmarkersaction">SetMarkersAction</a> to the client without a preceding request at any time.
+This is useful to implement features such as automatic live validation after each model update.</p>
+<p>The client visualizes each marker by decorating the corresponding graphical element with an icon indicating the severity.
+When hovering over the issue marker a tooltip with the issue description is displayed.</p>
+<img src="issue_marker.png" alt="issue" width=300/>
+<br>
+<br>
+<p>Depending on the chosen platform integration, validation markers are propagated to other user interface components.
+For instance, when integrating GLSP into Theia, markers are also translated into items shown in the Problems view.</p>
+<img src="problem_view.png" alt="problemview"/>
 </div>
     </article>
   </div>

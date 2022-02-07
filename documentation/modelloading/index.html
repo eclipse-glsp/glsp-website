@@ -14,28 +14,26 @@
   <meta name="google" content="notranslate" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="description" content="The Graphical Language Server Platform (GLSP) provides extensible components for the development of diagram editors including edit functionality in (distributed) web-applications via a client-server protocol. To learn more about the architecture, concepts, and code examples for typical diagram editor scenarios, please use the table of contents on the left to navigate through the documentation pages.
-A great starting point is the overview &amp; architecture.
-GLSP clients are implemented in TypeScript. GLSP servers can actually be implemented in any language.">
-  <meta property="og:title" content="Documentation" />
-<meta property="og:description" content="Eclipse Grapical Language Server Platform" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://www.eclipse.org/glsp/documentation/" />
+  <meta name="description" content="To be able to render the diagram, the GLSP client first requests the graphical model from the server. The model loading process is initiated with a RequestModelAction. Typically this is the first action that the GLSP client sends after initializing the diagram widget.
+With the RequestModelAction, the client can provide a set of custom arguments (client options). At the bare minimum these client options have to provide the required information so that the GLSP server can identify and load the correct model source.">
+  <meta property="og:title" content="Model Source &amp; State" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.eclipse.org/glsp/documentation/modelloading/" />
 
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Documentation &amp;middot; Eclipse Graphical Language Server Platform" />
-  <meta name="twitter:description" content="The Graphical Language Server Platform (GLSP) provides extensible components for the development of diagram editors including edit functionality in (distributed) web-applications via a client-server protocol. To learn more about the architecture, concepts, and code examples for typical diagram editor scenarios, please use the table of contents on the left to navigate through the documentation pages.
-A great starting point is the overview &amp; architecture.
-GLSP clients are implemented in TypeScript. GLSP servers can actually be implemented in any language.">
-  <meta name="twitter:url" content="https://www.eclipse.org/glsp/documentation/" />
+  <meta name="twitter:title" content="Model Source &amp; State &amp;middot; Eclipse Graphical Language Server Platform" />
+  <meta name="twitter:description" content="To be able to render the diagram, the GLSP client first requests the graphical model from the server. The model loading process is initiated with a RequestModelAction. Typically this is the first action that the GLSP client sends after initializing the diagram widget.
+With the RequestModelAction, the client can provide a set of custom arguments (client options). At the bare minimum these client options have to provide the required information so that the GLSP server can identify and load the correct model source.">
+  <meta name="twitter:url" content="https://www.eclipse.org/glsp/documentation/modelloading/" />
         <meta property="og:image" content="">
         <meta name="twitter:image" content="">
   <meta name="author" content="Eclipse Foundation">
 
   <meta name="generator" content="Hugo 0.78.1" />
 
-  <title>Documentation &middot; Eclipse Graphical Language Server Platform</title>
+  <title>Model Source & State &middot; Eclipse Graphical Language Server Platform</title>
 
   <!-- Theme Styles -->
   <style>
@@ -502,11 +500,11 @@ html {
                 <div class="col-12 pl-0 pb-1 text-body">
                   <div data-toggle="collapse" data-target="#list-page-modelloading .collapse" data-add-collapse="#list-page-modelloading .article-title"
                     class="row align-items-center justify-content-between mx-0 article-title">
-                      <h5 class="col px-0 m-0">
+                      <h5 class="col px-0 m-0 active-page">
                         <a href="https://www.eclipse.org/glsp/documentation/modelloading/">Model Source &amp; State</a>
                       </h5>
                   </div>
-                </div><div class="collapse"></div>
+                </div><div class="collapse show"></div>
         </article><article id="list-page-modelgeneration"
           class="col-12 px-0 mb-2">
                 <div class="col-12 pl-0 pb-1 text-body">
@@ -670,16 +668,95 @@ html {
       <article class="col-md-9">
   <div class="title-container row mx-0">
     <div class="title col px-0 text-center text-body">
-      <h2>Documentation</h2>
+      <h2>Model Source Loading &amp; Model State</h2>
     </div>
   </div>
-<div class="content-body col-12 content px-0 text-body"><p>The Graphical Language Server Platform (GLSP) provides extensible components for the development of diagram editors including edit functionality in (distributed) web-applications via a client-server protocol.
-To learn more about the architecture, concepts, and code examples for typical diagram editor scenarios, please use the table of contents on the left to navigate through the documentation pages.</p>
-<p>A great starting point is the <a href="/glsp/documentation/architecture/">overview &amp; architecture</a>.</p>
-<p>GLSP clients are implemented in TypeScript. GLSP servers can actually be implemented in any language. However, we provide two server frameworks that can be used to efficiently implement GLSP servers in Java or TypeScript. Thus, the documentations provides code examples for those two frameworks in Java and TypeScript for any server-related topics.</p>
-<p>For more information on building and running GLSP, please also visit the <a href="https://github.com/eclipse-glsp/glsp">GLSP GitHub page</a> and the <a href="https://github.com/eclipse-glsp/glsp-examples">GLSP example repository</a>. Also check out the <a href="/glsp/documentation/additionals/">additional external articles and videos about GLSP</a>.</p>
-<p>We are continiously working on improving this documentation. If you feel something is missing, please file an issue and open a PR at the <a href="https://github.com/eclipsesource/graphical-lsp-website">documentation repository</a>.</p>
-<p>If you need more help, please have a look at our <a href="/glsp/support/">available support options</a>.</p>
+<div class="content-body col-12 content px-0 text-body"><p>To be able to render the diagram, the GLSP client first requests the graphical model from the server.
+The model loading process is initiated with a <a href="https://github.com/eclipse-glsp/glsp/blob/master/PROTOCOL.md#241-requestmodelaction">RequestModelAction</a>.
+Typically this is the first action that the GLSP client sends after initializing the diagram widget.</p>
+<p>With the <a href="https://github.com/eclipse-glsp/glsp/blob/master/PROTOCOL.md#241-requestmodelaction">RequestModelAction</a>, the client can provide a set of custom arguments (client options).
+At the bare minimum these client options have to provide the required information so that the <em>GLSP server</em> can identify and load the correct model source.
+In most cases this will be, for instance, a URI of the model to be loaded.</p>
+<p>To handle such a request model action, the <em>GLSP server</em> will perform the following steps:</p>
+<ol>
+<li>Invoke the configured <code>ModelSourceLoader</code> to load the model from an arbitrary model source into the model state.</li>
+<li>Invoke the configured <code>GModelFactory</code> to transform the model state into the graphical model (GModel; see <a href="https://www.eclipse.org/glsp/documentation/modelgeneration/">GModelFactory</a>) that describes the diagram to be rendered.</li>
+<li>Invoke the model submission to send the graphical model to the client.</li>
+</ol>
+<p>In this section, we’ll look at step 1, in which the configured <code>ModelSourceLoader</code> implementation is invoked to load the source model from the arbitrary model source into the model state.</p>
+<p>The <code>ModelState</code> is the central stateful object within a client session that represents the information about the current state of the original source model.
+All other services and handlers may access the model state to obtain the required information about the model in order to perform their respective tasks.</p>
+<p>As you typically need to store custom information that is specific to your model in the model state, you typically also bind a custom implementation that represents your model state.
+This implementation usually implements the interface <code>GModelState</code> (and extends the base class <code>DefaultGModelState</code>).</p>
+<details open><summary>Java GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">protected</span> Class<span style="color:#f92672">&lt;?</span> <span style="color:#66d9ef">extends</span> GModelState<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">bindGModelState</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+  <span style="color:#66d9ef">return</span> MyModelState<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></details>
+<details><summary>Node GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">configure</span>(<span style="color:#a6e22e">bind</span>: <span style="color:#66d9ef">interfaces.Bind</span>, <span style="color:#a6e22e">unbind</span>: <span style="color:#66d9ef">interfaces.Unbind</span>,
+<span style="color:#a6e22e">isBound</span>: <span style="color:#66d9ef">interfaces.IsBound</span>, <span style="color:#a6e22e">rebind</span>: <span style="color:#66d9ef">interfaces.Rebind</span>)<span style="color:#f92672">:</span> <span style="color:#66d9ef">void</span> {
+    <span style="color:#66d9ef">super</span>.<span style="color:#a6e22e">configure</span>(<span style="color:#a6e22e">bind</span>, <span style="color:#a6e22e">unbind</span>, <span style="color:#a6e22e">isBound</span>, <span style="color:#a6e22e">rebind</span>);
+    <span style="color:#a6e22e">bind</span>(<span style="color:#a6e22e">MyModelState</span>).<span style="color:#a6e22e">toSelf</span>().<span style="color:#a6e22e">inSingletonScope</span>();
+    <span style="color:#a6e22e">bind</span>(<span style="color:#a6e22e">ModelState</span>).<span style="color:#a6e22e">toService</span>(<span style="color:#a6e22e">MyModelState</span>);
+}
+</code></pre></div></details>
+</br>
+<p>Now as we have registered our model state implementation, we can look at the model source loading.
+First, we need to make the GLSP server aware of your model source loader, you have to register your implementation of the <code>ModelSourceLoader</code> interface in the server’s DI module:</p>
+<details open><summary>Java GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">  <span style="color:#a6e22e">@Override</span>
+  <span style="color:#66d9ef">protected</span> Class<span style="color:#f92672">&lt;?</span> <span style="color:#66d9ef">extends</span> ModelSourceLoader<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">bindSourceModelLoader</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">return</span> MyModelLoader<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">;</span>
+  <span style="color:#f92672">}</span>
+</code></pre></div></details>
+<details><summary>Node GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts">  <span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">configure</span>(<span style="color:#a6e22e">bind</span>: <span style="color:#66d9ef">interfaces.Bind</span>, <span style="color:#a6e22e">unbind</span>: <span style="color:#66d9ef">interfaces.Unbind</span>,
+   <span style="color:#a6e22e">isBound</span>: <span style="color:#66d9ef">interfaces.IsBound</span>, <span style="color:#a6e22e">rebind</span>: <span style="color:#66d9ef">interfaces.Rebind</span>)<span style="color:#f92672">:</span> <span style="color:#66d9ef">void</span> {
+      <span style="color:#66d9ef">super</span>.<span style="color:#a6e22e">configure</span>(<span style="color:#a6e22e">bind</span>, <span style="color:#a6e22e">unbind</span>, <span style="color:#a6e22e">isBound</span>, <span style="color:#a6e22e">rebind</span>);
+      <span style="color:#a6e22e">bind</span>(<span style="color:#a6e22e">ModelSourceLoader</span>).<span style="color:#a6e22e">to</span>(<span style="color:#a6e22e">MyModelLoader</span>);
+  }
+</code></pre></div></details>
+</br>
+<p>The registered implementation of the model loader needs to load the source model and add it to the session’s model state, based on the parameters that are contained in the <a href="https://github.com/eclipse-glsp/glsp/blob/master/PROTOCOL.md#241-requestmodelaction">RequestModelAction</a>.
+Consequently, the implementation mostly depends on where you need to load your source model(s) from and what kind of model(s) you are dealing with (files, XML, JSON, EMF, database, etc.).</p>
+<details open><summary>Java GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyModelLoader</span> <span style="color:#66d9ef">implements</span> ModelSourceLoader <span style="color:#f92672">{</span>
+
+   <span style="color:#a6e22e">@Inject</span>
+   <span style="color:#66d9ef">protected</span> MyModelState modelState<span style="color:#f92672">;</span>
+
+   <span style="color:#a6e22e">@Override</span>
+   <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">loadSourceModel</span><span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> RequestModelAction action<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+      <span style="color:#66d9ef">final</span> String uri <span style="color:#f92672">=</span> MapUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">(</span>action<span style="color:#f92672">.</span><span style="color:#a6e22e">options</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;sourceURI&#34;</span><span style="color:#f92672">);</span>
+      <span style="color:#75715e">// load your model from file, EMF, database, etc.
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">final</span> YourModel model <span style="color:#f92672">=</span> <span style="color:#960050;background-color:#1e0010">…</span><span style="color:#f92672">;</span>
+      <span style="color:#75715e">// add information needed about your model into the model state
+</span><span style="color:#75715e"></span>      modelState<span style="color:#f92672">.</span><span style="color:#a6e22e">setModel</span><span style="color:#f92672">(</span>model<span style="color:#f92672">);</span>
+   <span style="color:#f92672">}</span>
+
+<span style="color:#f92672">}</span>
+</code></pre></div></details>
+<details opn><summary>Node GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">@injectable</span>()
+<span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyModelLoader</span> <span style="color:#66d9ef">implements</span> <span style="color:#a6e22e">ModelSourceLoader</span> {
+
+    <span style="color:#66d9ef">@inject</span>(<span style="color:#a6e22e">MyModelState</span>)
+    <span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">modelState</span>: <span style="color:#66d9ef">MyModelState</span>;
+
+    <span style="color:#a6e22e">loadSourceModel</span>(<span style="color:#a6e22e">action</span>: <span style="color:#66d9ef">RequestModelAction</span>)<span style="color:#f92672">:</span> <span style="color:#a6e22e">MaybePromise</span>&lt;<span style="color:#f92672">void</span>&gt; {
+      <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">uri</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">action</span>.<span style="color:#a6e22e">options</span><span style="color:#f92672">!</span>[<span style="color:#e6db74">&#34;sourceURI&#34;</span>];
+      <span style="color:#75715e">// load your model from file, EMF, database, etc.
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">model</span> <span style="color:#f92672">=</span> <span style="color:#960050;background-color:#1e0010">…</span>;
+      <span style="color:#75715e">// add information needed about your model into the model state
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">modelState</span>.<span style="color:#a6e22e">model</span><span style="color:#f92672">=</span><span style="color:#a6e22e">model</span>;
+    }
+}
+</code></pre></div></details>
+</br>
+<p>In the GLSP Workflow example there is also an example, in which the source model is a JSON file that contains the GModel directly.
+In such a scenario, you can use the plain GModelState and the JsonFileGModelLoader.</p>
+<p>Once the source model has been loaded into the model state, the GLSP server invokes the configured <code>GModelFactory</code> to derive the graphical model from the source model and issues model update for the client. (see <a href="https://www.eclipse.org/glsp/documentation/modelgeneration/">Graphical Model Generation</a>)</p>
 </div>
     </article>
   </div>

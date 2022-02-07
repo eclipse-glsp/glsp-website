@@ -14,28 +14,26 @@
   <meta name="google" content="notranslate" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="description" content="The Graphical Language Server Platform (GLSP) provides extensible components for the development of diagram editors including edit functionality in (distributed) web-applications via a client-server protocol. To learn more about the architecture, concepts, and code examples for typical diagram editor scenarios, please use the table of contents on the left to navigate through the documentation pages.
-A great starting point is the overview &amp; architecture.
-GLSP clients are implemented in TypeScript. GLSP servers can actually be implemented in any language.">
-  <meta property="og:title" content="Documentation" />
-<meta property="og:description" content="Eclipse Grapical Language Server Platform" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://www.eclipse.org/glsp/documentation/" />
+  <meta name="description" content="Model Rendering The input of the diagram rendering on the client is the GModel that has been generated on the server from the model source (see Graphical Model Generation) and sent to the client via a SetModelAction or UpdateModelAction. The client is then responsible for rendering the graphical model.
+In order to render the received graphical model, each graphical element type needs to be associated with a view on the client.">
+  <meta property="og:title" content="Model Rendering &amp; Styling" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.eclipse.org/glsp/documentation/rendering/" />
 
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Documentation &amp;middot; Eclipse Graphical Language Server Platform" />
-  <meta name="twitter:description" content="The Graphical Language Server Platform (GLSP) provides extensible components for the development of diagram editors including edit functionality in (distributed) web-applications via a client-server protocol. To learn more about the architecture, concepts, and code examples for typical diagram editor scenarios, please use the table of contents on the left to navigate through the documentation pages.
-A great starting point is the overview &amp; architecture.
-GLSP clients are implemented in TypeScript. GLSP servers can actually be implemented in any language.">
-  <meta name="twitter:url" content="https://www.eclipse.org/glsp/documentation/" />
+  <meta name="twitter:title" content="Model Rendering &amp; Styling &amp;middot; Eclipse Graphical Language Server Platform" />
+  <meta name="twitter:description" content="Model Rendering The input of the diagram rendering on the client is the GModel that has been generated on the server from the model source (see Graphical Model Generation) and sent to the client via a SetModelAction or UpdateModelAction. The client is then responsible for rendering the graphical model.
+In order to render the received graphical model, each graphical element type needs to be associated with a view on the client.">
+  <meta name="twitter:url" content="https://www.eclipse.org/glsp/documentation/rendering/" />
         <meta property="og:image" content="">
         <meta name="twitter:image" content="">
   <meta name="author" content="Eclipse Foundation">
 
   <meta name="generator" content="Hugo 0.78.1" />
 
-  <title>Documentation &middot; Eclipse Graphical Language Server Platform</title>
+  <title>Model Rendering & Styling &middot; Eclipse Graphical Language Server Platform</title>
 
   <!-- Theme Styles -->
   <style>
@@ -522,11 +520,11 @@ html {
                 <div class="col-12 pl-0 pb-1 text-body">
                   <div data-toggle="collapse" data-target="#list-page-rendering .collapse" data-add-collapse="#list-page-rendering .article-title"
                     class="row align-items-center justify-content-between mx-0 article-title">
-                      <h5 class="col px-0 m-0">
+                      <h5 class="col px-0 m-0 active-page">
                         <a href="https://www.eclipse.org/glsp/documentation/rendering/">Model Rendering &amp; Styling</a>
                       </h5>
                   </div>
-                </div><div class="collapse">
+                </div><div class="collapse show">
 <!--  -->
 <section id="toc" class="fragment ">
     <div class="container p-0 ">
@@ -670,17 +668,110 @@ html {
       <article class="col-md-9">
   <div class="title-container row mx-0">
     <div class="title col px-0 text-center text-body">
-      <h2>Documentation</h2>
+      <h2>Model Rendering &amp; Styling</h2>
     </div>
   </div>
-<div class="content-body col-12 content px-0 text-body"><p>The Graphical Language Server Platform (GLSP) provides extensible components for the development of diagram editors including edit functionality in (distributed) web-applications via a client-server protocol.
-To learn more about the architecture, concepts, and code examples for typical diagram editor scenarios, please use the table of contents on the left to navigate through the documentation pages.</p>
-<p>A great starting point is the <a href="/glsp/documentation/architecture/">overview &amp; architecture</a>.</p>
-<p>GLSP clients are implemented in TypeScript. GLSP servers can actually be implemented in any language. However, we provide two server frameworks that can be used to efficiently implement GLSP servers in Java or TypeScript. Thus, the documentations provides code examples for those two frameworks in Java and TypeScript for any server-related topics.</p>
-<p>For more information on building and running GLSP, please also visit the <a href="https://github.com/eclipse-glsp/glsp">GLSP GitHub page</a> and the <a href="https://github.com/eclipse-glsp/glsp-examples">GLSP example repository</a>. Also check out the <a href="/glsp/documentation/additionals/">additional external articles and videos about GLSP</a>.</p>
-<p>We are continiously working on improving this documentation. If you feel something is missing, please file an issue and open a PR at the <a href="https://github.com/eclipsesource/graphical-lsp-website">documentation repository</a>.</p>
-<p>If you need more help, please have a look at our <a href="/glsp/support/">available support options</a>.</p>
-</div>
+<div class="content-body col-12 content px-0 text-body">
+<!--  -->
+<section id="content-toc" class="fragment ">
+    <div class="container p-0 ">
+<div class="toc"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="https://www.eclipse.org/glsp/documentation/rendering/#model-rendering">Model Rendering</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/rendering/#styling">Styling</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+    </div>
+</section>
+<h3 id="model-rendering">Model Rendering</h3>
+<p>The input of the diagram rendering on the client is the GModel that has been generated on the server from the model source (see <a href="https://www.eclipse.org/glsp/documentation/modelgeneration/">Graphical Model Generation</a>) and sent to the client via a <a href="https://github.com/eclipse-glsp/glsp/blob/master/PROTOCOL.md#242-setmodelaction">SetModelAction</a> or <a href="https://github.com/eclipse-glsp/glsp/blob/master/PROTOCOL.md#243-updatemodelaction">UpdateModelAction</a>.
+The client is then responsible for rendering the graphical model.</p>
+<p>In order to render the received graphical model, each graphical element type needs to be associated with a view on the client.
+A view defines how a specific type of graphical element shall be transformed into a corresponding SVG representation.
+The derived SVG elements are then rendered on the canvas of the diagram widget.</p>
+<p>To define a new view, we have to create a class that implements the <code>IView</code> interface and register it for a specific type that is used in the graphical model.
+As an example, let’s configure that the view named <code>SLabelView</code> is used for all elements with the type “label:custom”.
+Therefore, we first need to create a dependency injection module, named <code>customDiagramModule</code> below, and configure the SLabelView for the graphical model element type “label:custom” using the <code>configureModelElement()</code> utility function:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">customDiagramModule</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">ContainerModule</span>((<span style="color:#a6e22e">bind</span>, <span style="color:#a6e22e">unbind</span>, <span style="color:#a6e22e">isBound</span>, <span style="color:#a6e22e">rebind</span>) <span style="color:#f92672">=&gt;</span> {
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">context</span> <span style="color:#f92672">=</span> { <span style="color:#a6e22e">bind</span>, <span style="color:#a6e22e">unbind</span>, <span style="color:#a6e22e">isBound</span>, <span style="color:#a6e22e">rebind</span> };
+    <span style="color:#a6e22e">configureModelElement</span>(<span style="color:#a6e22e">context</span>, <span style="color:#e6db74">&#39;label:custom&#39;</span>, <span style="color:#a6e22e">SLabel</span>, <span style="color:#a6e22e">SLabelView</span>);
+});
+</code></pre></div><p>The <code>configureModeElement()</code> function takes the inversify binding context, the graphical model type, its model class and its associated view as input. Under the hood this function sets up the necessary bindings so that the <em>GLSP client</em> knows that</p>
+<ul>
+<li>Graphical model elements (received from the GLSP Server) with type ‘label:custom’ are deserialized to instances of <code>SLabel</code></li>
+<li>Graphical model element with type ‘label:custom’ are rendered with the <code>SLabelView</code></li>
+</ul>
+<p>In order to be effective, we need to load the module <code>customDiagramModule</code> defined above in the diagram DI container, aka the root &ldquo;di.config.ts&rdquo; of your diagram implementation.
+With that, every element of type “label:custom” will be rendered with the view implementation <code>SLabelView</code>.</p>
+<p>Views themselves are typically implemented with <a href="https://www.typescriptlang.org/docs/handbook/jsx.html">JSX</a>, which simplifies the definition of SVG elements in Typescript. Therefore, the following generic imports are required in any module declaring a view to enable declaration of svg elements with JSX:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#75715e">/** @jsx svg */</span>
+<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">VNode</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#39;snabbdom&#39;</span>;
+<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">RenderingContext</span>, <span style="color:#a6e22e">svg</span> } <span style="color:#66d9ef">from</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#66d9ef">@eclipse</span><span style="color:#f92672">-</span><span style="color:#a6e22e">glsp</span><span style="color:#f92672">/</span><span style="color:#a6e22e">client</span><span style="color:#960050;background-color:#1e0010">’</span>;
+</code></pre></div><p>In addition, make sure that the following options are set in the <code>tsconfig.json</code> file of your project:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+  <span style="color:#f92672">&#34;compilerOptions&#34;</span>: {
+    <span style="color:#f92672">&#34;jsx&#34;</span>:<span style="color:#e6db74">&#34;react&#34;</span>,
+    <span style="color:#f92672">&#34;reactNamespace&#34;</span>:<span style="color:#e6db74">&#34;JSX&#34;</span>
+}
+</code></pre></div><p>With that, we can implement a view as follows:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tsx" data-lang="tsx"><span style="color:#66d9ef">@injectable</span>()
+<span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SLabelView</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">ShapeView</span> {
+    <span style="color:#a6e22e">render</span>(<span style="color:#a6e22e">label</span>: <span style="color:#66d9ef">Readonly</span>&lt;<span style="color:#f92672">SLabel</span>&gt;, <span style="color:#a6e22e">context</span>: <span style="color:#66d9ef">RenderingContext</span>)<span style="color:#f92672">:</span> <span style="color:#a6e22e">VNode</span> <span style="color:#f92672">|</span> <span style="color:#66d9ef">undefined</span> {
+        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">isEdgeLayoutable</span>(<span style="color:#a6e22e">label</span>) <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span><span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">isVisible</span>(<span style="color:#a6e22e">label</span>, <span style="color:#a6e22e">context</span>)) {
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">undefined</span>;
+        }
+        <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">vnode</span> <span style="color:#f92672">=</span> &lt;<span style="color:#f92672">text</span> <span style="color:#a6e22e">class</span><span style="color:#960050;background-color:#1e0010">-</span><span style="color:#a6e22e">sprotty</span><span style="color:#960050;background-color:#1e0010">-</span><span style="color:#a6e22e">label</span><span style="color:#f92672">=</span>{<span style="color:#66d9ef">true</span>}&gt;{<span style="color:#a6e22e">label</span>.<span style="color:#a6e22e">text</span>}&lt;/<span style="color:#f92672">text</span>&gt;;
+        <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">subType</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">getSubType</span>(<span style="color:#a6e22e">label</span>);
+        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">subType</span>) {
+            <span style="color:#a6e22e">setAttr</span>(<span style="color:#a6e22e">vnode</span>, <span style="color:#e6db74">&#39;class&#39;</span>, <span style="color:#a6e22e">subType</span>);
+        }
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">vnode</span>;
+    }
+}
+</code></pre></div><p>Every view has to implement the <code>render(</code>) method.
+The <code>render(</code>) method takes the graphical model element as input and returns the corresponding SVG element as virtual DOM node.
+The viewer queries all registered views and creates a new virtual DOM which is then used to patch the current DOM of the diagram widget.</p>
+<p>Note that the <code>SLabelView</code> also checks whether the given element is visible and skips the SVG generation if the element is not visible in the diagram canvas.
+This check is optional but it’s highly recommended to implement it in your custom views as it heavily improves the rendering performance.
+</br></br></p>
+<h3 id="styling">Styling</h3>
+<p>The style of the rendered SVG elements is controlled with plain CSS.
+CSS classes can be declared directly in the corresponding view.
+The <code>SLabelView</code>, for instance, adds the CSS class ‘sprotty-label’ to the generated SVG text element.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tsx" data-lang="tsx"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">vnode</span> <span style="color:#f92672">=</span> &lt;<span style="color:#f92672">text</span> <span style="color:#a6e22e">class</span><span style="color:#960050;background-color:#1e0010">-</span><span style="color:#a6e22e">sprotty</span><span style="color:#960050;background-color:#1e0010">-</span><span style="color:#a6e22e">label</span><span style="color:#f92672">=</span>{<span style="color:#66d9ef">true</span>}&gt;{<span style="color:#a6e22e">label</span>.<span style="color:#a6e22e">text</span>}&lt;/<span style="color:#f92672">text</span>&gt;;
+</code></pre></div><p>Graphical model elements also have a ‘cssClasses’ property which contains a list of CSS classes to be applied, in addition to the classes defined in the view.
+For instance, the server could send the following graphical model element:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+  <span style="color:#f92672">&#34;id&#34;</span>: <span style="color:#e6db74">&#34;myCustomLabel&#34;</span>,
+  <span style="color:#f92672">&#34;type&#34;</span>:<span style="color:#e6db74">&#34;label:custom&#34;</span>,
+  <span style="color:#f92672">&#34;cssClasses&#34;</span>:[
+    <span style="color:#e6db74">&#34;my-custom-class&#34;</span>
+  ]
+}
+</code></pre></div><p>Keeping our previous model configuration in mind, the corresponding SVG element now has two css classes applied: ‘sprotty-label’ and ‘my-custom-class’.</p>
+<p>Based on those CSS classes, we can define CSS rules:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">.<span style="color:#a6e22e">sprotty-label</span> {
+    fill: <span style="color:#66d9ef">black</span>;
+    <span style="color:#66d9ef">font-size</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">%</span>;
+}
+
+.<span style="color:#a6e22e">my-custom-class</span>.<span style="color:#a6e22e">sprotty-label</span> {
+    fill: <span style="color:#66d9ef">red</span>;
+}
+</code></pre></div><p>This simple style sheet declares that elements with the class ‘sprotty-label’’ should be rendered in black.
+If “my-custom-class’’ is applied as well they are rendered in red.
+To load this stylesheet it has to be imported somewhere in the project.
+Typically this is done in the &ldquo;di.config.ts” file as it’s the entry point of the diagram DI container.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">import</span> <span style="color:#e6db74">&#39;../css/diagram.css&#39;</span>;
+
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">customDiagramModule</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">ContainerModule</span>((<span style="color:#a6e22e">bind</span>,<span style="color:#a6e22e">unbind</span>, <span style="color:#a6e22e">isBound</span>,<span style="color:#a6e22e">rebind</span>)<span style="color:#f92672">=&gt;</span>{
+<span style="color:#960050;background-color:#1e0010">…</span>
+  });
+</code></pre></div></div>
     </article>
   </div>
     </div>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Documentation on Eclipse Graphical Language Server Platform</title>
+    <link>https://www.eclipse.org/glsp/documentation/</link>
+    <description>Recent content in Documentation on Eclipse Graphical Language Server Platform</description>
+    <generator>Hugo -- gohugo.io</generator><atom:link href="https://www.eclipse.org/glsp/documentation/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Overview &amp; Architecture</title>
+      <link>https://www.eclipse.org/glsp/documentation/architecture/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.eclipse.org/glsp/documentation/architecture/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Model Source &amp; State</title>
+      <link>https://www.eclipse.org/glsp/documentation/modelloading/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.eclipse.org/glsp/documentation/modelloading/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Graphical Model Generation</title>
+      <link>https://www.eclipse.org/glsp/documentation/modelgeneration/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.eclipse.org/glsp/documentation/modelgeneration/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Model Rendering &amp; Styling</title>
+      <link>https://www.eclipse.org/glsp/documentation/rendering/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.eclipse.org/glsp/documentation/rendering/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Client-side layouting</title>
+      <link>https://www.eclipse.org/glsp/documentation/clientlayouting/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.eclipse.org/glsp/documentation/clientlayouting/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>GModel Extensions</title>
+      <link>https://www.eclipse.org/glsp/documentation/modelextension/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.eclipse.org/glsp/documentation/modelextension/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Model Validation</title>
+      <link>https://www.eclipse.org/glsp/documentation/validation/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.eclipse.org/glsp/documentation/validation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Actions &amp; Action Handler</title>
+      <link>https://www.eclipse.org/glsp/documentation/actionhandler/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.eclipse.org/glsp/documentation/actionhandler/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>More Articles &amp; Videos</title>
+      <link>https://www.eclipse.org/glsp/documentation/additionals/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.eclipse.org/glsp/documentation/additionals/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

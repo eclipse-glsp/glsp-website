@@ -3,6 +3,42 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://www.eclipse.org/glsp/documentation/architecture/</loc>
+  </url>
+  
+  <url>
+    <loc>https://www.eclipse.org/glsp/documentation/modelloading/</loc>
+  </url>
+  
+  <url>
+    <loc>https://www.eclipse.org/glsp/documentation/modelgeneration/</loc>
+  </url>
+  
+  <url>
+    <loc>https://www.eclipse.org/glsp/documentation/rendering/</loc>
+  </url>
+  
+  <url>
+    <loc>https://www.eclipse.org/glsp/documentation/clientlayouting/</loc>
+  </url>
+  
+  <url>
+    <loc>https://www.eclipse.org/glsp/documentation/modelextension/</loc>
+  </url>
+  
+  <url>
+    <loc>https://www.eclipse.org/glsp/documentation/validation/</loc>
+  </url>
+  
+  <url>
+    <loc>https://www.eclipse.org/glsp/documentation/actionhandler/</loc>
+  </url>
+  
+  <url>
+    <loc>https://www.eclipse.org/glsp/documentation/additionals/</loc>
+  </url>
+  
+  <url>
     <loc>https://www.eclipse.org/glsp/categories/</loc>
   </url>
   
@@ -12,6 +48,10 @@
   
   <url>
     <loc>https://www.eclipse.org/glsp/documentation/</loc>
+  </url>
+  
+  <url>
+    <loc>https://www.eclipse.org/glsp/examples/</loc>
   </url>
   
   <url>

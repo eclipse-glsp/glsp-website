@@ -14,28 +14,24 @@
   <meta name="google" content="notranslate" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="description" content="The Graphical Language Server Platform (GLSP) provides extensible components for the development of diagram editors including edit functionality in (distributed) web-applications via a client-server protocol. To learn more about the architecture, concepts, and code examples for typical diagram editor scenarios, please use the table of contents on the left to navigate through the documentation pages.
-A great starting point is the overview &amp; architecture.
-GLSP clients are implemented in TypeScript. GLSP servers can actually be implemented in any language.">
-  <meta property="og:title" content="Documentation" />
-<meta property="og:description" content="Eclipse Grapical Language Server Platform" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://www.eclipse.org/glsp/documentation/" />
+  <meta name="description" content="We distinguish between micro and macro layout. Usually, the server is responsible for the macro layout, that is the arrangement of the main model elements (i.e. nodes and edges). This layout is defined already in the graphical model by means of coordinates. In turn, the client is responsible for the micro layout, that is the positioning and size computation of elements within a container element such as nodes. The client side (i.">
+  <meta property="og:title" content="Client-side layouting" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.eclipse.org/glsp/documentation/clientlayouting/" />
 
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Documentation &amp;middot; Eclipse Graphical Language Server Platform" />
-  <meta name="twitter:description" content="The Graphical Language Server Platform (GLSP) provides extensible components for the development of diagram editors including edit functionality in (distributed) web-applications via a client-server protocol. To learn more about the architecture, concepts, and code examples for typical diagram editor scenarios, please use the table of contents on the left to navigate through the documentation pages.
-A great starting point is the overview &amp; architecture.
-GLSP clients are implemented in TypeScript. GLSP servers can actually be implemented in any language.">
-  <meta name="twitter:url" content="https://www.eclipse.org/glsp/documentation/" />
+  <meta name="twitter:title" content="Client-side layouting &amp;middot; Eclipse Graphical Language Server Platform" />
+  <meta name="twitter:description" content="We distinguish between micro and macro layout. Usually, the server is responsible for the macro layout, that is the arrangement of the main model elements (i.e. nodes and edges). This layout is defined already in the graphical model by means of coordinates. In turn, the client is responsible for the micro layout, that is the positioning and size computation of elements within a container element such as nodes. The client side (i.">
+  <meta name="twitter:url" content="https://www.eclipse.org/glsp/documentation/clientlayouting/" />
         <meta property="og:image" content="">
         <meta name="twitter:image" content="">
   <meta name="author" content="Eclipse Foundation">
 
   <meta name="generator" content="Hugo 0.78.1" />
 
-  <title>Documentation &middot; Eclipse Graphical Language Server Platform</title>
+  <title>Client-side layouting &middot; Eclipse Graphical Language Server Platform</title>
 
   <!-- Theme Styles -->
   <style>
@@ -548,11 +544,11 @@ html {
                 <div class="col-12 pl-0 pb-1 text-body">
                   <div data-toggle="collapse" data-target="#list-page-clientlayouting .collapse" data-add-collapse="#list-page-clientlayouting .article-title"
                     class="row align-items-center justify-content-between mx-0 article-title">
-                      <h5 class="col px-0 m-0">
+                      <h5 class="col px-0 m-0 active-page">
                         <a href="https://www.eclipse.org/glsp/documentation/clientlayouting/">Client-side layouting</a>
                       </h5>
                   </div>
-                </div><div class="collapse">
+                </div><div class="collapse show">
 <!--  -->
 <section id="toc" class="fragment ">
     <div class="container p-0 ">
@@ -670,16 +666,101 @@ html {
       <article class="col-md-9">
   <div class="title-container row mx-0">
     <div class="title col px-0 text-center text-body">
-      <h2>Documentation</h2>
+      <h2>Client-side layouting</h2>
     </div>
   </div>
-<div class="content-body col-12 content px-0 text-body"><p>The Graphical Language Server Platform (GLSP) provides extensible components for the development of diagram editors including edit functionality in (distributed) web-applications via a client-server protocol.
-To learn more about the architecture, concepts, and code examples for typical diagram editor scenarios, please use the table of contents on the left to navigate through the documentation pages.</p>
-<p>A great starting point is the <a href="/glsp/documentation/architecture/">overview &amp; architecture</a>.</p>
-<p>GLSP clients are implemented in TypeScript. GLSP servers can actually be implemented in any language. However, we provide two server frameworks that can be used to efficiently implement GLSP servers in Java or TypeScript. Thus, the documentations provides code examples for those two frameworks in Java and TypeScript for any server-related topics.</p>
-<p>For more information on building and running GLSP, please also visit the <a href="https://github.com/eclipse-glsp/glsp">GLSP GitHub page</a> and the <a href="https://github.com/eclipse-glsp/glsp-examples">GLSP example repository</a>. Also check out the <a href="/glsp/documentation/additionals/">additional external articles and videos about GLSP</a>.</p>
-<p>We are continiously working on improving this documentation. If you feel something is missing, please file an issue and open a PR at the <a href="https://github.com/eclipsesource/graphical-lsp-website">documentation repository</a>.</p>
-<p>If you need more help, please have a look at our <a href="/glsp/support/">available support options</a>.</p>
+<div class="content-body col-12 content px-0 text-body">
+<!--  -->
+<section id="content-toc" class="fragment ">
+    <div class="container p-0 ">
+<div class="toc"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="https://www.eclipse.org/glsp/documentation/clientlayouting/#layout-container">Layout Container</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/clientlayouting/#edge-layout">Edge Layout</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+    </div>
+</section>
+<p>We distinguish between micro and macro layout.
+Usually, the server is responsible for the macro layout, that is the arrangement of the main model elements (i.e. nodes and edges).
+This layout is defined already in the graphical model by means of coordinates.
+In turn, the client is responsible for the micro layout, that is the positioning and size computation of elements within a container element such as nodes.
+The client side (i.e. micro) layout can be configured in the graphical model, but will be applied on the client during the rendering phase.
+</br></p>
+<h3 id="layout-container">Layout Container</h3>
+<p>Graphical elements that support client-side layouting of contained elements offer a <code>layout</code> property which defines the type of layouter that should be used.
+In addition, the behavior of the layouter can be configured with <code>layout options</code>.</p>
+<p>For an example let’s have a look at the following <code>GNode</code>:</p>
+<details open><summary> Java GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">new</span> GNodeBuilder<span style="color:#f92672">()</span>
+   <span style="color:#f92672">.</span><span style="color:#a6e22e">layout</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;vbox&#34;</span><span style="color:#f92672">)</span>
+   <span style="color:#f92672">.</span><span style="color:#a6e22e">layoutOptions</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> GLayoutOptions<span style="color:#f92672">()</span>
+      <span style="color:#f92672">.</span><span style="color:#a6e22e">hAlign</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;center&#34;</span><span style="color:#f92672">))</span>
+   <span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> GLabelBuilder<span style="color:#f92672">()</span>
+      <span style="color:#f92672">.</span><span style="color:#a6e22e">text</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;label1&#34;</span><span style="color:#f92672">)</span>
+      <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">())</span>
+   <span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> GLabelBuilder<span style="color:#f92672">()</span>
+      <span style="color:#f92672">.</span><span style="color:#a6e22e">text</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;label2&#34;</span><span style="color:#f92672">)</span>
+      <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">())</span>
+   <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+</code></pre></div></details>
+<details ><summary> Node GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">GNode</span>.<span style="color:#a6e22e">builder</span>()
+    .<span style="color:#a6e22e">layout</span>(<span style="color:#e6db74">&#39;vbox&#39;</span>)
+    .<span style="color:#a6e22e">addLayoutOption</span>(<span style="color:#e6db74">&#39;hAlign&#39;</span>, <span style="color:#e6db74">&#39;center&#39;</span>)
+    .<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">GLabelBuilder</span>(<span style="color:#a6e22e">GLabel</span>).<span style="color:#a6e22e">text</span>(<span style="color:#e6db74">&#39;label1&#39;</span>).<span style="color:#a6e22e">build</span>())
+    .<span style="color:#a6e22e">build</span>();
+</code></pre></div></details>
+</br>
+<p>This node contains two label elements that should be layouted.
+There are four built-in layout types that can be used: “hbox”,”vbox”,”stack” and “freeform”.
+In the example node we define that the labels should be layouted with the vbox layouter.
+In addition, we specify options for that layouter by defining that the children should be centered horizontally.</p>
+<p>Additional layouters can be contributed by creating a layouter class that implements the <code>ILayout</code> interface.</p>
+<details open><summary>GLSP Client</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">ILayout</span> {
+    <span style="color:#a6e22e">layout</span>(<span style="color:#a6e22e">container</span>: <span style="color:#66d9ef">SParentElement</span> <span style="color:#f92672">&amp;</span> <span style="color:#a6e22e">LayoutContainer</span>,
+           <span style="color:#a6e22e">layouter</span>: <span style="color:#66d9ef">StatefulLayouter</span>)<span style="color:#f92672">:</span> <span style="color:#66d9ef">void</span>
+}
+</code></pre></div></details>
+<p>Then the new custom layout needs to bound in the diagram module (&ldquo;di.config.ts&rdquo;):</p>
+<details open><summary>GLSP Client</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">myDiagramMdoule</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">ContainerModule</span>((<span style="color:#a6e22e">bind</span>, <span style="color:#a6e22e">unbind</span>, <span style="color:#a6e22e">isBound</span>, <span style="color:#a6e22e">rebind</span>) <span style="color:#f92672">=&gt;</span> {
+    <span style="color:#a6e22e">bind</span>(<span style="color:#a6e22e">TYPES</span>.<span style="color:#a6e22e">Layouter</span>).<span style="color:#a6e22e">to</span>(<span style="color:#a6e22e">MyCustomLayouter</span>);
+}
+</code></pre></div></details>
+</br>
+<h3 id="edge-layout">Edge Layout</h3>
+<p>Graphical elements that are typically rendered in combination with an edge such as labels have an <code>edgeLayout</code> property.
+This can be used to describe how the element should be aligned with the edge.</p>
+<p>For example let&rsquo;s have a look at the following <code>GLabel</code>:</p>
+<details open><summary> Java GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">new</span> GLabelBuilder<span style="color:#f92672">()</span> <span style="color:#75715e">//
+</span><span style="color:#75715e"></span>   <span style="color:#f92672">.</span><span style="color:#a6e22e">edgePlacement</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> GEdgePlacementBuilder<span style="color:#f92672">()</span><span style="color:#75715e">//
+</span><span style="color:#75715e"></span>      <span style="color:#f92672">.</span><span style="color:#a6e22e">side</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;top&#34;</span><span style="color:#f92672">)</span><span style="color:#75715e">//
+</span><span style="color:#75715e"></span>      <span style="color:#f92672">.</span><span style="color:#a6e22e">position</span><span style="color:#f92672">(</span>0<span style="color:#f92672">.</span><span style="color:#a6e22e">5</span><span style="color:#f92672">)</span><span style="color:#75715e">//
+</span><span style="color:#75715e"></span>      <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">())</span><span style="color:#75715e">//
+</span><span style="color:#75715e"></span>   <span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> GLabelBuilder<span style="color:#f92672">().</span><span style="color:#a6e22e">text</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;MyLabel&#34;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">build</span><span style="color:#f92672">())</span>
+   <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+</code></pre></div></details>
+<details ><summary> Node GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">GLabel</span>.<span style="color:#a6e22e">builder</span>()
+    .<span style="color:#a6e22e">edgePlacement</span>({ <span style="color:#a6e22e">side</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;top&#39;</span>, 
+                    <span style="color:#a6e22e">position</span>: <span style="color:#66d9ef">0.5</span>,
+                    <span style="color:#a6e22e">rotate</span>: <span style="color:#66d9ef">false</span>,
+                    <span style="color:#a6e22e">offset</span>: <span style="color:#66d9ef">0</span> })
+    .<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">GLabelBuilder</span>(<span style="color:#a6e22e">GLabel</span>).<span style="color:#a6e22e">text</span>(<span style="color:#e6db74">&#39;MyLabel&#39;</span>).<span style="color:#a6e22e">build</span>())
+    .<span style="color:#a6e22e">build</span>();
+</code></pre></div></details>
+</br>
+<p>The label above specifies the property <code>edgePlacement</code>.
+If this label is added as a child of an edge, it will be placed above the edge.
+The position is defined with 0.5 (i.e. 50 percent of the edge length) which means the label should be placed in the center of the edge.
+After the edge routes have been rendered the client will query all active edge placements and adjust the label position accordingly.</p>
 </div>
     </article>
   </div>
