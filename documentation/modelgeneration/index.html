@@ -15,7 +15,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="description" content="After the initial loading of the source model – and also after each change of the original source model – the GLSP server generates a graphical model from the source model in order to define what is to be rendered on the client.
-The generation of the graphical model from the original model source is the responsibility of the GModelFactory. Therefore, the GModelFactory obtains the source model from the model state and generates a new graphical model from it.">
+The generation of the graphical model from the original source model is the responsibility of the GModelFactory. Therefore, the GModelFactory obtains the source model from the model state and generates a new graphical model from it.">
   <meta property="og:title" content="Graphical Model Generation" />
 <meta property="og:description" content="" />
 <meta property="og:type" content="article" />
@@ -25,7 +25,7 @@ The generation of the graphical model from the original model source is the resp
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Graphical Model Generation &amp;middot; Eclipse Graphical Language Server Platform" />
   <meta name="twitter:description" content="After the initial loading of the source model – and also after each change of the original source model – the GLSP server generates a graphical model from the source model in order to define what is to be rendered on the client.
-The generation of the graphical model from the original model source is the responsibility of the GModelFactory. Therefore, the GModelFactory obtains the source model from the model state and generates a new graphical model from it.">
+The generation of the graphical model from the original source model is the responsibility of the GModelFactory. Therefore, the GModelFactory obtains the source model from the model state and generates a new graphical model from it.">
   <meta name="twitter:url" content="https://www.eclipse.org/glsp/documentation/modelgeneration/" />
         <meta property="og:image" content="">
         <meta name="twitter:image" content="">
@@ -501,7 +501,7 @@ html {
                   <div data-toggle="collapse" data-target="#list-page-modelloading .collapse" data-add-collapse="#list-page-modelloading .article-title"
                     class="row align-items-center justify-content-between mx-0 article-title">
                       <h5 class="col px-0 m-0">
-                        <a href="https://www.eclipse.org/glsp/documentation/modelloading/">Model Source &amp; State</a>
+                        <a href="https://www.eclipse.org/glsp/documentation/modelloading/">Source Model &amp; State</a>
                       </h5>
                   </div>
                 </div><div class="collapse"></div>
@@ -672,13 +672,13 @@ html {
     </div>
   </div>
 <div class="content-body col-12 content px-0 text-body"><p>After the initial loading of the source model – and also after each change of the original source model – the GLSP server generates a graphical model from the source model in order to define what is to be rendered on the client.</p>
-<p>The generation of the graphical model from the original model source is the responsibility of the <code>GModelFactory</code>.
+<p>The generation of the graphical model from the original source model is the responsibility of the <code>GModelFactory</code>.
 Therefore, the <code>GModelFactory</code> obtains the source model from the model state and generates a new graphical model from it.
 Implementations of the <code>GModelFactory</code> are by nature very specific to the source model and the diagram type.
 Thus, in almost every GLSP editor project, a custom <code>GModelFactory</code> implementation is provided.</p>
-<p>The only exception are GLSP editors that directly operate on GModels; that is, the GModel is persisted and loaded directly by the model source loader.
-In such cases, no transformation from the model source and the GModel needs to be provided as the model source already is the GModel.
-Thus, the so-called NullImpl of the <code>GModelFactory</code> can be used.
+<p>The only exception are GLSP editors that directly operate on GModels; that is, the GModel is persisted and loaded directly by the registered implementation of the source model storage.
+In such cases, no transformation from the source model to the GModel needs to be provided as the source model already is the GModel.
+Thus, the so-called <code>NullImpl</code> of the <code>GModelFactory</code> can be used.
 An example for such a use case is provided in the GLSP Workflow example.</p>
 <p>For all other use cases, an implementation of the <code>GModelFactory</code> needs to be provided and registered in the server DI module as follows.</p>
 <details open><summary>Java GLSP Server</summary>
@@ -695,7 +695,7 @@ An example for such a use case is provided in the GLSP Workflow example.</p>
     }
 </code></pre></div></details>
 </br>
-<p>For the sake of an example, let’s assume that the model source is a simple list of named entities.
+<p>For the sake of an example, let’s assume that the source model is a simple list of named entities.
 Each entity should be visualized as a node with a label, which indicates its name.
 Then the corresponding <code>ModelFactory</code> could look as follows.</p>
 <details open><summary>Java GLSP Server</summary>
@@ -754,7 +754,7 @@ Then the corresponding <code>ModelFactory</code> could look as follows.</p>
 }
 </code></pre></div></details>
 </br>
-<p>In the <code>createGModel()</code> method the entities are retrieved from the model state, as they have been added there by the model source loader (see  <a href="https://www.eclipse.org/glsp/documentation/modelloading/">Model Source Loader</a>).
+<p>In the <code>createGModel()</code> method the entities are retrieved from the model state, as they have been added there by the source model storage (see <a href="https://www.eclipse.org/glsp/documentation/modelloading/">Source Model Storage</a>).
 Then a new GNode is created for each entity.
 Finally all new nodes are added as children of a newly created GGraph and the graphical root element in the model state is updated.</p>
 <p>Note that we have used the <code>GModelBuilder</code> API in this example to construct new graphical elements.

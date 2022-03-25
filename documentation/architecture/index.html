@@ -499,7 +499,7 @@ html {
                   <div data-toggle="collapse" data-target="#list-page-modelloading .collapse" data-add-collapse="#list-page-modelloading .article-title"
                     class="row align-items-center justify-content-between mx-0 article-title">
                       <h5 class="col px-0 m-0">
-                        <a href="https://www.eclipse.org/glsp/documentation/modelloading/">Model Source &amp; State</a>
+                        <a href="https://www.eclipse.org/glsp/documentation/modelloading/">Source Model &amp; State</a>
                       </h5>
                   </div>
                 </div><div class="collapse"></div>
@@ -701,10 +701,10 @@ It communicates with a <em>GLSP Client</em> via action messages over JSON-RPC. A
 Both the <em>GLSP server</em> and <em>GLSP client</em> have dedicated action handlers that can process incoming action messages.</p>
 <p>Each running diagram widget is considered to be a single <em>GLSP client</em>.
 Each client is handled by exactly one <em>GLSP server</em>. A <em>GLSP server</em> can handle multiple <em>GLSP client</em>s, each within a dedicated client session.</p>
-<p>The server is responsible for loading the model source, e.g. a file, EMF model, or database, into the model state and defines how to transform it into the graphical model.
+<p>The server is responsible for loading the source model, e.g. a file, EMF model, or database, into the model state and defines how to transform it into the graphical model.
 The graphical model is a serializable description of the diagram that should be visualized.
 It is the central communication artifact that is transferred to the client.</p>
-<p>The <em>GLSP client</em> itself doesn’t need to know how the diagram has been generated from a model source or how to manipulate it.
+<p>The <em>GLSP client</em> itself doesn’t need to know how the diagram has been generated from a source model or how to manipulate it.
 Its main responsibility is to visualize the graphical model and to provide user interface elements for user interaction, such as editing tools.
 Thus, the client interprets the graphical model received from the server and renders a diagram from it.
 In addition, the <em>GLSP client</em> handles user interaction and provides editing tools to invoke manipulations of the diagram.
@@ -716,14 +716,14 @@ While such editing tools are applied by the user, it also shows visual feedback 
 <p>Certain knowledge about the rules of the graphical language is required within client-side editing tools and visual feedback.
 For instance, the client-side tools need to know whether the user is allowed to connect certain nodes with each other, whether those nodes can be resized or moved between container nodes, etc.
 Therefore, the protocol between client and server provides dedicated action messages that allows to transfer this required context- and diagram-specific information between the server and the client.</p>
-<p>Once an editing tool is applied in the client, the client sends a notification to the server, which then will perform the operation on the original model source, regenerates the graphical model and updates the client with the new version of the graphical model, which in turn will then update the rendered diagram based on the new graphical model.
+<p>Once an editing tool is applied in the client, the client sends a notification to the server, which then will perform the operation on the original source model, regenerates the graphical model and updates the client with the new version of the graphical model, which in turn will then update the rendered diagram based on the new graphical model.
 </br></br></p>
 <h3 id="action-protocol">Action Protocol</h3>
 <p>The GLSP action protocol defines the message types that are exchanged between client and server.
 The protocol is structured into so-called features.
 A feature describes a specific diagram capability, e.g. element creation, diagram validation, etc.
 Each feature is composed of a set of actions and/or operations.
-An operation is a special subtype of an action and is used to describe actions that modify the underlying model source on the <em>GLSP server</em>.
+An operation is a special subtype of an action and is used to describe actions that modify the underlying source model on the <em>GLSP server</em>.
 Every action that modifies the model in any way has to be implemented as an operation.</p>
 <p>A detailed description of the protocol is available in the <a href="https://github.com/eclipse-glsp/glsp/blob/master/PROTOCOL.md">GLSP repository</a>.
 The action protocol is customizable and can even be extended with additional custom actions using the dependency injection approach (see <a href="#dependency-injection">Dependency Injection</a>)
@@ -782,7 +782,7 @@ Adopters can extend this module and customize it by overriding dedicated binding
 <h3 id="graphical-model">Graphical Model</h3>
 <p>The graphical model is a serializable description of the diagram to be visualized on the client.
 It is the central communication artifact between client and server.
-The server creates the graphical model from an arbitrary model source and sends it to the client.
+The server creates the graphical model from an arbitrary source model and sends the graphical model to the client.
 Thus, the client doesn’t need to know where it came from and how to manipulate it.
 However, the client interprets the graphical model in order to render a visualization of the diagram described in the graphical model.</p>
 <p>The graphical model is composed of nodes and edges.
