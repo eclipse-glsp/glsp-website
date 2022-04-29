@@ -14,17 +14,17 @@
   <meta name="google" content="notranslate" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="description" content="In order to render a diagram, the GLSP client first requests the graphical model from the server by sending a RequestModelAction. With such a request model action, the client can provide a set of custom arguments in the client options, such as a URI or an ID of a diagram, to specify the diagram requested by the user. Based on these arguments, the GLSP server determines which source model it needs to load, transform into a graphical model and send back to the client.">
+  <meta name="description" content="Source Model The source model represents the actual data that is represented in the diagram and that is modified when the user applies changes in the diagram. Typical source model formats are EMF models, JSON files, and databases, etc. However, GLSP and the GLSP server frameworks don&rsquo;t put any restrictions on what the format of this source model is. This is achieved by putting developers of GLSP diagram servers in charge of defining how to load a source model, how to transform it into a graphical model, which is the description of the diagram to be rendered, and how to manipulate the source model, if a user edits a diagram.">
   <meta property="og:title" content="Source Model &amp; State" />
 <meta property="og:description" content="" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://www.eclipse.org/glsp/documentation/modelloading/" />
+<meta property="og:url" content="https://www.eclipse.org/glsp/documentation/sourcemodel/" />
 
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Source Model &amp; State &amp;middot; Eclipse Graphical Language Server Platform" />
-  <meta name="twitter:description" content="In order to render a diagram, the GLSP client first requests the graphical model from the server by sending a RequestModelAction. With such a request model action, the client can provide a set of custom arguments in the client options, such as a URI or an ID of a diagram, to specify the diagram requested by the user. Based on these arguments, the GLSP server determines which source model it needs to load, transform into a graphical model and send back to the client.">
-  <meta name="twitter:url" content="https://www.eclipse.org/glsp/documentation/modelloading/" />
+  <meta name="twitter:description" content="Source Model The source model represents the actual data that is represented in the diagram and that is modified when the user applies changes in the diagram. Typical source model formats are EMF models, JSON files, and databases, etc. However, GLSP and the GLSP server frameworks don&rsquo;t put any restrictions on what the format of this source model is. This is achieved by putting developers of GLSP diagram servers in charge of defining how to load a source model, how to transform it into a graphical model, which is the description of the diagram to be rendered, and how to manipulate the source model, if a user edits a diagram.">
+  <meta name="twitter:url" content="https://www.eclipse.org/glsp/documentation/sourcemodel/" />
         <meta property="og:image" content="">
         <meta name="twitter:image" content="">
   <meta name="author" content="Eclipse Foundation">
@@ -463,13 +463,13 @@ html {
     <div class="container p-0 ">
 
 
-  <div class="row mx-0 text-body"><article id="list-page-architecture"
+  <div class="row mx-0 text-body"><article id="list-page-overview"
           class="col-12 px-0 mb-2">
                 <div class="col-12 pl-0 pb-1 text-body">
-                  <div data-toggle="collapse" data-target="#list-page-architecture .collapse" data-add-collapse="#list-page-architecture .article-title"
+                  <div data-toggle="collapse" data-target="#list-page-overview .collapse" data-add-collapse="#list-page-overview .article-title"
                     class="row align-items-center justify-content-between mx-0 article-title">
                       <h5 class="col px-0 m-0">
-                        <a href="https://www.eclipse.org/glsp/documentation/architecture/">Overview &amp; Architecture</a>
+                        <a href="https://www.eclipse.org/glsp/documentation/overview/">Overview</a>
                       </h5>
                   </div>
                 </div><div class="collapse">
@@ -480,12 +480,8 @@ html {
   <ul>
     <li>
       <ul>
-        <li><a href="https://www.eclipse.org/glsp/documentation/architecture/#overview">Overview</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/architecture/#action-protocol">Action Protocol</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/architecture/#action-dispatching--handling">Action Dispatching &amp; Handling</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/architecture/#dependency-injection">Dependency Injection</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/architecture/#graphical-model">Graphical Model</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/architecture/#platform-integrations">Platform Integrations</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/overview/#how-it-works">How it works</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/overview/#customization-and-extension">Customization and Extension</a></li>
       </ul>
     </li>
   </ul>
@@ -493,33 +489,13 @@ html {
     </div>
 </section>
 </div>
-        </article><article id="list-page-modelloading"
+        </article><article id="list-page-gettingstarted"
           class="col-12 px-0 mb-2">
                 <div class="col-12 pl-0 pb-1 text-body">
-                  <div data-toggle="collapse" data-target="#list-page-modelloading .collapse" data-add-collapse="#list-page-modelloading .article-title"
-                    class="row align-items-center justify-content-between mx-0 article-title">
-                      <h5 class="col px-0 m-0 active-page">
-                        <a href="https://www.eclipse.org/glsp/documentation/modelloading/">Source Model &amp; State</a>
-                      </h5>
-                  </div>
-                </div><div class="collapse show"></div>
-        </article><article id="list-page-modelgeneration"
-          class="col-12 px-0 mb-2">
-                <div class="col-12 pl-0 pb-1 text-body">
-                  <div data-toggle="collapse" data-target="#list-page-modelgeneration .collapse" data-add-collapse="#list-page-modelgeneration .article-title"
+                  <div data-toggle="collapse" data-target="#list-page-gettingstarted .collapse" data-add-collapse="#list-page-gettingstarted .article-title"
                     class="row align-items-center justify-content-between mx-0 article-title">
                       <h5 class="col px-0 m-0">
-                        <a href="https://www.eclipse.org/glsp/documentation/modelgeneration/">Graphical Model Generation</a>
-                      </h5>
-                  </div>
-                </div><div class="collapse"></div>
-        </article><article id="list-page-rendering"
-          class="col-12 px-0 mb-2">
-                <div class="col-12 pl-0 pb-1 text-body">
-                  <div data-toggle="collapse" data-target="#list-page-rendering .collapse" data-add-collapse="#list-page-rendering .article-title"
-                    class="row align-items-center justify-content-between mx-0 article-title">
-                      <h5 class="col px-0 m-0">
-                        <a href="https://www.eclipse.org/glsp/documentation/rendering/">Model Rendering &amp; Styling</a>
+                        <a href="https://www.eclipse.org/glsp/documentation/gettingstarted/">Getting Started</a>
                       </h5>
                   </div>
                 </div><div class="collapse">
@@ -530,7 +506,114 @@ html {
   <ul>
     <li>
       <ul>
-        <li><a href="https://www.eclipse.org/glsp/documentation/rendering/#model-rendering">Model Rendering</a></li>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+    </div>
+</section>
+</div>
+        </article><article id="list-page-integrations"
+          class="col-12 px-0 mb-2">
+                <div class="col-12 pl-0 pb-1 text-body">
+                  <div data-toggle="collapse" data-target="#list-page-integrations .collapse" data-add-collapse="#list-page-integrations .article-title"
+                    class="row align-items-center justify-content-between mx-0 article-title">
+                      <h5 class="col px-0 m-0">
+                        <a href="https://www.eclipse.org/glsp/documentation/integrations/">Servers &amp; Integrations</a>
+                      </h5>
+                  </div>
+                </div><div class="collapse">
+<!--  -->
+<section id="toc" class="fragment ">
+    <div class="container p-0 ">
+<div class="toc"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/integrations/#package-architecture">Package Architecture</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/integrations/#server-frameworks">Server Frameworks</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/integrations/#source-model-integrations">Source Model Integrations</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/integrations/#platform-integrations">Platform Integrations</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+    </div>
+</section>
+</div>
+        </article><article id="list-page-sourcemodel"
+          class="col-12 px-0 mb-2">
+                <div class="col-12 pl-0 pb-1 text-body">
+                  <div data-toggle="collapse" data-target="#list-page-sourcemodel .collapse" data-add-collapse="#list-page-sourcemodel .article-title"
+                    class="row align-items-center justify-content-between mx-0 article-title">
+                      <h5 class="col px-0 m-0 active-page">
+                        <a href="https://www.eclipse.org/glsp/documentation/sourcemodel/">Source Model &amp; State</a>
+                      </h5>
+                  </div>
+                </div><div class="collapse show">
+<!--  -->
+<section id="toc" class="fragment ">
+    <div class="container p-0 ">
+<div class="toc"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="https://www.eclipse.org/glsp/documentation/sourcemodel/#source-model">Source Model</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/sourcemodel/#source-model-storage-and-model-state">Source Model Storage and Model State</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+    </div>
+</section>
+</div>
+        </article><article id="list-page-gmodel"
+          class="col-12 px-0 mb-2">
+                <div class="col-12 pl-0 pb-1 text-body">
+                  <div data-toggle="collapse" data-target="#list-page-gmodel .collapse" data-add-collapse="#list-page-gmodel .article-title"
+                    class="row align-items-center justify-content-between mx-0 article-title">
+                      <h5 class="col px-0 m-0">
+                        <a href="https://www.eclipse.org/glsp/documentation/gmodel/">Graphical Model</a>
+                      </h5>
+                  </div>
+                </div><div class="collapse">
+<!--  -->
+<section id="toc" class="fragment ">
+    <div class="container p-0 ">
+<div class="toc"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="https://www.eclipse.org/glsp/documentation/gmodel/#graphical-model-structure">Graphical Model Structure</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/gmodel/#graphical-model-factory">Graphical Model Factory</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/gmodel/#extending-the-graphical-model">Extending the Graphical Model</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+    </div>
+</section>
+</div>
+        </article><article id="list-page-rendering"
+          class="col-12 px-0 mb-2">
+                <div class="col-12 pl-0 pb-1 text-body">
+                  <div data-toggle="collapse" data-target="#list-page-rendering .collapse" data-add-collapse="#list-page-rendering .article-title"
+                    class="row align-items-center justify-content-between mx-0 article-title">
+                      <h5 class="col px-0 m-0">
+                        <a href="https://www.eclipse.org/glsp/documentation/rendering/">Rendering &amp; Styling</a>
+                      </h5>
+                  </div>
+                </div><div class="collapse">
+<!--  -->
+<section id="toc" class="fragment ">
+    <div class="container p-0 ">
+<div class="toc"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="https://www.eclipse.org/glsp/documentation/rendering/#rendering">Rendering</a></li>
         <li><a href="https://www.eclipse.org/glsp/documentation/rendering/#styling">Styling</a></li>
       </ul>
     </li>
@@ -545,7 +628,7 @@ html {
                   <div data-toggle="collapse" data-target="#list-page-clientlayouting .collapse" data-add-collapse="#list-page-clientlayouting .article-title"
                     class="row align-items-center justify-content-between mx-0 article-title">
                       <h5 class="col px-0 m-0">
-                        <a href="https://www.eclipse.org/glsp/documentation/clientlayouting/">Client-side layouting</a>
+                        <a href="https://www.eclipse.org/glsp/documentation/clientlayouting/">Client-side Layouting</a>
                       </h5>
                   </div>
                 </div><div class="collapse">
@@ -565,44 +648,6 @@ html {
     </div>
 </section>
 </div>
-        </article><article id="list-page-modelextension"
-          class="col-12 px-0 mb-2">
-                <div class="col-12 pl-0 pb-1 text-body">
-                  <div data-toggle="collapse" data-target="#list-page-modelextension .collapse" data-add-collapse="#list-page-modelextension .article-title"
-                    class="row align-items-center justify-content-between mx-0 article-title">
-                      <h5 class="col px-0 m-0">
-                        <a href="https://www.eclipse.org/glsp/documentation/modelextension/">GModel Extensions</a>
-                      </h5>
-                  </div>
-                </div><div class="collapse">
-<!--  -->
-<section id="toc" class="fragment ">
-    <div class="container p-0 ">
-<div class="toc"><nav id="TableOfContents">
-  <ul>
-    <li>
-      <ul>
-        <li><a href="https://www.eclipse.org/glsp/documentation/modelextension/#glsp-client">GLSP Client</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/modelextension/#node-glsp-server">Node GLSP Server</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/modelextension/#java-glsp-server">Java GLSP Server</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/modelextension/#generic-args">Generic Args</a></li>
-      </ul>
-    </li>
-  </ul>
-</nav></div>
-    </div>
-</section>
-</div>
-        </article><article id="list-page-validation"
-          class="col-12 px-0 mb-2">
-                <div class="col-12 pl-0 pb-1 text-body">
-                  <div data-toggle="collapse" data-target="#list-page-validation .collapse" data-add-collapse="#list-page-validation .article-title"
-                    class="row align-items-center justify-content-between mx-0 article-title">
-                      <h5 class="col px-0 m-0">
-                        <a href="https://www.eclipse.org/glsp/documentation/validation/">Model Validation</a>
-                      </h5>
-                  </div>
-                </div><div class="collapse"></div>
         </article><article id="list-page-actionhandler"
           class="col-12 px-0 mb-2">
                 <div class="col-12 pl-0 pb-1 text-body">
@@ -620,6 +665,7 @@ html {
   <ul>
     <li>
       <ul>
+        <li><a href="https://www.eclipse.org/glsp/documentation/actionhandler/#overview">Overview</a></li>
         <li><a href="https://www.eclipse.org/glsp/documentation/actionhandler/#action-specification">Action specification</a></li>
         <li><a href="https://www.eclipse.org/glsp/documentation/actionhandler/#implementing-an-action-handler-glsp-server">Implementing an Action Handler (GLSP Server)</a></li>
         <li><a href="https://www.eclipse.org/glsp/documentation/actionhandler/#implementing-an-action-handler-glsp-client">Implementing an Action Handler (GLSP Client)</a></li>
@@ -630,6 +676,26 @@ html {
     </div>
 </section>
 </div>
+        </article><article id="list-page-modeloperations"
+          class="col-12 px-0 mb-2">
+                <div class="col-12 pl-0 pb-1 text-body">
+                  <div data-toggle="collapse" data-target="#list-page-modeloperations .collapse" data-add-collapse="#list-page-modeloperations .article-title"
+                    class="row align-items-center justify-content-between mx-0 article-title">
+                      <h5 class="col px-0 m-0">
+                        <a href="https://www.eclipse.org/glsp/documentation/modeloperations/">Model Operations</a>
+                      </h5>
+                  </div>
+                </div><div class="collapse"></div>
+        </article><article id="list-page-validation"
+          class="col-12 px-0 mb-2">
+                <div class="col-12 pl-0 pb-1 text-body">
+                  <div data-toggle="collapse" data-target="#list-page-validation .collapse" data-add-collapse="#list-page-validation .article-title"
+                    class="row align-items-center justify-content-between mx-0 article-title">
+                      <h5 class="col px-0 m-0">
+                        <a href="https://www.eclipse.org/glsp/documentation/validation/">Model Validation</a>
+                      </h5>
+                  </div>
+                </div><div class="collapse"></div>
         </article><article id="list-page-additionals"
           class="col-12 px-0 mb-2">
                 <div class="col-12 pl-0 pb-1 text-body">
@@ -669,18 +735,57 @@ html {
       <h2>Source Model &amp; Model State</h2>
     </div>
   </div>
-<div class="content-body col-12 content px-0 text-body"><p>In order to render a diagram, the GLSP client first requests the graphical model from the server by sending a <a href="https://github.com/eclipse-glsp/glsp/blob/master/PROTOCOL.md#241-requestmodelaction">RequestModelAction</a>.
-With such a request model action, the client can provide a set of custom arguments in the client options, such as a URI or an ID of a diagram, to specify the diagram requested by the user.
-Based on these arguments, the GLSP server determines which source model it needs to load, transform into a graphical model and send back to the client.</p>
-<p>Therefore, a request model action is handled as follows by the the <em>GLSP server</em> (see also <code>RequestModelActionHandler</code>):</p>
+<div class="content-body col-12 content px-0 text-body">
+<!--  -->
+<section id="content-toc" class="fragment ">
+    <div class="container p-0 ">
+<div class="toc"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="https://www.eclipse.org/glsp/documentation/sourcemodel/#source-model">Source Model</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/sourcemodel/#source-model-storage-and-model-state">Source Model Storage and Model State</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+    </div>
+</section>
+<h3 id="source-model">Source Model</h3>
+<p>The source model represents the actual data that is represented in the diagram and that is modified when the user applies changes in the diagram.
+Typical source model formats are <a href="https://www.eclipse.org/modeling/emf">EMF</a> models, JSON files, and databases, etc.
+However, GLSP and the GLSP server frameworks don&rsquo;t put any restrictions on what the format of this source model is.
+This is achieved by putting developers of GLSP diagram servers in charge of defining how to load a source model, how to transform it into a <a href="https://www.eclipse.org/glsp/documentation/gmodel/">graphical model</a>, which is the description of the diagram to be rendered, and how to manipulate the source model, if a user edits a diagram.</p>
+<p>Therefore, a GLSP server needs to provide the following implementations:</p>
 <ol>
-<li>Invoke the configured <code>SourceModelStorage</code> to load the source model from an arbitrary resource into the model state.</li>
-<li>Invoke the configured <code>GModelFactory</code> to transform the model state into the graphical model, or GModel for short, that describes the diagram to be rendered (see also <a href="https://www.eclipse.org/glsp/documentation/modelgeneration/">GModelFactory</a>).</li>
-<li>Invoke the model submission to send the graphical model to the client.</li>
+<li><a href="#source-model-storage-and-model-state-and">Source model storage</a>, which defines how to load and store source models.</li>
+<li><a href="https://www.eclipse.org/glsp/documentation/gmodel/">Graphical model factory</a>, which defines how the source model is transformed into a graphical model.</li>
+<li><a href="https://www.eclipse.org/glsp/documentation/modeloperations/">Edit operation handlers</a> that manipulate the source model, based on user actions performed in the diagram.</li>
 </ol>
-<p>In this section, we’ll look at the interfaces involved step 1: the <code>SourceModelStorage</code> and the <code>GModelState</code>.</p>
+<h4 id="loading-source-models-and-showing-a-diagram">Loading Source Models and Showing a Diagram</h4>
+<p>To load a source model and show a diagram, the following steps are performed:</p>
+<ol>
+<li>The client sends a <a href="https://github.com/eclipse-glsp/glsp/blob/master/PROTOCOL.md#241-requestmodelaction">RequestModelAction</a> with a URI or other arguments for identifying a source model to the server</li>
+<li>The server invokes the <a href="#source-model-storage-and-model-state-and">source model storage</a> to load the source model identified by the arguments sent by the client</li>
+<li>The server invokes the <a href="https://www.eclipse.org/glsp/documentation/gmodel/">graphical model factory</a> to translate the source model into the graphical model</li>
+<li>The server sends the created graphical model to the client</li>
+<li>The client renders graphical model</li>
+</ol>
+<h4 id="processing-edit-operations">Processing Edit Operations</h4>
+<p>When a user performs an edit operation in the diagram:</p>
+<ol>
+<li>The client sends an operation request to the server</li>
+<li>The server invokes the registered <a href="https://www.eclipse.org/glsp/documentation/modeloperations/">edit operation handler</a>, which modifies the underlying source model directly</li>
+<li>The server applies the <a href="https://www.eclipse.org/glsp/documentation/gmodel/">graphical model factory</a> to the modified source model to create a new graphical model</li>
+<li>The server sends the created graphical model to the client</li>
+<li>The client re-renders the diagram according to the new version of the graphical model</li>
+</ol>
+<p>As can be seen in the steps above for loading and editing source models, both processes share many steps and are based on the same three custom implementations for particular source models.
+Thus, by providing these three implementations, any source model format can be supported with GLSP.</p>
+<p>Please note that GLSP provides <a href="https://www.eclipse.org/glsp/documentation/integrations/">generic base implementations</a> for typical source model types.</p>
+<h3 id="source-model-storage-and-model-state">Source Model Storage and Model State</h3>
 <p>Every GLSP server needs to provide an implementation of the interface <code>SourceModelStorage</code>.
-Implementations of this interface are reponsible for loading source models from a specific resource, such as an EMF model, a JSON file, or a database, into the GLSP server&rsquo;s model state.</p>
+Implementations of this interface are responsible for loading source models from a specific resource, such as an EMF model, a JSON file, or a database, into the GLSP server&rsquo;s model state.</p>
 <p>The <code>ModelState</code> is the central stateful object within a client session that represents the information about the current state of the original source model.
 All other services and handlers may access the model state to obtain the required information about the model in order to perform their diagram editing tasks.</p>
 <p>As you typically need to store custom information that is specific to your model in the model state, you typically also bind a custom implementation that represents your model state.
@@ -691,35 +796,30 @@ This implementation usually implements the interface <code>GModelState</code> (a
 <span style="color:#f92672">}</span>
 </code></pre></div></details>
 <details><summary>Node GLSP Server</summary>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">configure</span>(<span style="color:#a6e22e">bind</span>: <span style="color:#66d9ef">interfaces.Bind</span>, <span style="color:#a6e22e">unbind</span>: <span style="color:#66d9ef">interfaces.Unbind</span>,
-<span style="color:#a6e22e">isBound</span>: <span style="color:#66d9ef">interfaces.IsBound</span>, <span style="color:#a6e22e">rebind</span>: <span style="color:#66d9ef">interfaces.Rebind</span>)<span style="color:#f92672">:</span> <span style="color:#66d9ef">void</span> {
-    <span style="color:#66d9ef">super</span>.<span style="color:#a6e22e">configure</span>(<span style="color:#a6e22e">bind</span>, <span style="color:#a6e22e">unbind</span>, <span style="color:#a6e22e">isBound</span>, <span style="color:#a6e22e">rebind</span>);
-    <span style="color:#a6e22e">bind</span>(<span style="color:#a6e22e">MyModelState</span>).<span style="color:#a6e22e">toSelf</span>().<span style="color:#a6e22e">inSingletonScope</span>();
-    <span style="color:#a6e22e">bind</span>(<span style="color:#a6e22e">ModelState</span>).<span style="color:#a6e22e">toService</span>(<span style="color:#a6e22e">MyModelState</span>);
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">override</span> <span style="color:#a6e22e">bindModelState</span>()<span style="color:#f92672">:</span> <span style="color:#a6e22e">BindingTarget</span>&lt;<span style="color:#f92672">ModelState</span>&gt; {
+   <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">MyModelState</span>;
 }
 </code></pre></div></details>
 </br>
 <p>Now as we have registered our model state implementation, we can look at the source model loading.
 First, we need to make the GLSP server aware of your <code>SourceModelStorage</code> implementation, so you have to bind your implementation of the <code>SourceModelStorage</code> interface in the server’s DI module:</p>
 <details open><summary>Java GLSP Server</summary>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">  <span style="color:#a6e22e">@Override</span>
-  <span style="color:#66d9ef">protected</span> Class<span style="color:#f92672">&lt;?</span> <span style="color:#66d9ef">extends</span> SourceModelStorage<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">bindSourceModelStorage</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">return</span> MySourceModelStorage<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">;</span>
-  <span style="color:#f92672">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Override</span>
+<span style="color:#66d9ef">protected</span> Class<span style="color:#f92672">&lt;?</span> <span style="color:#66d9ef">extends</span> SourceModelStorage<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">bindSourceModelStorage</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+   <span style="color:#66d9ef">return</span> MySourceModelStorage<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 </code></pre></div></details>
 <details><summary>Node GLSP Server</summary>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts">  <span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">configure</span>(<span style="color:#a6e22e">bind</span>: <span style="color:#66d9ef">interfaces.Bind</span>, <span style="color:#a6e22e">unbind</span>: <span style="color:#66d9ef">interfaces.Unbind</span>,
-   <span style="color:#a6e22e">isBound</span>: <span style="color:#66d9ef">interfaces.IsBound</span>, <span style="color:#a6e22e">rebind</span>: <span style="color:#66d9ef">interfaces.Rebind</span>)<span style="color:#f92672">:</span> <span style="color:#66d9ef">void</span> {
-      <span style="color:#66d9ef">super</span>.<span style="color:#a6e22e">configure</span>(<span style="color:#a6e22e">bind</span>, <span style="color:#a6e22e">unbind</span>, <span style="color:#a6e22e">isBound</span>, <span style="color:#a6e22e">rebind</span>);
-      <span style="color:#a6e22e">bind</span>(<span style="color:#a6e22e">SourceModelStorage</span>).<span style="color:#a6e22e">to</span>(<span style="color:#a6e22e">MySourceModelStorage</span>);
-  }
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">bindModelState</span>()<span style="color:#f92672">:</span> <span style="color:#a6e22e">BindingTarget</span>&lt;<span style="color:#f92672">ModelState</span>&gt; {
+   <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">MySourceModelStorage</span>;
+}
 </code></pre></div></details>
 </br>
 <p>The registered implementation of the source model storage needs to provide two functionalities:</p>
 <ol>
 <li>Loading source models, based on the parameters that are contained in the <a href="https://github.com/eclipse-glsp/glsp/blob/master/PROTOCOL.md#241-requestmodelaction">RequestModelAction</a>, and adding them into the session’s model state.
 The implementation mostly depends on where you need to load your source model(s) from and what kind of model(s) you are dealing with (files, XML, JSON, EMF, a database, etc.).</li>
-<li>Saving the current version of the source model from the <code>GModelState</code> back into its original resource (files, XML, EMF, database, etc.). This method is invoked when the client sends a <a href="https://github.com/eclipse-glsp/glsp/blob/master/PROTOCOL.md#251-savemodelaction">SaveModelAction</a> (see also <code>SaveModelActionHandler</code>).</li>
+<li>Saving the current version of the source model from the <code>GModelState</code> back into its original resource (files, XML, EMF, database, etc.). This method is invoked when the client sends a <a href="https://github.com/eclipse-glsp/glsp/blob/master/PROTOCOL.md#251-savemodelaction">SaveModelAction</a>.</li>
 </ol>
 <details open><summary>Java GLSP Server</summary>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MySourceModelStorage</span> <span style="color:#66d9ef">implements</span> SourceModelStorage <span style="color:#f92672">{</span>
@@ -783,9 +883,11 @@ The implementation mostly depends on where you need to load your source model(s)
 }
 </code></pre></div></details>
 </br>
-<p>In the GLSP Workflow example there is also an example, in which the source model is a JSON file that contains the GModel directly.
+<p>The GLSP Workflow example is an example, in which in which the source model is a JSON file that contains the GModel directly.
 In such a scenario, you can use the plain GModelState and the JsonFileGModelStorage.</p>
-<p>Once the source model has been loaded into the model state, the GLSP server invokes the configured <code>GModelFactory</code> to derive the graphical model from the source model and issues model update for the client (see <a href="https://www.eclipse.org/glsp/documentation/modelgeneration/">Graphical Model Generation</a>).</p>
+<p>Once the source model has been loaded into the model state, the GLSP server invokes the configured <code>GModelFactory</code> to derive the graphical model from the source model and issues model update for the client.</p>
+<hr>
+<p>➡️ Let&rsquo;s look at how the source model is translated into a <a href="https://www.eclipse.org/glsp/documentation/gmodel/">graphical model</a> next!</p>
 </div>
     </article>
   </div>

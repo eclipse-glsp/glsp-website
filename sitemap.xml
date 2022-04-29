@@ -3,15 +3,23 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://www.eclipse.org/glsp/documentation/architecture/</loc>
+    <loc>https://www.eclipse.org/glsp/documentation/overview/</loc>
   </url>
   
   <url>
-    <loc>https://www.eclipse.org/glsp/documentation/modelloading/</loc>
+    <loc>https://www.eclipse.org/glsp/documentation/gettingstarted/</loc>
   </url>
   
   <url>
-    <loc>https://www.eclipse.org/glsp/documentation/modelgeneration/</loc>
+    <loc>https://www.eclipse.org/glsp/documentation/integrations/</loc>
+  </url>
+  
+  <url>
+    <loc>https://www.eclipse.org/glsp/documentation/sourcemodel/</loc>
+  </url>
+  
+  <url>
+    <loc>https://www.eclipse.org/glsp/documentation/gmodel/</loc>
   </url>
   
   <url>
@@ -23,15 +31,15 @@
   </url>
   
   <url>
-    <loc>https://www.eclipse.org/glsp/documentation/modelextension/</loc>
+    <loc>https://www.eclipse.org/glsp/documentation/actionhandler/</loc>
+  </url>
+  
+  <url>
+    <loc>https://www.eclipse.org/glsp/documentation/modeloperations/</loc>
   </url>
   
   <url>
     <loc>https://www.eclipse.org/glsp/documentation/validation/</loc>
-  </url>
-  
-  <url>
-    <loc>https://www.eclipse.org/glsp/documentation/actionhandler/</loc>
   </url>
   
   <url>

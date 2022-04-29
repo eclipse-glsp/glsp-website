@@ -14,24 +14,26 @@
   <meta name="google" content="notranslate" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="description" content="Overview The Graphical Language Server Platform (GLSP) is a client-server framework for building web-based diagram editors. It follows an architectural pattern similar to the hugely popular Language Server Protocol, but applies it to graphical modeling and diagram editors. With that, GLSP enables the development of modern, web-based diagram editors, whereas the heavy lifting, such as loading, interpreting, and editing diagrams according to the rules of the graphical diagram language, is encapsulated in the server.">
-  <meta property="og:title" content="Overview &amp; Architecture" />
+  <meta name="description" content="As mentioned in the getting started guide, GLSP is architected to be very flexible and provides several options. On this page, we give an overview of the dedicated integration components and point to the respective source code.
+ 🖥️ Server GLSP servers can be written either in Java or with Typescript based on nodejs. 🗂️ Source Model You can use any format or framework for managing your source model. For the most common choices, GLSP provides dedicated base modules, such as for EMF, emf.">
+  <meta property="og:title" content="Servers &amp; Integrations" />
 <meta property="og:description" content="" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://www.eclipse.org/glsp/documentation/architecture/" />
+<meta property="og:url" content="https://www.eclipse.org/glsp/documentation/integrations/" />
 
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Overview &amp; Architecture &amp;middot; Eclipse Graphical Language Server Platform" />
-  <meta name="twitter:description" content="Overview The Graphical Language Server Platform (GLSP) is a client-server framework for building web-based diagram editors. It follows an architectural pattern similar to the hugely popular Language Server Protocol, but applies it to graphical modeling and diagram editors. With that, GLSP enables the development of modern, web-based diagram editors, whereas the heavy lifting, such as loading, interpreting, and editing diagrams according to the rules of the graphical diagram language, is encapsulated in the server.">
-  <meta name="twitter:url" content="https://www.eclipse.org/glsp/documentation/architecture/" />
+  <meta name="twitter:title" content="Servers &amp; Integrations &amp;middot; Eclipse Graphical Language Server Platform" />
+  <meta name="twitter:description" content="As mentioned in the getting started guide, GLSP is architected to be very flexible and provides several options. On this page, we give an overview of the dedicated integration components and point to the respective source code.
+ 🖥️ Server GLSP servers can be written either in Java or with Typescript based on nodejs. 🗂️ Source Model You can use any format or framework for managing your source model. For the most common choices, GLSP provides dedicated base modules, such as for EMF, emf.">
+  <meta name="twitter:url" content="https://www.eclipse.org/glsp/documentation/integrations/" />
         <meta property="og:image" content="">
         <meta name="twitter:image" content="">
   <meta name="author" content="Eclipse Foundation">
 
   <meta name="generator" content="Hugo 0.78.1" />
 
-  <title>Overview & Architecture &middot; Eclipse Graphical Language Server Platform</title>
+  <title>Servers & Integrations &middot; Eclipse Graphical Language Server Platform</title>
 
   <!-- Theme Styles -->
   <style>
@@ -463,63 +465,13 @@ html {
     <div class="container p-0 ">
 
 
-  <div class="row mx-0 text-body"><article id="list-page-architecture"
+  <div class="row mx-0 text-body"><article id="list-page-overview"
           class="col-12 px-0 mb-2">
                 <div class="col-12 pl-0 pb-1 text-body">
-                  <div data-toggle="collapse" data-target="#list-page-architecture .collapse" data-add-collapse="#list-page-architecture .article-title"
-                    class="row align-items-center justify-content-between mx-0 article-title">
-                      <h5 class="col px-0 m-0 active-page">
-                        <a href="https://www.eclipse.org/glsp/documentation/architecture/">Overview &amp; Architecture</a>
-                      </h5>
-                  </div>
-                </div><div class="collapse show">
-<!--  -->
-<section id="toc" class="fragment ">
-    <div class="container p-0 ">
-<div class="toc"><nav id="TableOfContents">
-  <ul>
-    <li>
-      <ul>
-        <li><a href="https://www.eclipse.org/glsp/documentation/architecture/#overview">Overview</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/architecture/#action-protocol">Action Protocol</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/architecture/#action-dispatching--handling">Action Dispatching &amp; Handling</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/architecture/#dependency-injection">Dependency Injection</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/architecture/#graphical-model">Graphical Model</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/architecture/#platform-integrations">Platform Integrations</a></li>
-      </ul>
-    </li>
-  </ul>
-</nav></div>
-    </div>
-</section>
-</div>
-        </article><article id="list-page-modelloading"
-          class="col-12 px-0 mb-2">
-                <div class="col-12 pl-0 pb-1 text-body">
-                  <div data-toggle="collapse" data-target="#list-page-modelloading .collapse" data-add-collapse="#list-page-modelloading .article-title"
+                  <div data-toggle="collapse" data-target="#list-page-overview .collapse" data-add-collapse="#list-page-overview .article-title"
                     class="row align-items-center justify-content-between mx-0 article-title">
                       <h5 class="col px-0 m-0">
-                        <a href="https://www.eclipse.org/glsp/documentation/modelloading/">Source Model &amp; State</a>
-                      </h5>
-                  </div>
-                </div><div class="collapse"></div>
-        </article><article id="list-page-modelgeneration"
-          class="col-12 px-0 mb-2">
-                <div class="col-12 pl-0 pb-1 text-body">
-                  <div data-toggle="collapse" data-target="#list-page-modelgeneration .collapse" data-add-collapse="#list-page-modelgeneration .article-title"
-                    class="row align-items-center justify-content-between mx-0 article-title">
-                      <h5 class="col px-0 m-0">
-                        <a href="https://www.eclipse.org/glsp/documentation/modelgeneration/">Graphical Model Generation</a>
-                      </h5>
-                  </div>
-                </div><div class="collapse"></div>
-        </article><article id="list-page-rendering"
-          class="col-12 px-0 mb-2">
-                <div class="col-12 pl-0 pb-1 text-body">
-                  <div data-toggle="collapse" data-target="#list-page-rendering .collapse" data-add-collapse="#list-page-rendering .article-title"
-                    class="row align-items-center justify-content-between mx-0 article-title">
-                      <h5 class="col px-0 m-0">
-                        <a href="https://www.eclipse.org/glsp/documentation/rendering/">Model Rendering &amp; Styling</a>
+                        <a href="https://www.eclipse.org/glsp/documentation/overview/">Overview</a>
                       </h5>
                   </div>
                 </div><div class="collapse">
@@ -530,7 +482,140 @@ html {
   <ul>
     <li>
       <ul>
-        <li><a href="https://www.eclipse.org/glsp/documentation/rendering/#model-rendering">Model Rendering</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/overview/#how-it-works">How it works</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/overview/#customization-and-extension">Customization and Extension</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+    </div>
+</section>
+</div>
+        </article><article id="list-page-gettingstarted"
+          class="col-12 px-0 mb-2">
+                <div class="col-12 pl-0 pb-1 text-body">
+                  <div data-toggle="collapse" data-target="#list-page-gettingstarted .collapse" data-add-collapse="#list-page-gettingstarted .article-title"
+                    class="row align-items-center justify-content-between mx-0 article-title">
+                      <h5 class="col px-0 m-0">
+                        <a href="https://www.eclipse.org/glsp/documentation/gettingstarted/">Getting Started</a>
+                      </h5>
+                  </div>
+                </div><div class="collapse">
+<!--  -->
+<section id="toc" class="fragment ">
+    <div class="container p-0 ">
+<div class="toc"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+    </div>
+</section>
+</div>
+        </article><article id="list-page-integrations"
+          class="col-12 px-0 mb-2">
+                <div class="col-12 pl-0 pb-1 text-body">
+                  <div data-toggle="collapse" data-target="#list-page-integrations .collapse" data-add-collapse="#list-page-integrations .article-title"
+                    class="row align-items-center justify-content-between mx-0 article-title">
+                      <h5 class="col px-0 m-0 active-page">
+                        <a href="https://www.eclipse.org/glsp/documentation/integrations/">Servers &amp; Integrations</a>
+                      </h5>
+                  </div>
+                </div><div class="collapse show">
+<!--  -->
+<section id="toc" class="fragment ">
+    <div class="container p-0 ">
+<div class="toc"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/integrations/#package-architecture">Package Architecture</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/integrations/#server-frameworks">Server Frameworks</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/integrations/#source-model-integrations">Source Model Integrations</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/integrations/#platform-integrations">Platform Integrations</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+    </div>
+</section>
+</div>
+        </article><article id="list-page-sourcemodel"
+          class="col-12 px-0 mb-2">
+                <div class="col-12 pl-0 pb-1 text-body">
+                  <div data-toggle="collapse" data-target="#list-page-sourcemodel .collapse" data-add-collapse="#list-page-sourcemodel .article-title"
+                    class="row align-items-center justify-content-between mx-0 article-title">
+                      <h5 class="col px-0 m-0">
+                        <a href="https://www.eclipse.org/glsp/documentation/sourcemodel/">Source Model &amp; State</a>
+                      </h5>
+                  </div>
+                </div><div class="collapse">
+<!--  -->
+<section id="toc" class="fragment ">
+    <div class="container p-0 ">
+<div class="toc"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="https://www.eclipse.org/glsp/documentation/sourcemodel/#source-model">Source Model</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/sourcemodel/#source-model-storage-and-model-state">Source Model Storage and Model State</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+    </div>
+</section>
+</div>
+        </article><article id="list-page-gmodel"
+          class="col-12 px-0 mb-2">
+                <div class="col-12 pl-0 pb-1 text-body">
+                  <div data-toggle="collapse" data-target="#list-page-gmodel .collapse" data-add-collapse="#list-page-gmodel .article-title"
+                    class="row align-items-center justify-content-between mx-0 article-title">
+                      <h5 class="col px-0 m-0">
+                        <a href="https://www.eclipse.org/glsp/documentation/gmodel/">Graphical Model</a>
+                      </h5>
+                  </div>
+                </div><div class="collapse">
+<!--  -->
+<section id="toc" class="fragment ">
+    <div class="container p-0 ">
+<div class="toc"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="https://www.eclipse.org/glsp/documentation/gmodel/#graphical-model-structure">Graphical Model Structure</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/gmodel/#graphical-model-factory">Graphical Model Factory</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/gmodel/#extending-the-graphical-model">Extending the Graphical Model</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+    </div>
+</section>
+</div>
+        </article><article id="list-page-rendering"
+          class="col-12 px-0 mb-2">
+                <div class="col-12 pl-0 pb-1 text-body">
+                  <div data-toggle="collapse" data-target="#list-page-rendering .collapse" data-add-collapse="#list-page-rendering .article-title"
+                    class="row align-items-center justify-content-between mx-0 article-title">
+                      <h5 class="col px-0 m-0">
+                        <a href="https://www.eclipse.org/glsp/documentation/rendering/">Rendering &amp; Styling</a>
+                      </h5>
+                  </div>
+                </div><div class="collapse">
+<!--  -->
+<section id="toc" class="fragment ">
+    <div class="container p-0 ">
+<div class="toc"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="https://www.eclipse.org/glsp/documentation/rendering/#rendering">Rendering</a></li>
         <li><a href="https://www.eclipse.org/glsp/documentation/rendering/#styling">Styling</a></li>
       </ul>
     </li>
@@ -545,7 +630,7 @@ html {
                   <div data-toggle="collapse" data-target="#list-page-clientlayouting .collapse" data-add-collapse="#list-page-clientlayouting .article-title"
                     class="row align-items-center justify-content-between mx-0 article-title">
                       <h5 class="col px-0 m-0">
-                        <a href="https://www.eclipse.org/glsp/documentation/clientlayouting/">Client-side layouting</a>
+                        <a href="https://www.eclipse.org/glsp/documentation/clientlayouting/">Client-side Layouting</a>
                       </h5>
                   </div>
                 </div><div class="collapse">
@@ -565,44 +650,6 @@ html {
     </div>
 </section>
 </div>
-        </article><article id="list-page-modelextension"
-          class="col-12 px-0 mb-2">
-                <div class="col-12 pl-0 pb-1 text-body">
-                  <div data-toggle="collapse" data-target="#list-page-modelextension .collapse" data-add-collapse="#list-page-modelextension .article-title"
-                    class="row align-items-center justify-content-between mx-0 article-title">
-                      <h5 class="col px-0 m-0">
-                        <a href="https://www.eclipse.org/glsp/documentation/modelextension/">GModel Extensions</a>
-                      </h5>
-                  </div>
-                </div><div class="collapse">
-<!--  -->
-<section id="toc" class="fragment ">
-    <div class="container p-0 ">
-<div class="toc"><nav id="TableOfContents">
-  <ul>
-    <li>
-      <ul>
-        <li><a href="https://www.eclipse.org/glsp/documentation/modelextension/#glsp-client">GLSP Client</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/modelextension/#node-glsp-server">Node GLSP Server</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/modelextension/#java-glsp-server">Java GLSP Server</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/modelextension/#generic-args">Generic Args</a></li>
-      </ul>
-    </li>
-  </ul>
-</nav></div>
-    </div>
-</section>
-</div>
-        </article><article id="list-page-validation"
-          class="col-12 px-0 mb-2">
-                <div class="col-12 pl-0 pb-1 text-body">
-                  <div data-toggle="collapse" data-target="#list-page-validation .collapse" data-add-collapse="#list-page-validation .article-title"
-                    class="row align-items-center justify-content-between mx-0 article-title">
-                      <h5 class="col px-0 m-0">
-                        <a href="https://www.eclipse.org/glsp/documentation/validation/">Model Validation</a>
-                      </h5>
-                  </div>
-                </div><div class="collapse"></div>
         </article><article id="list-page-actionhandler"
           class="col-12 px-0 mb-2">
                 <div class="col-12 pl-0 pb-1 text-body">
@@ -620,6 +667,7 @@ html {
   <ul>
     <li>
       <ul>
+        <li><a href="https://www.eclipse.org/glsp/documentation/actionhandler/#overview">Overview</a></li>
         <li><a href="https://www.eclipse.org/glsp/documentation/actionhandler/#action-specification">Action specification</a></li>
         <li><a href="https://www.eclipse.org/glsp/documentation/actionhandler/#implementing-an-action-handler-glsp-server">Implementing an Action Handler (GLSP Server)</a></li>
         <li><a href="https://www.eclipse.org/glsp/documentation/actionhandler/#implementing-an-action-handler-glsp-client">Implementing an Action Handler (GLSP Client)</a></li>
@@ -630,6 +678,26 @@ html {
     </div>
 </section>
 </div>
+        </article><article id="list-page-modeloperations"
+          class="col-12 px-0 mb-2">
+                <div class="col-12 pl-0 pb-1 text-body">
+                  <div data-toggle="collapse" data-target="#list-page-modeloperations .collapse" data-add-collapse="#list-page-modeloperations .article-title"
+                    class="row align-items-center justify-content-between mx-0 article-title">
+                      <h5 class="col px-0 m-0">
+                        <a href="https://www.eclipse.org/glsp/documentation/modeloperations/">Model Operations</a>
+                      </h5>
+                  </div>
+                </div><div class="collapse"></div>
+        </article><article id="list-page-validation"
+          class="col-12 px-0 mb-2">
+                <div class="col-12 pl-0 pb-1 text-body">
+                  <div data-toggle="collapse" data-target="#list-page-validation .collapse" data-add-collapse="#list-page-validation .article-title"
+                    class="row align-items-center justify-content-between mx-0 article-title">
+                      <h5 class="col px-0 m-0">
+                        <a href="https://www.eclipse.org/glsp/documentation/validation/">Model Validation</a>
+                      </h5>
+                  </div>
+                </div><div class="collapse"></div>
         </article><article id="list-page-additionals"
           class="col-12 px-0 mb-2">
                 <div class="col-12 pl-0 pb-1 text-body">
@@ -666,7 +734,7 @@ html {
       <article class="col-md-9">
   <div class="title-container row mx-0">
     <div class="title col px-0 text-center text-body">
-      <h2>Overview &amp; Architecture</h2>
+      <h2>Servers, Tool Platform and Source Model Integrations</h2>
     </div>
   </div>
 <div class="content-body col-12 content px-0 text-body">
@@ -677,96 +745,106 @@ html {
   <ul>
     <li>
       <ul>
-        <li><a href="https://www.eclipse.org/glsp/documentation/architecture/#overview">Overview</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/architecture/#action-protocol">Action Protocol</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/architecture/#action-dispatching--handling">Action Dispatching &amp; Handling</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/architecture/#dependency-injection">Dependency Injection</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/architecture/#graphical-model">Graphical Model</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/architecture/#platform-integrations">Platform Integrations</a></li>
+        <li></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/integrations/#package-architecture">Package Architecture</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/integrations/#server-frameworks">Server Frameworks</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/integrations/#source-model-integrations">Source Model Integrations</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/integrations/#platform-integrations">Platform Integrations</a></li>
       </ul>
     </li>
   </ul>
 </nav></div>
     </div>
 </section>
-<h3 id="overview">Overview</h3>
-<p>The <em>Graphical Language Server Platform</em> (GLSP) is a client-server framework for building web-based diagram editors.
-It follows an architectural pattern similar to the hugely popular <a href="https://github.com/Microsoft/language-server-protocol">Language Server Protocol</a>, but applies it to graphical modeling and diagram editors.
-With that, GLSP enables the development of modern, web-based diagram editors, whereas the heavy lifting, such as loading, interpreting, and editing diagrams according to the rules of the graphical diagram language, is encapsulated in the server.</p>
+<p>As mentioned in the <a href="/glsp/documentation/gettingstarted/">getting started</a> guide, GLSP is architected to be very flexible and provides several options.
+On this page, we give an overview of the dedicated integration components and point to the respective source code.</p>
+<ul>
+<li>🖥️ <a href="#server-frameworks"><strong>Server</strong></a><br/>
+GLSP servers can be written either in Java or with Typescript based on nodejs.</li>
+<li>🗂️ <a href="#source-model-integrations"><strong>Source Model</strong></a><br/>
+You can use any format or framework for managing your source model.
+For the most common choices, GLSP provides dedicated base modules, such as for <a href="https://www.eclipse.org/modeling/emf">EMF</a>, <a href="https://www.eclipse.org/emfcloud">emf.cloud</a>, or GModel-JSON, which contains the graphical model directly.</li>
+<li>🖼️ <a href="#platform-integrations"><strong>Tool Platform</strong></a><br/>
+Diagram editors can used in multiple tool platforms or used in plain web applications or in an Electron app.
+GLSP provides dedicated integration components for seamlessly deploying a GLSP editor inside of <a href="https://www.theia-ide.org">Eclipse Theia</a>, <a href="https://code.visualstudio.com">VS Code</a>, or <a href="https://www.eclipse.org/ide">Eclipse RCP</a>.</li>
+</ul>
+<p>Due to GLSP&rsquo;s architecture, you can even change any of those options above later on, without impacting other parts of your implementation, or support multiple variants, e.g. VS Code and Eclipse RCP, while sharing almost all of your server and client code.</p>
+<details opn><summary>Need help deciding?</summary>
+<hr>
+<p>There are many options to choose from.
+In the following, we list a few hints to help you decide.
+Please note that especially the tool platform integration doesn&rsquo;t have to be an ultimate decision.
+Many adopters start deploying for one tool platform, e.g. Eclipse Theia, but add support for VS Code later and offer both options in parallel.</p>
+<hr>
+<h4 id="-server">🖥️ Server</h4>
+<p>Whether to use Java or Typescript is a matter of taste.
+However, there also are objective considerations.</p>
+<ul>
+<li>If you aim at providing a VS Code extension or Theia plugin, shipping a node-based GLSP server is easier, because you don&rsquo;t need to worry whether your users have a JVM installed. They&rsquo;ll have a node runtime already, otherwise they couldn&rsquo;t run VS Code or Theia. If you have more control over your users runtime, e.g. because the editor will run in a container in the cloud anyway, this is less of a concern.</li>
+<li>Using one language (Typescript) for your GLSP server and client leads to a more homogeneous developer experience than having to work with two languages (Java and Typescript).</li>
+<li>If you already have an editor implementation in Java, e.g. based on GMF, etc., or an EMF metamodel, building a Java-based server opens lots of opportunities for reusing your existing business logic in the GLSP server.</li>
+<li>If you want to work with EMF source models directly from your GLSP server, e.g. because you want to benefit from its command stack implementation, change notification support, etc., using Java on the GLSP server is clearly better.</li>
+</ul>
+<h4 id="-source-model">🗂️ Source Model</h4>
+<p>The choice of a framework to manage your source model mostly depends on two things:</p>
+<ol>
+<li>Which language do you choose for your GLSP server? This may already remove options, e.g. EMF in a node server, unless you externalize the model management into an own separate component, such as an emf.cloud model server.</li>
+<li>How do you process those source models later on, e.g. for code generation, interpreting it at runtime, etc. and what in what language those components that process your source model are developed with?</li>
+</ol>
+<p>Besides, there are a few more considerations.</p>
+<ul>
+<li>Usually you want to provide undo/redo support. If you use a custom serialization and format, you&rsquo;ll have to implement that yourself. Or are there frameworks available that will do that for you? For Java, EMF is a great choice here.</li>
+<li>You may want to consider using a database instead of a file. This will externalize much of the model and transaction management for you. However, databases have the disadvantage that they shouldn&rsquo;t be checked into a git repository. So you opt out of a completely file-based approach with that choice.</li>
+<li>In many use cases, it is advisable to separate the graphical information (such as coordinates) from the &ldquo;semantic&rdquo; information of your model. This way your semantic model will be more concise for later processing. It&rsquo;ll put a slight overhead during editing on top, as you&rsquo;ll need to manage two resources. For EMF, GLSP provides a very simple notation model to capture the graphical information.</li>
+</ul>
+<p>More information on the integration components is given in the section on <a href="#source-model-integrations">source model integrations</a>.</p>
+<h4 id="-tool-platform">🖼️ Tool Platform</h4>
+<p>The decision for a tool platform has many aspects, such as are you providing a product or a plugin for a generic tool, such as VS Code, are your users already using a certain tool platform, etc.?
+However, the integration layer of GLSP editors for certain tools is rather thin and it is not much work to provide multiple options here in parallel.
+So choose what&rsquo;s best for you now, you can easily change or add a tool platform support later.</p>
+<p>More information on the integration components is given in the section on <a href="#platform-integrations">platform integrations</a>.</p>
+<hr>
+</details>
+<br/>
+<h3 id="package-architecture">Package Architecture</h3>
+<!-- TODO write -->
+<p>Depending on your choice of tool platform integration and server framework, a different selection of packages needs to be used.
+The project templates linked in the <a href="/glsp/documentation/gettingstarted/">getting started guide</a> provide the initial setup of the package architecture for the respective combination of components.
+However, all of them will have a diagram-specific client package that depends on <a href="https://github.com/eclipse-glsp/glsp-client/tree/master/packages/client">@glsp/client</a> and a diagram-specific server package that either depends on the <a href="https://github.com/eclipse-glsp/glsp-server-node/tree/main/packages/server-node">node-based GLSP server framework</a> or the <a href="https://github.com/eclipse-glsp/glsp-server/tree/master/plugins/org.eclipse.glsp.server">Java-based GLSP server framework</a>.</p>
+<p>Irrespectively of the used tool platform integration, server framework or source model integration, your custom <code>glsp-client</code> is always the same and can be reused for all scenarios.
+Your server implementation is also independent of the respective platform integration and reusable for multiple platforms.
+Depending on the source model framework, the server may add additional dependencies (e.g. to use the <a href="https://github.com/eclipse-emfcloud/emfcloud-modelserver/tree/master/bundles/org.eclipse.emfcloud.modelserver.client">EMF.cloud model server client</a>).</p>
+<p>As an example, the following figure shows the package architecture for a Theia-based GLSP editor with a node-based server.</p>
 <p align="center">
-<img src="architecture.png" alt="architecture" width=700/>
+<img src="package-overview-node-theia.png" alt="Package overview for node server and Theia" />
+<br/>
+<b>Package overview for node-based server and Theia integration</b>
 </p>
-<p>A <em>GLSP Server</em> is a standalone backend process and provides the language-specific smarts and editing capabilities.
-It communicates with a <em>GLSP Client</em> via action messages over JSON-RPC. Actions are plain JSON objects and describe the information needed to execute certain operations.
-Both the <em>GLSP server</em> and <em>GLSP client</em> have dedicated action handlers that can process incoming action messages.</p>
-<p>Each running diagram widget is considered to be a single <em>GLSP client</em>.
-Each client is handled by exactly one <em>GLSP server</em>. A <em>GLSP server</em> can handle multiple <em>GLSP client</em>s, each within a dedicated client session.</p>
-<p>The server is responsible for loading the source model, e.g. a file, EMF model, or database, into the model state and defines how to transform it into the graphical model.
-The graphical model is a serializable description of the diagram that should be visualized.
-It is the central communication artifact that is transferred to the client.</p>
-<p>The <em>GLSP client</em> itself doesn’t need to know how the diagram has been generated from a source model or how to manipulate it.
-Its main responsibility is to visualize the graphical model and to provide user interface elements for user interaction, such as editing tools.
-Thus, the client interprets the graphical model received from the server and renders a diagram from it.
-In addition, the <em>GLSP client</em> handles user interaction and provides editing tools to invoke manipulations of the diagram.
-While such editing tools are applied by the user, it also shows visual feedback for guiding the user through editing operations.</p>
-<p align="center">
-<img src="capabilites.png" alt="capabilities" width=400 />
-</P>
-</br></br>
-<p>Certain knowledge about the rules of the graphical language is required within client-side editing tools and visual feedback.
-For instance, the client-side tools need to know whether the user is allowed to connect certain nodes with each other, whether those nodes can be resized or moved between container nodes, etc.
-Therefore, the protocol between client and server provides dedicated action messages that allows to transfer this required context- and diagram-specific information between the server and the client.</p>
-<p>Once an editing tool is applied in the client, the client sends a notification to the server, which then will perform the operation on the original source model, regenerates the graphical model and updates the client with the new version of the graphical model, which in turn will then update the rendered diagram based on the new graphical model.
-</br></br></p>
-<h3 id="action-protocol">Action Protocol</h3>
-<p>The GLSP action protocol defines the message types that are exchanged between client and server.
-The protocol is structured into so-called features.
-A feature describes a specific diagram capability, e.g. element creation, diagram validation, etc.
-Each feature is composed of a set of actions and/or operations.
-An operation is a special subtype of an action and is used to describe actions that modify the underlying source model on the <em>GLSP server</em>.
-Every action that modifies the model in any way has to be implemented as an operation.</p>
-<p>A detailed description of the protocol is available in the <a href="https://github.com/eclipse-glsp/glsp/blob/master/PROTOCOL.md">GLSP repository</a>.
-The action protocol is customizable and can even be extended with additional custom actions using the dependency injection approach (see <a href="#dependency-injection">Dependency Injection</a>)
-</br></br></p>
-<h3 id="action-dispatching--handling">Action Dispatching &amp; Handling</h3>
-<p align="center">
-<img src="action-handler.png" alt="capabilities"  />
-</br></br>
-</p>
-<p>Action messages are used for client-server communication.
-In addition, they are also used for the internal event flow in both the <em>GLSP server</em> and the <em>GLSP client</em>.
-The action dispatcher is the central component that manages all sent or received actions.
-For each action type, one or more dedicated handlers can be registered.</p>
-<p>When the dispatcher receives a new action for dispatching, it determines whether it should be dispatched to the internal action handlers only or submitted to the opposite component via JSON-RCP (server or client), based on the registered handlers on the server or the client.</p>
-<p>The dispatcher distinguishes between notifications and request-response action pairs.
-Notification actions are one-way actions transferred between client and server.
-This means when the action dispatcher dispatches a notification it does not wait for a response and directly continues with dispatching the next incoming action.
-Request actions are issued by the <em>GLSP client</em> and can be used to block client-side action dispatching until the server has sent a corresponding response action.
-For more details on how to implement action handlers see <a href="https://www.eclipse.org/glsp/documentation/actionhandler/">Action &amp; Action Handler</a>.
-</br></br></p>
-<h3 id="dependency-injection">Dependency Injection</h3>
-<p>As diagram editors are by nature very specific to the respective diagram language, GLSP is designed with a strong focus on customization and extensibility.
-To this end, both the client and the server are using an inversion of control pattern based on dependency injection (DI).
-Every service and component that is part of a GLSP interaction is configured in a global DI container.
-Adopters can simply modify this global DI container and bind additional services or even rebind existing services to customized versions of it.</p>
-<h4 id="glsp-client">GLSP Client</h4>
-<p>Each single diagram widget – that is each client – has its own isolated DI container.
-All services used by the client, such as action handlers, views, mouse listeners, etc., are configured in this DI container.
-On the client, GLSP adopts <a href="https://inversify.io/">inversify.js</a> as dependency injection framework.
-With Inversify, a DI container is constructed by loading a set of DI modules into a DI container.
-Each DI module provides the bindings for a specific feature or concern.
-Adopters can load new modules into the DI container.</p>
-<p align="center">
-<img src="client-di.png" alt="client-di" />
-</p>
-</br></br>
-<h4 id="glsp-server">GLSP Server</h4>
-<p>Similar to the GLSP client, also the server is configured via DI, including its service implementations, handlers, etc.
-The main difference to the client is, however, that the server has to manage multiple diagram client sessions. Therefore the DI setup is composed of multiple DI containers:</p>
-<p align="center">
-<img src="client-di.png" alt="server-di" />
-</p>
-</br></br>
+<p>The package <code>your-glsp-client</code> represents your custom client package and <code>your-glsp-server</code> depicts your custom GLSP server package.
+They contain the diagram-specific implementations for your diagram editor and modeling language.</p>
+<p>Please note how the <code>your-glsp-client</code> builds upon the <a href="https://github.com/eclipse-glsp/glsp-client/tree/master/packages/client">@glsp/client</a> and the package <code>your-theia-integration</code> just integrates this as an editor based on <a href="https://github.com/eclipse-glsp/glsp-theia-integration/tree/master/packages/theia-integration">@glsp/theia-integration</a> into the Theia tool platform.
+Your GLSP client and your Theia integration have an indirect dependency to <a href="https://github.com/eclipse/sprotty">Eclipse Sprotty</a> and its <a href="https://github.com/eclipse/sprotty-theia">Theia glue code</a>.
+Both the client and the server share a common package <a href="https://github.com/eclipse-glsp/glsp-client/tree/master/packages/protocol">@glsp/protocol</a> that defines the action types.</p>
+<h3 id="server-frameworks">Server Frameworks</h3>
+<p>GLSP servers can be written in any language, as they run in a separate process and communicate via JSON-RCP with the client.
+To make it easier to develop GLSP servers, however, GLSP provides two server frameworks:</p>
+<ul>
+<li><a href="https://github.com/eclipse-glsp/glsp-server">GLSP server framework for Java</a></li>
+<li><a href="https://github.com/eclipse-glsp/glsp-server-node">GLSP server framework for Node</a></li>
+</ul>
+<p>Even though they are built with different runtimes and languages, they are structurally very similar.
+Both use dependency injection (DI) for hooking up your diagram-specific providers, services, and handlers or for replacing default implementation with customized implementations.</p>
+<p>The Java-based GLSP server uses <a href="https://github.com/google/guice">Google Guice</a> as a dependency injection framework.
+With Google Guice, there is one main DI module that contains each binding in a dedicated method.
+Adopters can extend this module and customize it by overriding dedicated binding methods.
+The node-based GLSP server uses <a href="https://inversify.io/">inversify.js</a> as dependency injection framework.</p>
+<p>For both servers, GLSP provides dedicated abstract base classes named <code>DiagramModule</code>, which are intended to be extended in order to implement a concrete diagram server.
+The idea of those abstract base classes is that the abstract methods they contain MUST be implemented in order to show a diagram, e.g. the <a href="/glsp/documentation/sourcemodel/">source model storage</a> and the <a href="/glsp/documentation/gmodel/">graphical model factory</a>, and additional methods MAY be overwritten to add functionalities, such as certain <a href="/glsp/documentation/modeloperations/">editing operations</a> or <a href="/glsp/documentation/validation/">model validation</a>, or to customize default behavior.
+There are also <a href="#source-model-integrations">pre-configured diagram modules</a> for certain source models, described below, e.g. for EMF or EMF.cloud, which already bind relevant implementations.</p>
+<p>The remainder of this documentation shows, whenever applicable, a code example for both servers.
+Also there are project templates for both servers, as listed in the <a href="/glsp/documentation/gettingstarted/">getting started guide</a>, as well as an example server for the common &ldquo;workflow diagram&rdquo;, in each of the server repositories, linked above.</p>
+<h4 id="server-di-container-vs-diagram-session-di-container">Server DI Container vs Diagram Session DI Container</h4>
+<p>It is worth noting, that GLSP servers distinguish between two DI containers:</p>
 <ul>
 <li><em>Server DI Container</em> </br>
 The server DI container is used to configure global components and services that are not related to a specific session diagram as well as components that are shared between all session containers.</li>
@@ -774,55 +852,18 @@ The server DI container is used to configure global components and services that
 Each client session has a dedicated DI container which holds the session-specific information as well as dedicated instances of handlers, states, etc.
 Each client session container is associated with a single diagram language and is configured with the corresponding diagram module.</li>
 </ul>
-<p>The Java-based GLSP server uses <a href="https://github.com/google/guice">Google Guice</a> as a dependency injection framework.
-With Google Guice, there is one main DI module that contains each binding in a dedicated method.
-Adopters can extend this module and customize it by overriding dedicated binding methods.</p>
-<p>The node-based GLSP server uses <a href="https://inversify.io/">inversify.js</a> as dependency injection framework and is structured similarly to the GLSP client.
-</br></br></p>
-<h3 id="graphical-model">Graphical Model</h3>
-<p>The graphical model is a serializable description of the diagram to be visualized on the client.
-It is the central communication artifact between client and server.
-The server creates the graphical model from an arbitrary source model and sends the graphical model to the client.
-Thus, the client doesn’t need to know where it came from and how to manipulate it.
-However, the client interprets the graphical model in order to render a visualization of the diagram described in the graphical model.</p>
-<p>The graphical model is composed of nodes and edges.
-Each element, whether it is a node or an edge, has a unique ID and a type.
-The graphical model elements are organized in a tree, as defined by the parent-child relationship between elements.</p>
-<p>The graphical model is typically composed of the following elements. However, these base classes can be extended by adopters, e.g. to be augmented with new custom element types and properties (see <a href="https://www.eclipse.org/glsp/documentation/modelextension/">Extending the Graphical Model</a>).</p>
+<p align="center">
+<img src="server-di.png" alt="server-di" />
+</p>
+<h3 id="source-model-integrations">Source Model Integrations</h3>
+<p>GLSP works with any source model format or framework for managing your source model, as the implementation for loading source models and translating them into diagrams needs to be provided by the developer of the diagram editor.
+However, there are recurring popular choices, for which GLSP provides base modules with default implementations for a specific source model framework.</p>
 <ul>
-<li><strong>GModelRoot</strong>: Each graphical model must have exactly one root
-<ul>
-<li><strong>GShapeElement</strong>: A graphical element is represented by a shape with visual bounds (position and size).
-Note that such elements can be nested based on their parent-child relationship.
-There are a the following concrete sub-types of shapes:
-<ul>
-<li><strong>GNode</strong>: Representation of a logical diagram node</li>
-<li><strong>GPort</strong>: Ports are typically children of nodes and serve as connection points for edges</li>
-<li><strong>GLabel</strong>: Representation of a text label</li>
-<li><strong>GCompartment</strong>: A generic container element used for element grouping</li>
+<li><a href="https://github.com/eclipse-glsp/glsp-server/tree/master/plugins/org.eclipse.glsp.server.emf">Integration for EMF models</a></li>
+<li><a href="https://github.com/eclipse-glsp/glsp-server/tree/master/plugins/org.eclipse.glsp.server.emf">Integration for EMF models with a separate notation model</a></li>
+<li><a href="https://github.com/eclipse-emfcloud/modelserver-glsp-integration">Integration for EMF.cloud model server</a></li>
+<li>Abstract base diagram module for storing and modifying GModels as JSON files directly: <a href="https://github.com/eclipse-glsp/glsp-server/blob/master/plugins/org.eclipse.glsp.server/src/org/eclipse/glsp/server/di/GModelJsonDiagramModule.java">Java</a> or <a href="https://github.com/eclipse-glsp/glsp-server-node/blob/main/packages/server-node/src/gmodel-lib/gmodel-diagram-module.ts">node</a></li>
 </ul>
-</li>
-<li><strong>GEdge</strong>: A diagram edge that connects a source element and a target element (typically nodes or ports).
-</br></br></li>
-</ul>
-</li>
-</ul>
-<h4 id="smodel-graphical-model-on-client-side">SModel: Graphical model on client side</h4>
-<p>The default GLSP client uses <a href="https://github.com/eclipse/sprotty/">Sprotty</a>, an SVG-based diagramming framework, to render diagrams.
-Sprotty uses a model to represent a diagram too &ndash; the so-called SModel.
-The graphical model of GLSP is based on the SModel and, thus, can be seen as a compatible extension of the Sprotty model.</p>
-<p>As a naming convention, GLSP uses the S-prefix for model elements on the client to conform to the naming of the Sprotty model.
-Thus, a node of the graphical model on the GLSP client is called SNode, whereas it is called GNode on the server, the same is true for SEdge/GEdge, etc.
-Semantically, those elements, however, are equivalent and are exchanged transparently between the server and the client via JSON-RPC.
-</br></br></p>
-<h4 id="gmodel-graphical-model-on-server-side">GModel: Graphical model on server side</h4>
-<p>The Java-based GLSP server uses the <a href="https://www.eclipse.org/modeling/emf/">Eclipse Modeling Framework (EMF)</a> to represent and manage the graphical model internally.
-Note that this is just an internal way of representing the GModel at runtime but doesn’t mean that adopters need to represent their original source models with EMF too.
-The GLSP server uses EMF in order to reuse its model management and editing capabilities, its command stack and command-based editing.
-Therefore, the graphical model is described as an Ecore model and the corresponding Java classes are automatically generated from this model.
-Using GSON, the GModel is then serialized and deserialized to JSON before it is sent via JSON-RPC to the client.</p>
-<p>The node-based GLSP server uses the same representation of the GModel as the client, since both are based on ES6.
-</br></br></p>
 <h3 id="platform-integrations">Platform Integrations</h3>
 <p>GLSP-based editors can be integrated into any web application frame.
 To ease the platform integration for adopters, however, dedicated glue code frameworks are provided for</p>
@@ -835,7 +876,7 @@ To ease the platform integration for adopters, however, dedicated glue code fram
 <p>In general it is recommended to keep the GLSP diagram implementation separated from the platform integration code by splitting them into separate packages.
 With that, the core GLSP editor can be easily reused and integrated into another platform.</p>
 <p>As an example, the GLSP Workflow example provides the GLSP diagram implementation in the <code>@eclipse-glsp/workflow-glsp</code> package.
-All platform specific integration examples import this package and provide a small integration package containing the platform-specific glue code on top.</p>
+All platform-specific integration examples import this package and provide a small integration package containing the platform-specific glue code on top.</p>
 </div>
     </article>
   </div>

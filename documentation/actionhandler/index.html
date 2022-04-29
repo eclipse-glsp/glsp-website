@@ -14,7 +14,8 @@
   <meta name="google" content="notranslate" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="description" content="Action messages are used for client-server communication. In addition, they are also used for the internal event flow in both the GLSP server and the GLSP client. Actions must be handled by at least one or more action handlers. Any service, mouse or keyboard tool, etc. can issue actions by invoking the action dispatcher, either on the client or the server. The action dispatcher – there is one on the client and one on the server – is the central component responsible for dispatching received actions to their designated action handlers (see also Action Dispatching &amp; Handling).">
+  <meta name="description" content="Overview The client and the server communicate bidirectionally by sending actions via JSON-RPC. In addition, they are also used for the internal event flow in both the GLSP server and the GLSP client. Any service, mouse tool, etc. can issue actions by invoking the action dispatcher, either on the client or the server.
+The action dispatcher – there is one on the client and one on the server – is the central component responsible for dispatching actions to their designated action handlers.">
   <meta property="og:title" content="Actions &amp; Action Handler" />
 <meta property="og:description" content="" />
 <meta property="og:type" content="article" />
@@ -23,7 +24,8 @@
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Actions &amp; Action Handler &amp;middot; Eclipse Graphical Language Server Platform" />
-  <meta name="twitter:description" content="Action messages are used for client-server communication. In addition, they are also used for the internal event flow in both the GLSP server and the GLSP client. Actions must be handled by at least one or more action handlers. Any service, mouse or keyboard tool, etc. can issue actions by invoking the action dispatcher, either on the client or the server. The action dispatcher – there is one on the client and one on the server – is the central component responsible for dispatching received actions to their designated action handlers (see also Action Dispatching &amp; Handling).">
+  <meta name="twitter:description" content="Overview The client and the server communicate bidirectionally by sending actions via JSON-RPC. In addition, they are also used for the internal event flow in both the GLSP server and the GLSP client. Any service, mouse tool, etc. can issue actions by invoking the action dispatcher, either on the client or the server.
+The action dispatcher – there is one on the client and one on the server – is the central component responsible for dispatching actions to their designated action handlers.">
   <meta name="twitter:url" content="https://www.eclipse.org/glsp/documentation/actionhandler/" />
         <meta property="og:image" content="">
         <meta name="twitter:image" content="">
@@ -463,13 +465,13 @@ html {
     <div class="container p-0 ">
 
 
-  <div class="row mx-0 text-body"><article id="list-page-architecture"
+  <div class="row mx-0 text-body"><article id="list-page-overview"
           class="col-12 px-0 mb-2">
                 <div class="col-12 pl-0 pb-1 text-body">
-                  <div data-toggle="collapse" data-target="#list-page-architecture .collapse" data-add-collapse="#list-page-architecture .article-title"
+                  <div data-toggle="collapse" data-target="#list-page-overview .collapse" data-add-collapse="#list-page-overview .article-title"
                     class="row align-items-center justify-content-between mx-0 article-title">
                       <h5 class="col px-0 m-0">
-                        <a href="https://www.eclipse.org/glsp/documentation/architecture/">Overview &amp; Architecture</a>
+                        <a href="https://www.eclipse.org/glsp/documentation/overview/">Overview</a>
                       </h5>
                   </div>
                 </div><div class="collapse">
@@ -480,12 +482,8 @@ html {
   <ul>
     <li>
       <ul>
-        <li><a href="https://www.eclipse.org/glsp/documentation/architecture/#overview">Overview</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/architecture/#action-protocol">Action Protocol</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/architecture/#action-dispatching--handling">Action Dispatching &amp; Handling</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/architecture/#dependency-injection">Dependency Injection</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/architecture/#graphical-model">Graphical Model</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/architecture/#platform-integrations">Platform Integrations</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/overview/#how-it-works">How it works</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/overview/#customization-and-extension">Customization and Extension</a></li>
       </ul>
     </li>
   </ul>
@@ -493,33 +491,13 @@ html {
     </div>
 </section>
 </div>
-        </article><article id="list-page-modelloading"
+        </article><article id="list-page-gettingstarted"
           class="col-12 px-0 mb-2">
                 <div class="col-12 pl-0 pb-1 text-body">
-                  <div data-toggle="collapse" data-target="#list-page-modelloading .collapse" data-add-collapse="#list-page-modelloading .article-title"
+                  <div data-toggle="collapse" data-target="#list-page-gettingstarted .collapse" data-add-collapse="#list-page-gettingstarted .article-title"
                     class="row align-items-center justify-content-between mx-0 article-title">
                       <h5 class="col px-0 m-0">
-                        <a href="https://www.eclipse.org/glsp/documentation/modelloading/">Source Model &amp; State</a>
-                      </h5>
-                  </div>
-                </div><div class="collapse"></div>
-        </article><article id="list-page-modelgeneration"
-          class="col-12 px-0 mb-2">
-                <div class="col-12 pl-0 pb-1 text-body">
-                  <div data-toggle="collapse" data-target="#list-page-modelgeneration .collapse" data-add-collapse="#list-page-modelgeneration .article-title"
-                    class="row align-items-center justify-content-between mx-0 article-title">
-                      <h5 class="col px-0 m-0">
-                        <a href="https://www.eclipse.org/glsp/documentation/modelgeneration/">Graphical Model Generation</a>
-                      </h5>
-                  </div>
-                </div><div class="collapse"></div>
-        </article><article id="list-page-rendering"
-          class="col-12 px-0 mb-2">
-                <div class="col-12 pl-0 pb-1 text-body">
-                  <div data-toggle="collapse" data-target="#list-page-rendering .collapse" data-add-collapse="#list-page-rendering .article-title"
-                    class="row align-items-center justify-content-between mx-0 article-title">
-                      <h5 class="col px-0 m-0">
-                        <a href="https://www.eclipse.org/glsp/documentation/rendering/">Model Rendering &amp; Styling</a>
+                        <a href="https://www.eclipse.org/glsp/documentation/gettingstarted/">Getting Started</a>
                       </h5>
                   </div>
                 </div><div class="collapse">
@@ -530,7 +508,114 @@ html {
   <ul>
     <li>
       <ul>
-        <li><a href="https://www.eclipse.org/glsp/documentation/rendering/#model-rendering">Model Rendering</a></li>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+    </div>
+</section>
+</div>
+        </article><article id="list-page-integrations"
+          class="col-12 px-0 mb-2">
+                <div class="col-12 pl-0 pb-1 text-body">
+                  <div data-toggle="collapse" data-target="#list-page-integrations .collapse" data-add-collapse="#list-page-integrations .article-title"
+                    class="row align-items-center justify-content-between mx-0 article-title">
+                      <h5 class="col px-0 m-0">
+                        <a href="https://www.eclipse.org/glsp/documentation/integrations/">Servers &amp; Integrations</a>
+                      </h5>
+                  </div>
+                </div><div class="collapse">
+<!--  -->
+<section id="toc" class="fragment ">
+    <div class="container p-0 ">
+<div class="toc"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/integrations/#package-architecture">Package Architecture</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/integrations/#server-frameworks">Server Frameworks</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/integrations/#source-model-integrations">Source Model Integrations</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/integrations/#platform-integrations">Platform Integrations</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+    </div>
+</section>
+</div>
+        </article><article id="list-page-sourcemodel"
+          class="col-12 px-0 mb-2">
+                <div class="col-12 pl-0 pb-1 text-body">
+                  <div data-toggle="collapse" data-target="#list-page-sourcemodel .collapse" data-add-collapse="#list-page-sourcemodel .article-title"
+                    class="row align-items-center justify-content-between mx-0 article-title">
+                      <h5 class="col px-0 m-0">
+                        <a href="https://www.eclipse.org/glsp/documentation/sourcemodel/">Source Model &amp; State</a>
+                      </h5>
+                  </div>
+                </div><div class="collapse">
+<!--  -->
+<section id="toc" class="fragment ">
+    <div class="container p-0 ">
+<div class="toc"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="https://www.eclipse.org/glsp/documentation/sourcemodel/#source-model">Source Model</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/sourcemodel/#source-model-storage-and-model-state">Source Model Storage and Model State</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+    </div>
+</section>
+</div>
+        </article><article id="list-page-gmodel"
+          class="col-12 px-0 mb-2">
+                <div class="col-12 pl-0 pb-1 text-body">
+                  <div data-toggle="collapse" data-target="#list-page-gmodel .collapse" data-add-collapse="#list-page-gmodel .article-title"
+                    class="row align-items-center justify-content-between mx-0 article-title">
+                      <h5 class="col px-0 m-0">
+                        <a href="https://www.eclipse.org/glsp/documentation/gmodel/">Graphical Model</a>
+                      </h5>
+                  </div>
+                </div><div class="collapse">
+<!--  -->
+<section id="toc" class="fragment ">
+    <div class="container p-0 ">
+<div class="toc"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="https://www.eclipse.org/glsp/documentation/gmodel/#graphical-model-structure">Graphical Model Structure</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/gmodel/#graphical-model-factory">Graphical Model Factory</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/gmodel/#extending-the-graphical-model">Extending the Graphical Model</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+    </div>
+</section>
+</div>
+        </article><article id="list-page-rendering"
+          class="col-12 px-0 mb-2">
+                <div class="col-12 pl-0 pb-1 text-body">
+                  <div data-toggle="collapse" data-target="#list-page-rendering .collapse" data-add-collapse="#list-page-rendering .article-title"
+                    class="row align-items-center justify-content-between mx-0 article-title">
+                      <h5 class="col px-0 m-0">
+                        <a href="https://www.eclipse.org/glsp/documentation/rendering/">Rendering &amp; Styling</a>
+                      </h5>
+                  </div>
+                </div><div class="collapse">
+<!--  -->
+<section id="toc" class="fragment ">
+    <div class="container p-0 ">
+<div class="toc"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="https://www.eclipse.org/glsp/documentation/rendering/#rendering">Rendering</a></li>
         <li><a href="https://www.eclipse.org/glsp/documentation/rendering/#styling">Styling</a></li>
       </ul>
     </li>
@@ -545,7 +630,7 @@ html {
                   <div data-toggle="collapse" data-target="#list-page-clientlayouting .collapse" data-add-collapse="#list-page-clientlayouting .article-title"
                     class="row align-items-center justify-content-between mx-0 article-title">
                       <h5 class="col px-0 m-0">
-                        <a href="https://www.eclipse.org/glsp/documentation/clientlayouting/">Client-side layouting</a>
+                        <a href="https://www.eclipse.org/glsp/documentation/clientlayouting/">Client-side Layouting</a>
                       </h5>
                   </div>
                 </div><div class="collapse">
@@ -565,44 +650,6 @@ html {
     </div>
 </section>
 </div>
-        </article><article id="list-page-modelextension"
-          class="col-12 px-0 mb-2">
-                <div class="col-12 pl-0 pb-1 text-body">
-                  <div data-toggle="collapse" data-target="#list-page-modelextension .collapse" data-add-collapse="#list-page-modelextension .article-title"
-                    class="row align-items-center justify-content-between mx-0 article-title">
-                      <h5 class="col px-0 m-0">
-                        <a href="https://www.eclipse.org/glsp/documentation/modelextension/">GModel Extensions</a>
-                      </h5>
-                  </div>
-                </div><div class="collapse">
-<!--  -->
-<section id="toc" class="fragment ">
-    <div class="container p-0 ">
-<div class="toc"><nav id="TableOfContents">
-  <ul>
-    <li>
-      <ul>
-        <li><a href="https://www.eclipse.org/glsp/documentation/modelextension/#glsp-client">GLSP Client</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/modelextension/#node-glsp-server">Node GLSP Server</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/modelextension/#java-glsp-server">Java GLSP Server</a></li>
-        <li><a href="https://www.eclipse.org/glsp/documentation/modelextension/#generic-args">Generic Args</a></li>
-      </ul>
-    </li>
-  </ul>
-</nav></div>
-    </div>
-</section>
-</div>
-        </article><article id="list-page-validation"
-          class="col-12 px-0 mb-2">
-                <div class="col-12 pl-0 pb-1 text-body">
-                  <div data-toggle="collapse" data-target="#list-page-validation .collapse" data-add-collapse="#list-page-validation .article-title"
-                    class="row align-items-center justify-content-between mx-0 article-title">
-                      <h5 class="col px-0 m-0">
-                        <a href="https://www.eclipse.org/glsp/documentation/validation/">Model Validation</a>
-                      </h5>
-                  </div>
-                </div><div class="collapse"></div>
         </article><article id="list-page-actionhandler"
           class="col-12 px-0 mb-2">
                 <div class="col-12 pl-0 pb-1 text-body">
@@ -620,6 +667,7 @@ html {
   <ul>
     <li>
       <ul>
+        <li><a href="https://www.eclipse.org/glsp/documentation/actionhandler/#overview">Overview</a></li>
         <li><a href="https://www.eclipse.org/glsp/documentation/actionhandler/#action-specification">Action specification</a></li>
         <li><a href="https://www.eclipse.org/glsp/documentation/actionhandler/#implementing-an-action-handler-glsp-server">Implementing an Action Handler (GLSP Server)</a></li>
         <li><a href="https://www.eclipse.org/glsp/documentation/actionhandler/#implementing-an-action-handler-glsp-client">Implementing an Action Handler (GLSP Client)</a></li>
@@ -630,6 +678,26 @@ html {
     </div>
 </section>
 </div>
+        </article><article id="list-page-modeloperations"
+          class="col-12 px-0 mb-2">
+                <div class="col-12 pl-0 pb-1 text-body">
+                  <div data-toggle="collapse" data-target="#list-page-modeloperations .collapse" data-add-collapse="#list-page-modeloperations .article-title"
+                    class="row align-items-center justify-content-between mx-0 article-title">
+                      <h5 class="col px-0 m-0">
+                        <a href="https://www.eclipse.org/glsp/documentation/modeloperations/">Model Operations</a>
+                      </h5>
+                  </div>
+                </div><div class="collapse"></div>
+        </article><article id="list-page-validation"
+          class="col-12 px-0 mb-2">
+                <div class="col-12 pl-0 pb-1 text-body">
+                  <div data-toggle="collapse" data-target="#list-page-validation .collapse" data-add-collapse="#list-page-validation .article-title"
+                    class="row align-items-center justify-content-between mx-0 article-title">
+                      <h5 class="col px-0 m-0">
+                        <a href="https://www.eclipse.org/glsp/documentation/validation/">Model Validation</a>
+                      </h5>
+                  </div>
+                </div><div class="collapse"></div>
         </article><article id="list-page-additionals"
           class="col-12 px-0 mb-2">
                 <div class="col-12 pl-0 pb-1 text-body">
@@ -677,6 +745,7 @@ html {
   <ul>
     <li>
       <ul>
+        <li><a href="https://www.eclipse.org/glsp/documentation/actionhandler/#overview">Overview</a></li>
         <li><a href="https://www.eclipse.org/glsp/documentation/actionhandler/#action-specification">Action specification</a></li>
         <li><a href="https://www.eclipse.org/glsp/documentation/actionhandler/#implementing-an-action-handler-glsp-server">Implementing an Action Handler (GLSP Server)</a></li>
         <li><a href="https://www.eclipse.org/glsp/documentation/actionhandler/#implementing-an-action-handler-glsp-client">Implementing an Action Handler (GLSP Client)</a></li>
@@ -686,15 +755,23 @@ html {
 </nav></div>
     </div>
 </section>
-<p>Action messages are used for client-server communication.
-In addition, they are also used for the internal event flow in both the GLSP server and the GLSP client.
-Actions must be handled by at least one or more action handlers.
-Any service, mouse or keyboard tool, etc. can issue actions by invoking the action dispatcher, either on the client or the server.
-The action dispatcher – there is one on the client and one on the server – is the central component responsible for dispatching received actions to their
-designated action handlers (see also <a href="https://www.eclipse.org/glsp/documentation/architecture/#action-dispatching--handling">Action Dispatching &amp; Handling</a>).</p>
-<p>Adopters can contribute new action handlers or customize existing handlers for any action types of the <a href="https://www.eclipse.org/glsp/documentation/architecture/#action-protocol">action protocol</a>.
-In addition, the base action protocol can be extended with new action kinds and designated handlers.</p>
-<p>To do that the following steps have to be performed</p>
+<h3 id="overview">Overview</h3>
+<p>The client and the server communicate bidirectionally by sending actions via JSON-RPC.
+In addition, they are also used for the internal event flow in both the <em>GLSP server</em> and the <em>GLSP client</em>.
+Any service, mouse tool, etc. can issue actions by invoking the action dispatcher, either on the client or the server.</p>
+<p>The action dispatcher – there is one on the client and one on the server – is the central component responsible for dispatching actions to their designated action handlers.</p>
+<p align="center">
+<img src="action-handler.png" alt="Action Dispatching & Handlers"  />
+</p>
+<p>When the dispatcher receives a new action for dispatching, it determines whether it should be dispatched to the internal action handlers only or submitted to the opposite component via JSON-RCP (server or client), based on the registered handlers on the server or the client.</p>
+<p>The dispatcher distinguishes between notifications and request-response action pairs.
+Notification actions are one-way actions transferred between client and server.
+This means when the action dispatcher dispatches a notification it does not wait for a response and directly continues with dispatching the next incoming action.
+Request actions are typically issued by the <em>GLSP client</em> and can be used to block client-side action dispatching until the server has sent a corresponding response action.</p>
+<p>GLSP defines the standard action types of the <a href="https://github.com/eclipse-glsp/glsp/blob/master/PROTOCOL.md">graphical language server protocol</a>.
+However, adopters can add new custom action types.
+Besides, adopters can replace and extend existing, or add additional action handlers for standard or custom action types.</p>
+<p>To do that the following steps have to be performed:</p>
 <ol>
 <li>Create a new action specification by providing a corresponding <code>Action</code> implementation</li>
 <li>Create a new action handler for the newly created action type by providing a implementation of the <code>ActionHandler</code> interface</li>
@@ -730,7 +807,7 @@ In addition, the base action protocol can be extended with new action kinds and 
 }
 </code></pre></div></details>
 </br>
-<p>Each action specification has a unique “kind” and can optionally declare additional data properties
+<p>Each action specification has a unique “kind” and can optionally declare additional data properties.
 We recommend defining the action kind as a static constant of the implementing class so that it can be accessed from other places, e.g. when registering the handler.
 Note that action instances need to be serializable to JSON.
 Therefore the class should only contain plain data properties and no additional business logic.
@@ -831,20 +908,19 @@ Therefore, the Java GLSP server provides an abstract base class that is designed
 </br>
 <p>The <code>executeAction()</code> method has to be implemented to provide the custom logic of your action handler.
 It returns a set of response actions that should be dispatched after the handler execution.</p>
-<p>Finally the custom handler has to be configured in the <code>DiagramModule</code>:</p>
+<p>Next, the custom handler has to be configured in the <code>DiagramModule</code>:</p>
 <details open><summary>Java GLSP Server</summary>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">configureClientActions</span><span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> MultiBinding<span style="color:#f92672">&lt;</span>Action<span style="color:#f92672">&gt;</span> binding<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">configureClientAction</span><span style="color:#f92672">(</span>binding<span style="color:#f92672">);</span>
-    binding<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>MyCustomRequestAction<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Override</span>
+<span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">configureActionHandlers</span><span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> MultiBinding<span style="color:#f92672">&lt;</span>ActionHandler<span style="color:#f92672">&gt;</span> binding<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">configureActionHandlers</span><span style="color:#f92672">(</span>binding<span style="color:#f92672">);</span>
+    binding<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>MyCustomActionHandler<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
 <span style="color:#f92672">}</span>
 </code></pre></div></details>
 <details><summary>Node GLSP Server</summary>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts">    <span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">configureClientActions</span>(
-        <span style="color:#a6e22e">binding</span>: <span style="color:#66d9ef">InstanceMultiBinding</span>&lt;<span style="color:#f92672">string</span>&gt;
-    )<span style="color:#f92672">:</span> <span style="color:#66d9ef">void</span> {
-        <span style="color:#66d9ef">super</span>.<span style="color:#a6e22e">configureClientActions</span>(<span style="color:#a6e22e">binding</span>);
-        <span style="color:#a6e22e">binding</span>.<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">MyCustomRequestAction</span>.<span style="color:#a6e22e">KIND</span>);
-    }
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">override</span> <span style="color:#a6e22e">configureActionHandlers</span>(<span style="color:#a6e22e">binding</span>: <span style="color:#66d9ef">InstanceMultiBinding</span>&lt;<span style="color:#f92672">ActionHandlerConstructor</span>&gt;)<span style="color:#f92672">:</span> <span style="color:#66d9ef">void</span> {
+    <span style="color:#66d9ef">super</span>.<span style="color:#a6e22e">configureActionHandlers</span>(<span style="color:#a6e22e">binding</span>);
+    <span style="color:#a6e22e">binding</span>.<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">MyCustomActionHandler</span>);
+}
 </code></pre></div></details>
 </br>
 <p>In addition, each response action of the handler that should be handled by the <em>GLSP client</em> has to be configured as dedicated client action to indicate that it needs to be dispatched to the client:</p>
@@ -855,12 +931,12 @@ It returns a set of response actions that should be dispatched after the handler
 <span style="color:#f92672">}</span>
 </code></pre></div></details>
 <details><summary>Node GLSP Server</summary>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts">    <span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">configureClientActions</span>(
-        <span style="color:#a6e22e">binding</span>: <span style="color:#66d9ef">InstanceMultiBinding</span>&lt;<span style="color:#f92672">string</span>&gt;
-    )<span style="color:#f92672">:</span> <span style="color:#66d9ef">void</span> {
-        <span style="color:#66d9ef">super</span>.<span style="color:#a6e22e">configureClientActions</span>(<span style="color:#a6e22e">binding</span>);
-        <span style="color:#a6e22e">binding</span>.<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">MyCustomRequestAction</span>.<span style="color:#a6e22e">KIND</span>);
-    }
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">configureClientActions</span>(
+    <span style="color:#a6e22e">binding</span>: <span style="color:#66d9ef">InstanceMultiBinding</span>&lt;<span style="color:#f92672">string</span>&gt;
+)<span style="color:#f92672">:</span> <span style="color:#66d9ef">void</span> {
+    <span style="color:#66d9ef">super</span>.<span style="color:#a6e22e">configureClientActions</span>(<span style="color:#a6e22e">binding</span>);
+    <span style="color:#a6e22e">binding</span>.<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">MyCustomRequestAction</span>.<span style="color:#a6e22e">KIND</span>);
+}
 </code></pre></div></details>
 </br>
 <h4 id="request-response-handling">Request-Response Handling</h4>
