@@ -406,7 +406,7 @@ html {
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="navbar-collapse justify-content-end collapse show" id="navbarCollapse">
+    <div class="navbar-collapse justify-content-between collapse show" id="navbarCollapse">
       <ul class="navbar-nav"><li class="nav-item">
               <a href="/glsp/"
                   class="nav-link">
@@ -444,6 +444,21 @@ html {
               </a>
             </li>
       </ul>
+        <div class="search-container position-relative">
+          <form action="https://www.eclipse.org/glsp/search" class="my-0">
+            <div class="input-group my-0">
+              <input type="text" class="form-control py-1" id="search-query-nav" name="s" placeholder="Search...">
+              <div class="input-group-append">
+                <button class="btn btn-primary" title="Search"><i class="fa fa-search"></i></button>
+              </div>
+            </div>
+          </form>
+          <div class="search-results-container">
+            <div class="col p-0">
+              <div id="search-results-nav" class="col px-0 results"></div>
+            </div>
+          </div>
+        </div>
     </div>
   </div>
 </nav>
@@ -452,6 +467,52 @@ html {
   title="Back to top"
   ><i class="fas fa-angle-up"></i><span class="sr-only">Back to top</span>
 </div>
+
+<script id="search-empty-template-nav" type="text/x-js-template">
+  <p class="p-2">Please enter a word or phrase above</p>
+</script>
+<script id="search-no-results-template-nav" type="text/x-js-template">
+  <p class="p-2">No matches found</p>
+</script>
+<script id="search-result-template-nav" type="text/x-js-template">
+  <a href="${link}" id="summary-${key}" class="result ignore-color-change">
+    <div class="p-2">
+      <h5>${title}</h5>
+      <p class="m-0 text-body">${snippet}</p>
+      ${ isset tags }<p>Tags: ${tags}</p>${ end }
+      ${ isset categories }<p>Categories: ${categories}</p>${ end }
+    </div>
+  </a>
+</script>
+
+<script>
+  (function() {
+    var fragmentName = "nav";
+    window.syna.api.register('search', 'search-' + fragmentName, {
+      searchInput: `#search-query-${fragmentName}`,
+      resultsContainer: `#search-results-${fragmentName}`,
+      template: `#search-result-template-${fragmentName}`,
+      noResults: `#search-no-results-template-${fragmentName}`,
+      empty: `#search-empty-template-${fragmentName}`,
+    });
+
+    var resultsContainer = document.querySelector(`#${fragmentName} .search-results-container`)
+    document.querySelector(`#search-query-${fragmentName}`).addEventListener('input', function(e) {
+      if (e.target.value.length) {
+        resultsContainer.classList.add('show');
+      } else {
+        resultsContainer.classList.remove('show');
+      }
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!document.querySelector(`#${fragmentName} .search-container`).contains(e.target)) {
+        document.querySelector(`#search-query-${fragmentName}`).value = '';
+        resultsContainer.classList.remove('show');
+      }
+    });
+  })();
+</script>
 <!-- Content -->
 <section id="content" class="fragment content-fragment">
     <div class="container-fluid bg-light overlay">
@@ -614,6 +675,7 @@ html {
     <li>
       <ul>
         <li><a href="https://www.eclipse.org/glsp/documentation/rendering/#rendering">Rendering</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/rendering/#default-views">Default Views</a></li>
         <li><a href="https://www.eclipse.org/glsp/documentation/rendering/#styling">Styling</a></li>
       </ul>
     </li>
@@ -641,6 +703,32 @@ html {
       <ul>
         <li><a href="https://www.eclipse.org/glsp/documentation/clientlayouting/#layout-container">Layout Container</a></li>
         <li><a href="https://www.eclipse.org/glsp/documentation/clientlayouting/#edge-layout">Edge Layout</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+    </div>
+</section>
+</div>
+        </article><article id="list-page-ui-extensions"
+          class="col-12 px-0 mb-2">
+                <div class="col-12 pl-0 pb-1 text-body">
+                  <div data-toggle="collapse" data-target="#list-page-ui-extensions .collapse" data-add-collapse="#list-page-ui-extensions .article-title"
+                    class="row align-items-center justify-content-between mx-0 article-title">
+                      <h5 class="col px-0 m-0">
+                        <a href="https://www.eclipse.org/glsp/documentation/ui-extensions/">UI Extensions</a>
+                      </h5>
+                  </div>
+                </div><div class="collapse">
+<!--  -->
+<section id="toc" class="fragment ">
+    <div class="container p-0 ">
+<div class="toc"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="https://www.eclipse.org/glsp/documentation/ui-extensions/#register-and-activate-custom-ui-extensions">Register and activate custom UI Extensions</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/ui-extensions/#button-overlay-showcase">Button Overlay Showcase</a></li>
       </ul>
     </li>
   </ul>
@@ -759,13 +847,13 @@ The client side (i.e. micro) layout can be configured in the graphical model, bu
 </br></p>
 <h3 id="layout-container">Layout Container</h3>
 <p>Graphical elements that support client-side layouting of contained elements offer a <code>layout</code> property which defines the type of layouter that should be used.
-In addition, the behavior of the layouter can be configured with <code>layout options</code>.</p>
+In addition, the behavior of the layouter can be configured with a set of <code>layout options</code>.</p>
 <p>For an example let’s have a look at the following <code>GNode</code>:</p>
 <details open><summary> Java GLSP Server</summary>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">new</span> GNodeBuilder<span style="color:#f92672">()</span>
-   <span style="color:#f92672">.</span><span style="color:#a6e22e">layout</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;vbox&#34;</span><span style="color:#f92672">)</span>
+   <span style="color:#f92672">.</span><span style="color:#a6e22e">layout</span><span style="color:#f92672">(</span>GConstants<span style="color:#f92672">.</span><span style="color:#a6e22e">Layout</span><span style="color:#f92672">.</span><span style="color:#a6e22e">VBOX</span><span style="color:#f92672">)</span>
    <span style="color:#f92672">.</span><span style="color:#a6e22e">layoutOptions</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> GLayoutOptions<span style="color:#f92672">()</span>
-      <span style="color:#f92672">.</span><span style="color:#a6e22e">hAlign</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;center&#34;</span><span style="color:#f92672">))</span>
+      <span style="color:#f92672">.</span><span style="color:#a6e22e">hAlign</span><span style="color:#f92672">(</span>GConstants<span style="color:#f92672">.</span><span style="color:#a6e22e">HAlign</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Center</span><span style="color:#f92672">))</span>
    <span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> GLabelBuilder<span style="color:#f92672">()</span>
       <span style="color:#f92672">.</span><span style="color:#a6e22e">text</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;label1&#34;</span><span style="color:#f92672">)</span>
       <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">())</span>
@@ -776,51 +864,375 @@ In addition, the behavior of the layouter can be configured with <code>layout op
 </code></pre></div></details>
 <details ><summary> Node GLSP Server</summary>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">GNode</span>.<span style="color:#a6e22e">builder</span>()
-    .<span style="color:#a6e22e">layout</span>(<span style="color:#e6db74">&#39;vbox&#39;</span>)
-    .<span style="color:#a6e22e">addLayoutOption</span>(<span style="color:#e6db74">&#39;hAlign&#39;</span>, <span style="color:#e6db74">&#39;center&#39;</span>)
-    .<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">GLabelBuilder</span>(<span style="color:#a6e22e">GLabel</span>).<span style="color:#a6e22e">text</span>(<span style="color:#e6db74">&#39;label1&#39;</span>).<span style="color:#a6e22e">build</span>())
-    .<span style="color:#a6e22e">build</span>();
+  .<span style="color:#a6e22e">layout</span>(<span style="color:#e6db74">&#34;vbox&#34;</span>)
+  .<span style="color:#a6e22e">addLayoutOption</span>(<span style="color:#e6db74">&#34;hAlign&#34;</span>, <span style="color:#e6db74">&#34;center&#34;</span>)
+  .<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">GLabel</span>.<span style="color:#a6e22e">builder</span>().<span style="color:#a6e22e">text</span>(<span style="color:#e6db74">&#34;label1&#34;</span>).<span style="color:#a6e22e">build</span>())
+  .<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">GLabel</span>.<span style="color:#a6e22e">builder</span>().<span style="color:#a6e22e">text</span>(<span style="color:#e6db74">&#34;label2&#34;</span>).<span style="color:#a6e22e">build</span>())
+  .<span style="color:#a6e22e">build</span>();
 </code></pre></div></details>
 </br>
-<p>This node contains two label elements that should be layouted.
-There are four built-in layout types that can be used: “hbox”,”vbox”,”stack” and “freeform”.
-In the example node we define that the labels should be layouted with the vbox layouter.
+<p>This node contains two label elements that should be layouted vertically (from top to bottom) using the <code>vbox</code> layouter.
 In addition, we specify options for that layouter by defining that the children should be centered horizontally.</p>
-<p>Additional layouters can be contributed by creating a layouter class that implements the <code>ILayout</code> interface.</p>
+<h4 id="layout-options">Layout Options</h4>
+<p>To adapt the chosen Layout (for more details please see <a href="#default-layouters">below</a>), the default Layout options <a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/features/bounds/layout-options.ts">AbstractLayoutOptions</a> allow to configure:</p>
+<ul>
+<li><code>resizeContainer: boolean</code></br>
+Indicates, if the container is resizable depending on its children (e.g. <code>true</code> for <code>hbox</code> layout)</li>
+<li><code>paddingTop: number</code></br>
+Sets the height of the padding area on the top of an element to be positioned in pixel.</li>
+<li><code>paddingBottom: number</code></br>
+Sets the height of the padding area on the bottom of an element to be positioned in pixel.</li>
+<li><code>paddingLeft: number</code></br>
+Sets the height of the padding area to the left of an element to be positioned in pixel.</li>
+<li><code>paddingRight: number</code></br>
+Sets the height of the padding area to the right of an element to be positioned in pixel.</li>
+<li><code>paddingFactor: number</code></br>
+Defines the multiplication factor for an element&rsquo;s size, which is then added as padding space around this element.
+E.g. For the <code>stack</code> layout <code>1</code> does not add additional padding to the element, <code>2</code> doubles the padding area around the element by its size.</li>
+<li><code>minWidth: number</code></br>
+Defines the minimum width of an element to be positioned.</li>
+<li><code>minHeight: number</code></br>
+Defines the minimum height of an element to be positioned.</li>
+</ul>
+<details open><summary>Usage Java GLSP Server</summary>
+<p>To use the Layout options on the GLSP Java Server, there are several utility classes for option keys and values, for example:</p>
+<ul>
+<li>Edge label placement <code>GConstants.EdgeSide</code>: <code>LEFT</code> | <code>RIGHT</code> | <code>TOP</code> | <code>BOTTOM</code> | <code>ON</code></li>
+<li>Horizontal alignment <code>GConstants.HAlign</code>: <code>LEFT</code> | <code>CENTER</code> | <code>RIGHT</code></li>
+</ul>
+<p>For more details, please see <a href="https://github.com/eclipse-glsp/glsp-server/blob/master/plugins/org.eclipse.glsp.graph/src/org/eclipse/glsp/graph/builder/impl/GLayoutOptions.java"><code>GLayoutOptions</code></a>
+and <a href="https://github.com/eclipse-glsp/glsp-server/blob/master/plugins/org.eclipse.glsp.graph/src/org/eclipse/glsp/graph/util/GConstants.java"><code>GConstants</code></a>.</p>
+</details>
+<details><summary>Usage Node GLSP Server</summary>
+<p>To use the Layout options on the GLSP Node Server, the support via utility classes for option keys and values is currently very limited, e.g. only the <a href="https://github.com/eclipse-glsp/glsp-server-node/blob/main/packages/graph/src/gedge-layoutable.ts">EdgeSide</a> type is available.
+Therefore please use the dedicated string values in the meantime, e.g. <code>&quot;hAlign&quot;</code> <code>&quot;center&quot;</code> and so on.</p>
+</details>
+</br>
+<h4 id="default-layouters">Default Layouters</h4>
+<p>In general, layouters can be applied to elements that are compartments, in order to layout the containers based on the sizes of their children.
+There are four built-in layout types that can be used: <code>hbox</code>, <code>vbox</code>, <code>freeform</code> and <code>stack</code>.</p>
+<h5 id="hbox-layout"><code>hbox</code> Layout</h5>
+<p>The <a href="https://github.com/eclipse-glsp/glsp-client/blob/master/packages/client/src/features/layout/hbox-layout.ts"><code>HBoxLayouterExt</code></a> layouts children of a container in a horizontal (left to right) direction.</p>
+<p>This layouter provides additional layout options via <code>HBoxLayoutOptionsExt</code>:</p>
+<ul>
+<li><code>hGap</code>: number</br>
+Defines a horizontal gap between elements in the same container in pixel.</li>
+<li><code>vAlign</code>: VAlignment = &lsquo;top&rsquo; | &lsquo;center&rsquo; | &lsquo;bottom&rsquo;</br>
+Defines the vertical alignment of the element to be positioned.</li>
+<li><code>hGrab</code>: boolean</br>
+Indicates whether the remaining horizontal size can be grabbed by its children.</li>
+<li><code>vGrab</code>: boolean</br>
+Indicates whether the remaining vertical size can be grabbed by its children.</li>
+<li><code>prefWidth</code>: number | null</br>
+Defines the preferred width of the container element, which will be assigned, if there is no manually specified width and the sizes of its children aren&rsquo;t requiring a larger width to fit into the container.</li>
+<li><code>prefHeight</code>: number | null</br>
+Defines the preferred height of the container element, which will be assigned, if there is no manually specified height and the sizes of its children aren&rsquo;t requiring a larger height to fit into the container.</li>
+</ul>
+<p>According to the layout options, the children of the container are layouted and as concluding step, the final bounds of the container are computed based on the sum of this children bounds.</p>
+<h6 id="hbox-layout-example"><code>hbox</code> Layout Example</h6>
+<p>This example creates a compartment of the default type <code>DefaultTypes.COMPARTMENT</code> using the <code>hbox</code> layout.
+It adds two children, one icon compartment (with custom type <code>&quot;icon&quot;</code>) and one label.
+The layout options define a horizontal gap of <code>15</code> pixel between the children of the compartment.</p>
+<details open><summary> Java GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">   <span style="color:#66d9ef">new</span> GCompartmentBuilder<span style="color:#f92672">()</span>
+         <span style="color:#f92672">.</span><span style="color:#a6e22e">type</span><span style="color:#f92672">(</span>DefaultTypes<span style="color:#f92672">.</span><span style="color:#a6e22e">COMPARTMENT</span><span style="color:#f92672">)</span>
+         <span style="color:#f92672">.</span><span style="color:#a6e22e">layout</span><span style="color:#f92672">(</span>GConstants<span style="color:#f92672">.</span><span style="color:#a6e22e">Layout</span><span style="color:#f92672">.</span><span style="color:#a6e22e">HBOX</span><span style="color:#f92672">)</span>
+         <span style="color:#f92672">.</span><span style="color:#a6e22e">layoutOptions</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> GLayoutOptions<span style="color:#f92672">().</span><span style="color:#a6e22e">hGap</span><span style="color:#f92672">(</span>15<span style="color:#f92672">))</span>
+         <span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> GCompartmentBuilder<span style="color:#f92672">()</span>
+            <span style="color:#f92672">.</span><span style="color:#a6e22e">type</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;icon&#34;</span><span style="color:#f92672">)</span>
+            <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">())</span>
+         <span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> GLabelBuilder<span style="color:#f92672">()</span>
+            <span style="color:#f92672">.</span><span style="color:#a6e22e">text</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;label&#34;</span><span style="color:#f92672">)</span>
+            <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">())</span>
+         <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+   <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+</code></pre></div></details>
+<details ><summary> Node GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">GCompartment</span>.<span style="color:#a6e22e">builder</span>()
+  .<span style="color:#a6e22e">builder</span>()
+  .<span style="color:#a6e22e">layout</span>(<span style="color:#e6db74">&#34;hbox&#34;</span>)
+  .<span style="color:#a6e22e">addLayoutOption</span>(<span style="color:#e6db74">&#34;hGap&#34;</span>, <span style="color:#ae81ff">15</span>)
+  .<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">GCompartment</span>.<span style="color:#a6e22e">builder</span>().<span style="color:#66d9ef">type</span>(<span style="color:#e6db74">&#34;icon&#34;</span>).<span style="color:#a6e22e">build</span>())
+  .<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">GLabel</span>.<span style="color:#a6e22e">builder</span>().<span style="color:#a6e22e">text</span>(<span style="color:#e6db74">&#34;label&#34;</span>).<span style="color:#a6e22e">build</span>())
+  .<span style="color:#a6e22e">build</span>();
+</code></pre></div></details>
+</br>
+<p>On the client side, we need to configure (besides the default elements <code>SCompartment</code> and <code>SLabel</code>) a custom <code>Icon</code> element and a <code>IconView</code> like this: <code>configureModelElement(context, 'icon', Icon, IconView)</code>.
+The <a href="https://github.com/eclipse-glsp/glsp-client/blob/master/examples/workflow-glsp/src/model.ts"><code>Icon</code> element definition</a> and the <a href="https://github.com/eclipse-glsp/glsp-client/blob/master/examples/workflow-glsp/src/workflow-views.tsx"><code>IconView</code> definition</a> are taken from the workflow example.</p>
+<p>The resulting element with the obvious horizontal gap between the child elements is shown in the following image:</p>
+<p align="center">
+    <img src="./hbox-layout-example.png" alt="example-hbox-layout">
+</p>
+<p  align="center">
+    <em>Using no `hGap` layout option (left) or `hGap` layout option with 15 pixel (right)</em>
+</p>
+<p></br></br></p>
+<h5 id="vbox-layoutbr"><code>vbox</code> Layout</br></h5>
+<p>The <a href="https://github.com/eclipse-glsp/glsp-client/blob/master/packages/client/src/features/layout/vbox-layout.ts"><code>VBoxLayouterExt</code></a> layouts children of a container in a vertical (top to bottom) direction.</p>
+<p>This layouter provides additional layout options via <code>VBoxLayoutOptionsExt</code>:</p>
+<ul>
+<li><code>vGap</code>: number</br>
+Defines a vertical gap between elements in the same container in pixel.</li>
+<li><code>hAlign</code>: HAlignment = &lsquo;left&rsquo; | &lsquo;center&rsquo; | &lsquo;right&rsquo;</br>
+Defines the horizontal alignment of the element to be positioned.</li>
+<li><code>hGrab</code>: boolean</br>
+Indicates whether the remaining horizontal size can be grabbed by its children.</li>
+<li><code>vGrab</code>: boolean</br>
+Indicates whether the remaining vertical size can be grabbed by its children.</li>
+<li><code>prefWidth</code>: number | null</br>
+Defines the preferred width of the container element, which will be assigned, if there is no manually specified width and the sizes of its children aren&rsquo;t requiring a larger width to fit into the container.</li>
+<li><code>prefHeight</code>: number | null</br>
+Defines the preferred height of the container element, which will be assigned, if there is no manually specified height and the sizes of its children aren&rsquo;t requiring a larger height to fit into the container.</li>
+</ul>
+<p>According to the layout options, the children of the container are layouted and as concluding step, the final bounds of the container are computed based on the sum of this children bounds.</p>
+<h6 id="vbox-layout-example"><code>vbox</code> Layout Example</h6>
+<p>This example creates a compartment of the default type <code>DefaultTypes.COMPARTMENT</code> using the <code>vbox</code> layout.
+It adds two children labels, which are positioned vertically from top to bottom and are centered horizontally.</p>
+<details open><summary> Java GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">   <span style="color:#66d9ef">new</span> GCompartmentBuilder<span style="color:#f92672">()</span>
+         <span style="color:#f92672">.</span><span style="color:#a6e22e">type</span><span style="color:#f92672">(</span>DefaultTypes<span style="color:#f92672">.</span><span style="color:#a6e22e">COMPARTMENT</span><span style="color:#f92672">)</span>
+         <span style="color:#f92672">.</span><span style="color:#a6e22e">layout</span><span style="color:#f92672">(</span>GConstants<span style="color:#f92672">.</span><span style="color:#a6e22e">Layout</span><span style="color:#f92672">.</span><span style="color:#a6e22e">VBOX</span><span style="color:#f92672">)</span>
+         <span style="color:#f92672">.</span><span style="color:#a6e22e">layoutOptions</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> GLayoutOptions<span style="color:#f92672">().</span><span style="color:#a6e22e">hAlign</span><span style="color:#f92672">(</span>GConstants<span style="color:#f92672">.</span><span style="color:#a6e22e">HAlign</span><span style="color:#f92672">.</span><span style="color:#a6e22e">CENTER</span><span style="color:#f92672">))</span>
+         <span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> GCompartmentBuilder<span style="color:#f92672">()</span>
+            <span style="color:#f92672">.</span><span style="color:#a6e22e">type</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;icon&#34;</span><span style="color:#f92672">)</span>
+            <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">())</span>
+         <span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> GLabelBuilder<span style="color:#f92672">()</span>
+            <span style="color:#f92672">.</span><span style="color:#a6e22e">text</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Label&#34;</span><span style="color:#f92672">)</span>
+            <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">())</span>
+         <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+   <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+</code></pre></div></details>
+<details ><summary> Node GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">GCompartment</span>.<span style="color:#a6e22e">builder</span>()
+  .<span style="color:#a6e22e">builder</span>()
+  .<span style="color:#a6e22e">layout</span>(<span style="color:#e6db74">&#34;vbox&#34;</span>)
+  .<span style="color:#a6e22e">addLayoutOption</span>(<span style="color:#e6db74">&#34;hAlign&#34;</span>, <span style="color:#e6db74">&#34;center&#34;</span>)
+  .<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">GCompartment</span>.<span style="color:#a6e22e">builder</span>().<span style="color:#66d9ef">type</span>(<span style="color:#e6db74">&#34;icon&#34;</span>).<span style="color:#a6e22e">build</span>())
+  .<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">GLabel</span>.<span style="color:#a6e22e">builder</span>().<span style="color:#a6e22e">text</span>(<span style="color:#e6db74">&#34;Label&#34;</span>).<span style="color:#a6e22e">build</span>())
+  .<span style="color:#a6e22e">build</span>();
+</code></pre></div></details>
+</br>
+<p>On the client side, we use again the <code>Icon</code> element definition and <code>IconView</code>, please see section <a href="#hbox-layout-example"><code>hbox</code> Layout Example</a>.</p>
+<p>The resulting element positions its children vertically from top to bottom and aligns each element horizontally, this is shown in the following image:</p>
+<p align="center">
+    <img src="./vbox-layout-example.png" alt="example-vbox-layout">
+</p>
+<p  align="center">
+    <em>Center children horizontally (left image) or align children to the left (right image)</em>
+</p>
+<p></br></br></p>
+<h5 id="freeform-layoutbr"><code>freeform</code> Layout</br></h5>
+<p>The <a href="https://github.com/eclipse-glsp/glsp-client/blob/master/packages/client/src/features/layout/freeform-layout.ts"><code>FreeFormLayouter</code></a> positions the children of a container according to their explicit, parent-relative <code>x/y</code> coordinates inside the parent container.
+This layouter uses the default <a href="#layout-options">Layout Options</a> and provides suitable default values (e.g. <code>resizeContainer: true</code>).</p>
+<p>Again here, the children of the container are positioned according to their explicit positions inside the container and as concluding step, the final bounds of the container are computed based on the required bounds of its children.</p>
+<h6 id="freeform-layout-example"><code>freeform</code> Layout Example</h6>
+<p>This example creates a compartment of the custom type <code>&quot;comp:structure&quot;</code> using the <code>freeform</code> layout.
+It adds one child node, at the relative position <code>(75, 35)</code> of the parent container.
+The parent container defines its preferred size of <code>250 x 125</code>.</p>
+<details open><summary> Java GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">  GDimension containerPrefSize <span style="color:#f92672">=</span> GraphUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">dimension</span><span style="color:#f92672">(</span>250 <span style="color:#75715e">/*width*/</span><span style="color:#f92672">,</span> 125 <span style="color:#75715e">/*height*/</span><span style="color:#f92672">);</span>
+  GPoint childPosition <span style="color:#f92672">=</span> GraphUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">point</span><span style="color:#f92672">(</span>75 <span style="color:#75715e">/*x*/</span><span style="color:#f92672">,</span> 35 <span style="color:#75715e">/*y*/</span><span style="color:#f92672">);</span>
+
+  Map<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Object<span style="color:#f92672">&gt;</span> layoutOptions <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;();</span>
+  layoutOptions<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>H_GRAB<span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+  layoutOptions<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>V_GRAB<span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+  layoutOptions<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>GLayoutOptions<span style="color:#f92672">.</span><span style="color:#a6e22e">KEY_PREF_WIDTH</span><span style="color:#f92672">,</span> containerPrefSize<span style="color:#f92672">.</span><span style="color:#a6e22e">getWidth</span><span style="color:#f92672">());</span>
+  layoutOptions<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>GLayoutOptions<span style="color:#f92672">.</span><span style="color:#a6e22e">KEY_PREF_HEIGHT</span><span style="color:#f92672">,</span> containerPrefSize<span style="color:#f92672">.</span><span style="color:#a6e22e">getHeight</span><span style="color:#f92672">());</span>
+  <span style="color:#66d9ef">new</span> GCompartmentBuilder<span style="color:#f92672">()</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">type</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;comp:structure&#34;</span><span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">layout</span><span style="color:#f92672">(</span>GConstants<span style="color:#f92672">.</span><span style="color:#a6e22e">Layout</span><span style="color:#f92672">.</span><span style="color:#a6e22e">FREEFORM</span><span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">layoutOptions</span><span style="color:#f92672">(</span>layoutOptions<span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>
+      <span style="color:#66d9ef">new</span> GNodeBuilder<span style="color:#f92672">(</span>DefaultTypes<span style="color:#f92672">.</span><span style="color:#a6e22e">NODE</span><span style="color:#f92672">)</span>
+        <span style="color:#f92672">.</span><span style="color:#a6e22e">position</span><span style="color:#f92672">(</span>childPosition<span style="color:#f92672">)</span>
+        <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">()</span>
+    <span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+</code></pre></div></details>
+<details ><summary> Node GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">containerPrefSize</span> <span style="color:#f92672">=</span> { <span style="color:#a6e22e">width</span>: <span style="color:#66d9ef">250</span>, <span style="color:#a6e22e">height</span>: <span style="color:#66d9ef">125</span> };
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">childPosition</span> <span style="color:#f92672">=</span> { <span style="color:#a6e22e">x</span>: <span style="color:#66d9ef">75</span>, <span style="color:#a6e22e">y</span>: <span style="color:#66d9ef">35</span> };
+
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">layoutOptions</span> <span style="color:#f92672">=</span> {
+  [<span style="color:#e6db74">&#34;hGrab&#34;</span>]<span style="color:#f92672">:</span> <span style="color:#66d9ef">true</span>,
+  [<span style="color:#e6db74">&#34;vGrab&#34;</span>]<span style="color:#f92672">:</span> <span style="color:#66d9ef">true</span>,
+  [<span style="color:#e6db74">&#34;prefWidth&#34;</span>]<span style="color:#f92672">:</span> <span style="color:#a6e22e">containerPrefSize</span>.<span style="color:#a6e22e">width</span>,
+  [<span style="color:#e6db74">&#34;prefHeight&#34;</span>]<span style="color:#f92672">:</span> <span style="color:#a6e22e">containerPrefSize</span>.<span style="color:#a6e22e">height</span>,
+};
+<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">GCompartment</span>.<span style="color:#a6e22e">builder</span>()
+  .<span style="color:#66d9ef">type</span>(<span style="color:#e6db74">&#34;comp:structure&#34;</span>)
+  .<span style="color:#a6e22e">layout</span>(<span style="color:#e6db74">&#34;freeform&#34;</span>)
+  .<span style="color:#a6e22e">addLayoutOptions</span>(<span style="color:#a6e22e">layoutOptions</span>)
+  .<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">GNode</span>.<span style="color:#a6e22e">builder</span>().<span style="color:#66d9ef">type</span>(<span style="color:#e6db74">&#34;node&#34;</span>).<span style="color:#a6e22e">position</span>(<span style="color:#a6e22e">childPosition</span>).<span style="color:#a6e22e">build</span>())
+  .<span style="color:#a6e22e">build</span>();
+</code></pre></div></details>
+</br>
+<p>On the client side, configure the <code>&quot;comp:structure&quot;</code> compartment as <code>configureModelElement(context, 'struct', SCompartment, StructureCompartmentView)</code>.</p>
+<p>The resulting compartment element positions its child at the desired position.
+The compartment defines its preferred size, which is used if the children do not enlarge the container. If the preferred size is omitted, the container&rsquo;s size depends on its children.</p>
+<p align="center">
+    <img src="./freeform-layout-example.png" alt="freeform-layout-example">
+</p>
+<p  align="center">
+    <em>Container with preferred size (left image) or without preferred size (right image)</em>
+</p>
+<p></br></br></p>
+<h5 id="stack-layoutbr"><code>stack</code> Layout</br></h5>
+<p>The <a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/features/bounds/stack-layout.ts"><code>StackLayouter</code></a> positions the children by stacking them on top of each other considering the given alignment.</p>
+<p>This layouter provides additional layout options via <code>StackLayoutOptions</code>:</p>
+<ul>
+<li><code>vAlign</code>: VAlignment = &lsquo;top&rsquo; | &lsquo;center&rsquo; | &lsquo;bottom&rsquo;</br>
+Defines the vertical alignment of the element to be positioned.</li>
+<li><code>hAlign</code>: HAlignment = &lsquo;left&rsquo; | &lsquo;center&rsquo; | &lsquo;right&rsquo;</br>
+Defines the horizontal alignment of the element to be positioned.</li>
+</ul>
+<p>The children of the container are positioned according to their order and the defined alignment. Based on that, the maximum height and width are computed and are used as bounds for the container.</p>
+<h6 id="stack-layout-example"><code>stack</code> Layout Example</h6>
+<p>This example creates a compartment of the custom type <code>&quot;comp:structure&quot;</code> using the <code>freeform</code> layout.
+It adds one child node, at the relative position <code>(75, 35)</code> of the parent container.
+The parent container defines its preferred size of <code>250 x 125</code>.</p>
+<details open><summary> Java GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">  Map<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Object<span style="color:#f92672">&gt;</span> layoutOptions <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;();</span>
+  layoutOptions<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>GLayoutOptions<span style="color:#f92672">.</span><span style="color:#a6e22e">KEY_H_ALIGN</span><span style="color:#f92672">,</span> GConstants<span style="color:#f92672">.</span><span style="color:#a6e22e">HAlign</span><span style="color:#f92672">.</span><span style="color:#a6e22e">CENTER</span><span style="color:#f92672">);</span>
+  layoutOptions<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>GLayoutOptions<span style="color:#f92672">.</span><span style="color:#a6e22e">KEY_RESIZE_CONTAINER</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">);</span>
+  <span style="color:#66d9ef">new</span> GCompartmentBuilder<span style="color:#f92672">()</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">type</span><span style="color:#f92672">(</span>DefaultTypes<span style="color:#f92672">.</span><span style="color:#a6e22e">COMPARTMENT</span><span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">layout</span><span style="color:#f92672">(</span>GConstants<span style="color:#f92672">.</span><span style="color:#a6e22e">Layout</span><span style="color:#f92672">.</span><span style="color:#a6e22e">STACK</span><span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">layoutOptions</span><span style="color:#f92672">(</span>layoutOptions<span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span>GraphUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">dimension</span><span style="color:#f92672">(</span>35<span style="color:#f92672">,</span> 35<span style="color:#f92672">))</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>
+      <span style="color:#66d9ef">new</span> GNodeBuilder<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;circle&#34;</span><span style="color:#f92672">)</span>
+        <span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span>GraphUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">dimension</span><span style="color:#f92672">(</span>35<span style="color:#f92672">,</span> 35<span style="color:#f92672">))</span>
+        <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">()</span>
+    <span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>
+      <span style="color:#66d9ef">new</span> GLabelBuilder<span style="color:#f92672">()</span>
+        <span style="color:#f92672">.</span><span style="color:#a6e22e">text</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;A&#34;</span><span style="color:#f92672">)</span>
+        <span style="color:#f92672">.</span><span style="color:#a6e22e">addCssClass</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;circle-letter&#34;</span><span style="color:#f92672">)</span>
+        <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">()</span>
+    <span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+</code></pre></div></details>
+<details ><summary> Node GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">layoutOptions</span> <span style="color:#f92672">=</span> {
+  [<span style="color:#e6db74">&#34;hAlign&#34;</span>]<span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;center&#34;</span>,
+  [<span style="color:#e6db74">&#34;resizeContainer&#34;</span>]<span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span>,
+};
+<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">GCompartment</span>.<span style="color:#a6e22e">builder</span>()
+  .<span style="color:#66d9ef">type</span>(<span style="color:#e6db74">&#34;comp&#34;</span>)
+  .<span style="color:#a6e22e">layout</span>(<span style="color:#e6db74">&#34;struct&#34;</span>)
+  .<span style="color:#a6e22e">addLayoutOptions</span>(<span style="color:#a6e22e">layoutOptions</span>)
+  .<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">GNode</span>.<span style="color:#a6e22e">builder</span>().<span style="color:#66d9ef">type</span>(<span style="color:#e6db74">&#34;circle&#34;</span>).<span style="color:#a6e22e">size</span>(<span style="color:#ae81ff">35</span>, <span style="color:#ae81ff">35</span>).<span style="color:#a6e22e">build</span>())
+  .<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">GLabel</span>.<span style="color:#a6e22e">builder</span>().<span style="color:#a6e22e">text</span>(<span style="color:#e6db74">&#34;A&#34;</span>).<span style="color:#a6e22e">addCssClass</span>(<span style="color:#e6db74">&#34;circle-letter&#34;</span>).<span style="color:#a6e22e">build</span>())
+  .<span style="color:#a6e22e">build</span>();
+</code></pre></div></details>
+</br>
+<p>On the client side, configure the <code>&quot;circle&quot;</code> node element as <code>configureModelElement(context, 'circle', CircularNode, CircularNodeView)</code>.</p>
+<p>To style the letter label, we add this simple CSS rule as well:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">.<span style="color:#a6e22e">circle-letter</span> {
+  fill: <span style="color:#66d9ef">lightsteelblue</span>;
+}
+</code></pre></div><p>The resulting compartment positions its children on top of each other and centers the label horizontally.</p>
+<p align="center">
+    <img src="./struct-layout-example.png" alt="freeform-layout-example">
+</p>
+<p  align="center">
+    <em>Container that stacks its children and positions the label to the left (1), in the center (2) and to the right (3)</em>
+</p>
+<p></br></br></p>
+<h4 id="custom-layouter">Custom Layouter</h4>
+<p>Additional custom layouters can be contributed by creating a layouter class that extends the <code>AbstractLayouter</code> and optionally provide custom options that extend the <code>AbstractLayoutOptions</code>.</p>
+<p>In the following example we show a simple custom layouter that extends the <code>VBoxLayouterExt</code> and provides a custom layout option,
+which increases the widths and heights of all children by a specified value, the default value is <code>50</code> pixel.</p>
 <details open><summary>GLSP Client</summary>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">ILayout</span> {
-    <span style="color:#a6e22e">layout</span>(<span style="color:#a6e22e">container</span>: <span style="color:#66d9ef">SParentElement</span> <span style="color:#f92672">&amp;</span> <span style="color:#a6e22e">LayoutContainer</span>,
-           <span style="color:#a6e22e">layouter</span>: <span style="color:#66d9ef">StatefulLayouter</span>)<span style="color:#f92672">:</span> <span style="color:#66d9ef">void</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">MyCustomLayoutOptions</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">VBoxLayoutOptionsExt</span> {
+  <span style="color:#a6e22e">enlargeSizeBy</span>: <span style="color:#66d9ef">number</span>;
+}
+
+<span style="color:#66d9ef">@injectable</span>()
+<span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyCustomLayouter</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">VBoxLayouterExt</span> {
+  <span style="color:#66d9ef">static</span> <span style="color:#a6e22e">override</span> <span style="color:#a6e22e">KIND</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;myCustomLayout&#34;</span>;
+
+  <span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">override</span> <span style="color:#a6e22e">getChildrenSize</span>(
+    <span style="color:#a6e22e">container</span>: <span style="color:#66d9ef">SParentElement</span> <span style="color:#f92672">&amp;</span> <span style="color:#a6e22e">LayoutContainer</span>,
+    <span style="color:#a6e22e">containerOptions</span>: <span style="color:#66d9ef">MyCustomLayoutOptions</span>,
+    <span style="color:#a6e22e">layouter</span>: <span style="color:#66d9ef">StatefulLayouter</span>
+  )<span style="color:#f92672">:</span> <span style="color:#a6e22e">Dimension</span> {
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">super</span>.<span style="color:#a6e22e">getChildrenSize</span>(<span style="color:#a6e22e">container</span>, <span style="color:#a6e22e">containerOptions</span>, <span style="color:#a6e22e">layouter</span>);
+    <span style="color:#66d9ef">return</span> {
+      <span style="color:#a6e22e">width</span>: <span style="color:#66d9ef">result.width</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">containerOptions</span>.<span style="color:#a6e22e">enlargeSizeBy</span>,
+      <span style="color:#a6e22e">height</span>: <span style="color:#66d9ef">result.height</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">containerOptions</span>.<span style="color:#a6e22e">enlargeSizeBy</span>,
+    };
+  }
+
+  <span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">override</span> <span style="color:#a6e22e">getDefaultLayoutOptions</span>()<span style="color:#f92672">:</span> <span style="color:#a6e22e">MyCustomLayoutOptions</span> {
+    <span style="color:#66d9ef">return</span> {
+      <span style="color:#a6e22e">enlargeSizeBy</span>: <span style="color:#66d9ef">50</span>,
+      ...<span style="color:#66d9ef">super</span>.<span style="color:#a6e22e">getDefaultLayoutOptions</span>(),
+    };
+  }
+
+  <span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">override</span> <span style="color:#a6e22e">spread</span>(
+    <span style="color:#a6e22e">a</span>: <span style="color:#66d9ef">MyCustomLayoutOptions</span>,
+    <span style="color:#a6e22e">b</span>: <span style="color:#66d9ef">MyCustomLayoutOptions</span>
+  )<span style="color:#f92672">:</span> <span style="color:#a6e22e">MyCustomLayoutOptions</span> {
+    <span style="color:#66d9ef">return</span> { ...<span style="color:#a6e22e">a</span>, ...<span style="color:#a6e22e">b</span> };
+  }
 }
 </code></pre></div></details>
-<p>Then the new custom layout needs to bound in the diagram module (&ldquo;di.config.ts&rdquo;):</p>
+<p>Then the new custom layout needs to bound in the diagram module (<code>di.config.ts</code>):</p>
 <details open><summary>GLSP Client</summary>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">myDiagramMdoule</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">ContainerModule</span>((<span style="color:#a6e22e">bind</span>, <span style="color:#a6e22e">unbind</span>, <span style="color:#a6e22e">isBound</span>, <span style="color:#a6e22e">rebind</span>) <span style="color:#f92672">=&gt;</span> {
-    <span style="color:#a6e22e">bind</span>(<span style="color:#a6e22e">TYPES</span>.<span style="color:#a6e22e">Layouter</span>).<span style="color:#a6e22e">to</span>(<span style="color:#a6e22e">MyCustomLayouter</span>);
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">myDiagramModule</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">ContainerModule</span>((<span style="color:#a6e22e">bind</span>, <span style="color:#a6e22e">unbind</span>, <span style="color:#a6e22e">isBound</span>, <span style="color:#a6e22e">rebind</span>) <span style="color:#f92672">=&gt;</span> {
+   <span style="color:#a6e22e">rebind</span>(<span style="color:#a6e22e">VBoxLayouter</span>).<span style="color:#a6e22e">to</span>(<span style="color:#a6e22e">MyCustomLayouter</span>);
 }
 </code></pre></div></details>
+<p>Custom layouter, which don&rsquo;t overwrite existing ones, should extend the <code>AbstractLayout</code> and can be registered for a certain layouter key,
+e.g. <code>MyCustomLayouter.KIND</code>, that is used in the <code>layout</code> property of compartments as follows:</p>
+<details open><summary>GLSP Client</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">myDiagramModule</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">ContainerModule</span>((<span style="color:#a6e22e">bind</span>, <span style="color:#a6e22e">unbind</span>, <span style="color:#a6e22e">isBound</span>, <span style="color:#a6e22e">rebind</span>) <span style="color:#f92672">=&gt;</span> {
+   <span style="color:#a6e22e">configureLayout</span>({ <span style="color:#a6e22e">bind</span>, <span style="color:#a6e22e">isBound</span> }, <span style="color:#a6e22e">MyCustomLayouter</span>.<span style="color:#a6e22e">KIND</span>, <span style="color:#a6e22e">MyCustomLayouter</span>);
+}
+</code></pre></div></details>
+<p>With that, the custom layouter is ready to be used by compartments in the graphical model:</p>
+<details open><summary> Java GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">   <span style="color:#66d9ef">new</span> GCompartmentBuilder<span style="color:#f92672">()</span>
+         <span style="color:#f92672">.</span><span style="color:#a6e22e">type</span><span style="color:#f92672">(</span>DefaultTypes<span style="color:#f92672">.</span><span style="color:#a6e22e">COMPARTMENT</span><span style="color:#f92672">)</span>
+         <span style="color:#f92672">.</span><span style="color:#a6e22e">layout</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;myCustomLayout&#34;</span><span style="color:#f92672">)</span>
+         <span style="color:#f92672">.</span><span style="color:#a6e22e">layoutOptions</span><span style="color:#f92672">(</span>Map<span style="color:#f92672">.</span><span style="color:#a6e22e">of</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;enlargeSizeBy&#34;</span><span style="color:#f92672">,</span> 15<span style="color:#f92672">))</span>
+         <span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> GLabelBuilder<span style="color:#f92672">()</span>
+            <span style="color:#f92672">.</span><span style="color:#a6e22e">text</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;label&#34;</span><span style="color:#f92672">)</span>
+            <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">())</span>
+         <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+   <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+</code></pre></div></details>
+<details ><summary> Node GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">GCompartment</span>.<span style="color:#a6e22e">builder</span>()
+  .<span style="color:#a6e22e">builder</span>()
+  .<span style="color:#a6e22e">layout</span>(<span style="color:#e6db74">&#34;myCustomLayout&#34;</span>)
+  .<span style="color:#a6e22e">addLayoutOption</span>(<span style="color:#e6db74">&#34;enlargeSizeBy&#34;</span>, <span style="color:#ae81ff">15</span>)
+  .<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">GLabel</span>.<span style="color:#a6e22e">builder</span>().<span style="color:#a6e22e">text</span>(<span style="color:#e6db74">&#34;label&#34;</span>).<span style="color:#a6e22e">build</span>())
+  .<span style="color:#a6e22e">build</span>();
+</code></pre></div></details>
+</details>
 </br>
 <h3 id="edge-layout">Edge Layout</h3>
 <p>Graphical elements that are typically rendered in combination with an edge such as labels have an <code>edgeLayout</code> property.
 This can be used to describe how the element should be aligned with the edge.</p>
 <p>For example let&rsquo;s have a look at the following <code>GLabel</code>:</p>
 <details open><summary> Java GLSP Server</summary>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">new</span> GLabelBuilder<span style="color:#f92672">()</span> <span style="color:#75715e">//
-</span><span style="color:#75715e"></span>   <span style="color:#f92672">.</span><span style="color:#a6e22e">edgePlacement</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> GEdgePlacementBuilder<span style="color:#f92672">()</span><span style="color:#75715e">//
-</span><span style="color:#75715e"></span>      <span style="color:#f92672">.</span><span style="color:#a6e22e">side</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;top&#34;</span><span style="color:#f92672">)</span><span style="color:#75715e">//
-</span><span style="color:#75715e"></span>      <span style="color:#f92672">.</span><span style="color:#a6e22e">position</span><span style="color:#f92672">(</span>0<span style="color:#f92672">.</span><span style="color:#a6e22e">5</span><span style="color:#f92672">)</span><span style="color:#75715e">//
-</span><span style="color:#75715e"></span>      <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">())</span><span style="color:#75715e">//
-</span><span style="color:#75715e"></span>   <span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> GLabelBuilder<span style="color:#f92672">().</span><span style="color:#a6e22e">text</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;MyLabel&#34;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">build</span><span style="color:#f92672">())</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">new</span> GLabelBuilder<span style="color:#f92672">()</span>
+   <span style="color:#f92672">.</span><span style="color:#a6e22e">edgePlacement</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> GEdgePlacementBuilder<span style="color:#f92672">()</span>
+      <span style="color:#f92672">.</span><span style="color:#a6e22e">side</span><span style="color:#f92672">(</span>GConstants<span style="color:#f92672">.</span><span style="color:#a6e22e">EdgeSide</span><span style="color:#f92672">.</span><span style="color:#a6e22e">TOP</span><span style="color:#f92672">)</span>
+      <span style="color:#f92672">.</span><span style="color:#a6e22e">position</span><span style="color:#f92672">(</span>0<span style="color:#f92672">.</span><span style="color:#a6e22e">5</span><span style="color:#f92672">)</span>
+      <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">())</span>
+   <span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> GLabelBuilder<span style="color:#f92672">().</span><span style="color:#a6e22e">text</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;MyLabel&#34;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">build</span><span style="color:#f92672">())</span>
    <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
 </code></pre></div></details>
 <details ><summary> Node GLSP Server</summary>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">GLabel</span>.<span style="color:#a6e22e">builder</span>()
-    .<span style="color:#a6e22e">edgePlacement</span>({ <span style="color:#a6e22e">side</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;top&#39;</span>, 
-                    <span style="color:#a6e22e">position</span>: <span style="color:#66d9ef">0.5</span>,
-                    <span style="color:#a6e22e">rotate</span>: <span style="color:#66d9ef">false</span>,
-                    <span style="color:#a6e22e">offset</span>: <span style="color:#66d9ef">0</span> })
-    .<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">GLabelBuilder</span>(<span style="color:#a6e22e">GLabel</span>).<span style="color:#a6e22e">text</span>(<span style="color:#e6db74">&#39;MyLabel&#39;</span>).<span style="color:#a6e22e">build</span>())
-    .<span style="color:#a6e22e">build</span>();
+  .<span style="color:#a6e22e">edgePlacement</span>({ <span style="color:#a6e22e">side</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;top&#34;</span>, <span style="color:#a6e22e">position</span>: <span style="color:#66d9ef">0.5</span>, <span style="color:#a6e22e">rotate</span>: <span style="color:#66d9ef">false</span>, <span style="color:#a6e22e">offset</span>: <span style="color:#66d9ef">0</span> })
+  .<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">GLabelBuilder</span>(<span style="color:#a6e22e">GLabel</span>).<span style="color:#a6e22e">text</span>(<span style="color:#e6db74">&#34;MyLabel&#34;</span>).<span style="color:#a6e22e">build</span>())
+  .<span style="color:#a6e22e">build</span>();
 </code></pre></div></details>
 </br>
 <p>The label above specifies the property <code>edgePlacement</code>.
@@ -942,6 +1354,7 @@ After the edge routes have been rendered the client will query all active edge p
 
     <!-- Theme Code -->
       <script async defer src="/glsp/scripts/syna-main.min.68ae1ae47948304c9c224cfc1a97ffe16c57514bc587dd6140dcb82389a8d299.js"></script>
+      <script async defer src="/glsp/scripts/syna-search.min.647ab37afa752ff5b6d866ed67df267795da44cad28ceed27646bdaef99e386f.js"></script>
       <script async defer src="/glsp/scripts/syna-content.min.bf537eb5ace369e45e8b4ed41b8d235a65db92236a400ed5659f7a3c41d0f221.js"></script>
       <script async defer src="/glsp/scripts/syna-collapse.min.1f6ca6206008af133f158e2b7b650b4156b8fc33189c5a6142db3bb43c7ad8e7.js"></script>
   </body>

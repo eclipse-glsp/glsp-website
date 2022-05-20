@@ -31,6 +31,10 @@
   </url>
   
   <url>
+    <loc>https://www.eclipse.org/glsp/documentation/ui-extensions/</loc>
+  </url>
+  
+  <url>
     <loc>https://www.eclipse.org/glsp/documentation/actionhandler/</loc>
   </url>
   
@@ -40,6 +44,10 @@
   
   <url>
     <loc>https://www.eclipse.org/glsp/documentation/validation/</loc>
+  </url>
+  
+  <url>
+    <loc>https://www.eclipse.org/glsp/search/</loc>
   </url>
   
   <url>

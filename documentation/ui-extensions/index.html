@@ -14,26 +14,28 @@
   <meta name="google" content="notranslate" />
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="description" content="GLSP is architected to be very flexible and provides several implementation options:
- 🖥️ Server GLSP servers can be written either in Java or with Typescript based on nodejs. 🗂️ Source Model You can use any format or framework for managing your source model. For the most common choices, GLSP provides dedicated base modules, such as for EMF, emf.cloud, or GModel-JSON, which contains the graphical model directly. 🖼️ Tool Platform Diagram editors can used in multiple tool platforms or used in plain web applications or in an Electron app.">
-  <meta property="og:title" content="Getting Started" />
+  <meta name="description" content="A UI Extension is a concept provided by the underlying framework Sprotty, which allows to display additional UI HTML elements on top of a diagram.
+It is often used to add UI controls to the diagram. It is also frequently used in the core GLSP functionality:
+ the GLSP tool palette the Sprotty command palette the Sprotty EditLabelUI  Register and activate custom UI Extensions To implement a custom UI extension, it is necessary to extend the base AbstractUIExtension.">
+  <meta property="og:title" content="UI Extensions" />
 <meta property="og:description" content="" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://www.eclipse.org/glsp/documentation/gettingstarted/" />
+<meta property="og:url" content="https://www.eclipse.org/glsp/documentation/ui-extensions/" />
 
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Getting Started &amp;middot; Eclipse Graphical Language Server Platform" />
-  <meta name="twitter:description" content="GLSP is architected to be very flexible and provides several implementation options:
- 🖥️ Server GLSP servers can be written either in Java or with Typescript based on nodejs. 🗂️ Source Model You can use any format or framework for managing your source model. For the most common choices, GLSP provides dedicated base modules, such as for EMF, emf.cloud, or GModel-JSON, which contains the graphical model directly. 🖼️ Tool Platform Diagram editors can used in multiple tool platforms or used in plain web applications or in an Electron app.">
-  <meta name="twitter:url" content="https://www.eclipse.org/glsp/documentation/gettingstarted/" />
+  <meta name="twitter:title" content="UI Extensions &amp;middot; Eclipse Graphical Language Server Platform" />
+  <meta name="twitter:description" content="A UI Extension is a concept provided by the underlying framework Sprotty, which allows to display additional UI HTML elements on top of a diagram.
+It is often used to add UI controls to the diagram. It is also frequently used in the core GLSP functionality:
+ the GLSP tool palette the Sprotty command palette the Sprotty EditLabelUI  Register and activate custom UI Extensions To implement a custom UI extension, it is necessary to extend the base AbstractUIExtension.">
+  <meta name="twitter:url" content="https://www.eclipse.org/glsp/documentation/ui-extensions/" />
         <meta property="og:image" content="">
         <meta name="twitter:image" content="">
   <meta name="author" content="Eclipse Foundation">
 
   <meta name="generator" content="Hugo 0.78.1" />
 
-  <title>Getting Started &middot; Eclipse Graphical Language Server Platform</title>
+  <title>UI Extensions &middot; Eclipse Graphical Language Server Platform</title>
 
   <!-- Theme Styles -->
   <style>
@@ -557,11 +559,11 @@ html {
                 <div class="col-12 pl-0 pb-1 text-body">
                   <div data-toggle="collapse" data-target="#list-page-gettingstarted .collapse" data-add-collapse="#list-page-gettingstarted .article-title"
                     class="row align-items-center justify-content-between mx-0 article-title">
-                      <h5 class="col px-0 m-0 active-page">
+                      <h5 class="col px-0 m-0">
                         <a href="https://www.eclipse.org/glsp/documentation/gettingstarted/">Getting Started</a>
                       </h5>
                   </div>
-                </div><div class="collapse show">
+                </div><div class="collapse">
 <!--  -->
 <section id="toc" class="fragment ">
     <div class="container p-0 ">
@@ -717,11 +719,11 @@ html {
                 <div class="col-12 pl-0 pb-1 text-body">
                   <div data-toggle="collapse" data-target="#list-page-ui-extensions .collapse" data-add-collapse="#list-page-ui-extensions .article-title"
                     class="row align-items-center justify-content-between mx-0 article-title">
-                      <h5 class="col px-0 m-0">
+                      <h5 class="col px-0 m-0 active-page">
                         <a href="https://www.eclipse.org/glsp/documentation/ui-extensions/">UI Extensions</a>
                       </h5>
                   </div>
-                </div><div class="collapse">
+                </div><div class="collapse show">
 <!--  -->
 <section id="toc" class="fragment ">
     <div class="container p-0 ">
@@ -822,7 +824,7 @@ html {
       <article class="col-md-9">
   <div class="title-container row mx-0">
     <div class="title col px-0 text-center text-body">
-      <h2>Getting Started</h2>
+      <h2>UI Extensions</h2>
     </div>
   </div>
 <div class="content-body col-12 content px-0 text-body">
@@ -833,46 +835,149 @@ html {
   <ul>
     <li>
       <ul>
-        <li></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/ui-extensions/#register-and-activate-custom-ui-extensions">Register and activate custom UI Extensions</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/ui-extensions/#button-overlay-showcase">Button Overlay Showcase</a></li>
       </ul>
     </li>
   </ul>
 </nav></div>
     </div>
 </section>
-<p>GLSP is architected to be very flexible and provides several implementation options:</p>
+<p>A UI Extension is a concept provided by the underlying framework Sprotty, which allows to display additional UI HTML elements on top of a diagram.</p>
+<p>It is often used to add UI controls to the diagram. It is also frequently used in the core GLSP functionality:</p>
 <ul>
-<li>🖥️ <strong>Server</strong><br/>
-GLSP servers can be written either in Java or with Typescript based on nodejs.</li>
-<li>🗂️ <strong>Source Model</strong><br/>
-You can use any format or framework for managing your source model.
-For the most common choices, GLSP provides dedicated base modules, such as for <a href="https://www.eclipse.org/modeling/emf">EMF</a>, <a href="https://www.eclipse.org/emfcloud">emf.cloud</a>, or GModel-JSON, which contains the graphical model directly.</li>
-<li>🖼️ <strong>Tool Platform</strong><br/>
-Diagram editors can used in multiple tool platforms or used in plain web applications or in an Electron app.
-While GLSP editors can be integrated into any web application, GLSP provides dedicated integration components for seamlessly deploying a GLSP editor inside of <a href="https://www.theia-ide.org">Eclipse Theia</a>, <a href="https://code.visualstudio.com">VS Code</a>, or <a href="https://www.eclipse.org/ide">Eclipse RCP</a>.</li>
+<li>the GLSP <a href="https://github.com/eclipse-glsp/glsp-client/blob/master/packages/protocol/src/action-protocol/tool-palette.ts">tool palette</a></li>
+<li>the Sprotty <a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/features/command-palette/command-palette.ts">command palette</a></li>
+<li>the Sprotty <a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/features/edit/edit-label-ui.ts">EditLabelUI</a></li>
 </ul>
-<p>Due to GLSP&rsquo;s architecture, you can even change any of those options above later on, without impacting other parts of your implementation, or support multiple variants, e.g. VS Code and Eclipse RCP, while sharing almost all of your server and client code.</p>
-<p>To get you started quickly, GLSP provides project templates for the most popular choices.
-Thus, please clone the <a href="https://github.com/eclipse-glsp/glsp-examples">glsp-examples repository</a> and switch to the folder <a href="https://github.com/eclipse-glsp/glsp-examples/tree/master/project-templates"><code>project templates</code></a>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git clone https://github.com/eclipse-glsp/glsp-examples.git
-cd glsp-examples/project-templates
-</code></pre></div><p>Now select your preferred server language, source model format, and platform integration (see list below).
-Switch to the respective folder and follow its readme file.</p>
+<h3 id="register-and-activate-custom-ui-extensions">Register and activate custom UI Extensions</h3>
+<p>To implement a custom UI extension, it is necessary to extend the base <a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/base/ui-extensions/ui-extension.ts"><code>AbstractUIExtension</code></a>.
+This super class provides a base HTML element (<code>containerElement</code>) which is then the base for the custom UI elements.
+It also provides utility methods for showing/hiding or handling focus of the extension.
+To add the actual UI elements to the DOM, the abstract method <code>initializeContents</code> must be implemented.</p>
+<p>The <a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/base/ui-extensions/ui-extension-registry.ts">UIExtensionRegistry</a> allows to register multiple UIExtensions per diagram.</p>
+<p>To enable a UI Extension a <a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/base/ui-extensions/ui-extension-registry.ts"><code>SetUIExtensionVisibilityAction</code></a> or <a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/base/ui-extensions/ui-extension-registry.ts"><code>SetUIExtensionVisibilityCommand</code></a> with the respective UI Extension ID needs to be invoked.</p>
+<p>As already mentioned, there is a broad use case for UI extensions, hence also their trigger events can of course vary.
+UI extensions can be enabled practically with any event that can dispatch an action, e.g. via context menu entries, mouse click events, keyboard events or changes of the diagram itself, for example the change of the diagram&rsquo;s <code>EditMode</code>.</p>
+<p>For example:</p>
 <ul>
-<li><a href="https://github.com/eclipse-glsp/glsp-examples/tree/master/project-templates/java-emf-theia">🖥️ Java ● 🗂️ EMF ● 🖼️ Theia &ndash; <code>java-emf-theia</code></a></li>
-<li>🖥️ Node ● 🗂️ Custom JSON ● 🖼️ Theia &ndash; <code>node-json-theia</code> (<a href="https://github.com/eclipse-glsp/glsp-examples/pull/117">coming soon</a>)</li>
-<li><a href="https://github.com/eclipse-glsp/glsp-examples/tree/master/project-templates/node-json-vscode">🖥️ Node ● 🗂️ Custom JSON ● 🖼️ VS Code &ndash; <code>node-json-vscode</code></a></li>
+<li>The GLSP <code>ToolPalette</code> is opened via the GLSP Action <code>EnableToolPalette</code> right after the model was requested in <a href="https://github.com/eclipse-glsp/glsp-theia-integration/blob/master/packages/theia-integration/src/browser/diagram/glsp-diagram-widget.ts">GLSPDiagramWidget#<code>dispatchInitialActions()</code></a>.</li>
+<li>The <code>CommandPalette</code> is opened via the keyboard shortcut <kbd>Ctrl</kbd>+<kbd>Space</kbd>.</li>
+<li>The <code>EditLabelUI</code> is opened via a double click on an editable Label (e.g. a Category or Task node in the Workflow example).</li>
+<li>The <code>TaskEditor</code> in the Workflow example is opened via a context menu entry (<code>Direct Edit Task</code>) for the Task node.</li>
 </ul>
-<p>If you don&rsquo;t find your preferred combination, please raise a question in the <a href="https://github.com/eclipse-glsp/glsp/discussions">Github discussions</a>.
-If you need help on deciding which combination is right for you, please refer to the <a href="/glsp/documentation/integrations/">integrations</a> page or look at our <a href="/glsp/support/">support options</a>.</p>
-<h4 id="what-next">What next?</h4>
-<p>Once you are up and running based on the project template above, we recommend to start working on the following aspects next:</p>
-<ul>
-<li>➡️ Add your custom <a href="/glsp/documentation/sourcemodel/">source model</a> instead of using the example model!</li>
-<li>➡️ Define the diagram elements to be generated from the source model into the <a href="/glsp/documentation/gmodel/">graphical model</a>!</li>
-<li>➡️ Make the diagram look the way you want by adjusting the <a href="/glsp/documentation/rendering/">diagram rendering and styling</a>!</li>
-<li>➡️ Look at the <a href="https://github.com/eclipse-glsp/glsp-examples/tree/master/workflow">workflow example</a> to explore the implementation of more advanced editor features</li>
-</ul>
+<p>The following GIF shows the different triggers of the the mentioned extensions:</p>
+<p><img src="./ui-extension-triggers.gif" alt="UI Extension Triggers"></p>
+<h3 id="button-overlay-showcase">Button Overlay Showcase</h3>
+<p>The following section gives an overview of the necessary bits to create a very simple UI Extension that provides two buttons to center a diagram or fit it to the screen.
+This showcase is implemented on top of the Workflow example in the <code>glsp-client</code> and <code>glsp-theia-integration</code>.</p>
+<p>At first, the UI extension needs to be defined, in this case we want the provided base HTML element (<code>containerElement</code>) to contain our buttons.
+Those buttons should show an icon as well as a descriptive text label and should trigger the respective GLSP Action on click of either one of them.
+Therefore we create for each button a <code>&lt;div&gt;</code> which contains the icon <code>&lt;i&gt;</code> and the description as adjacent text.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">@injectable</span>()
+<span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ButtonOverlay</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">AbstractUIExtension</span> {
+  <span style="color:#66d9ef">@inject</span>(<span style="color:#a6e22e">TYPES</span>.<span style="color:#a6e22e">IActionDispatcher</span>)
+  <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">readonly</span> <span style="color:#a6e22e">actionDispatcher</span>: <span style="color:#66d9ef">IActionDispatcher</span>;
+
+  <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">readonly</span> <span style="color:#a6e22e">ID</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;button-overlay&#34;</span>;
+
+  <span style="color:#a6e22e">id() {</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">ButtonOverlay</span>.<span style="color:#a6e22e">ID</span>;
+  }
+
+  <span style="color:#a6e22e">containerClass() {</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">ButtonOverlay</span>.<span style="color:#a6e22e">ID</span>;
+  }
+
+  <span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">initializeContents</span>(<span style="color:#a6e22e">containerElement</span>: <span style="color:#66d9ef">HTMLElement</span>)<span style="color:#f92672">:</span> <span style="color:#66d9ef">void</span> {
+    <span style="color:#a6e22e">containerElement</span>.<span style="color:#a6e22e">appendChild</span>(
+      <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">createButton</span>(
+        <span style="color:#e6db74">&#34;btn_center_diagram&#34;</span>,
+        <span style="color:#e6db74">&#34;Center&#34;</span>,
+        <span style="color:#e6db74">&#34;screen-normal&#34;</span>,
+        <span style="color:#a6e22e">CenterAction</span>.<span style="color:#a6e22e">create</span>([])
+      )
+    );
+    <span style="color:#a6e22e">containerElement</span>.<span style="color:#a6e22e">appendChild</span>(
+      <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">createButton</span>(
+        <span style="color:#e6db74">&#34;btn_fit_diagram&#34;</span>,
+        <span style="color:#e6db74">&#34;Fit to screen&#34;</span>,
+        <span style="color:#e6db74">&#34;screen-full&#34;</span>,
+        <span style="color:#a6e22e">FitToScreenAction</span>.<span style="color:#a6e22e">create</span>([])
+      )
+    );
+  }
+
+  <span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">createButton</span>(
+    <span style="color:#a6e22e">id</span>: <span style="color:#66d9ef">string</span>,
+    <span style="color:#a6e22e">label</span>: <span style="color:#66d9ef">string</span>,
+    <span style="color:#a6e22e">codiconId</span>: <span style="color:#66d9ef">string</span>,
+    <span style="color:#a6e22e">action</span>: <span style="color:#66d9ef">Action</span>
+  )<span style="color:#f92672">:</span> <span style="color:#a6e22e">HTMLElement</span> {
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">baseDiv</span> <span style="color:#f92672">=</span> document.<span style="color:#a6e22e">getElementById</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">options</span>.<span style="color:#a6e22e">baseDiv</span>);
+    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">baseDiv</span>) {
+      <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">button</span> <span style="color:#f92672">=</span> document.<span style="color:#a6e22e">createElement</span>(<span style="color:#e6db74">&#34;div&#34;</span>);
+      <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">insertedDiv</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">baseDiv</span>.<span style="color:#a6e22e">insertBefore</span>(<span style="color:#a6e22e">button</span>, <span style="color:#a6e22e">baseDiv</span>.<span style="color:#a6e22e">firstChild</span>);
+      <span style="color:#a6e22e">button</span>.<span style="color:#a6e22e">id</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">id</span>;
+      <span style="color:#a6e22e">button</span>.<span style="color:#a6e22e">classList</span>.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;overlay-button&#34;</span>);
+      <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">icon</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">createIcon</span>(<span style="color:#a6e22e">codiconId</span>);
+      <span style="color:#a6e22e">insertedDiv</span>.<span style="color:#a6e22e">appendChild</span>(<span style="color:#a6e22e">icon</span>);
+      <span style="color:#a6e22e">insertedDiv</span>.<span style="color:#a6e22e">onclick</span> <span style="color:#f92672">=</span> () <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">actionDispatcher</span>.<span style="color:#a6e22e">dispatch</span>(<span style="color:#a6e22e">action</span>);
+      <span style="color:#a6e22e">insertedDiv</span>.<span style="color:#a6e22e">insertAdjacentText</span>(<span style="color:#e6db74">&#34;beforeend&#34;</span>, <span style="color:#a6e22e">label</span>);
+      <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">button</span>;
+    }
+    <span style="color:#66d9ef">return</span> document.<span style="color:#a6e22e">createElement</span>(<span style="color:#e6db74">&#34;div&#34;</span>);
+  }
+
+  <span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">createIcon</span>(<span style="color:#a6e22e">codiconId</span>: <span style="color:#66d9ef">string</span>)<span style="color:#f92672">:</span> <span style="color:#a6e22e">HTMLElement</span> {
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">icon</span> <span style="color:#f92672">=</span> document.<span style="color:#a6e22e">createElement</span>(<span style="color:#e6db74">&#34;i&#34;</span>);
+    <span style="color:#a6e22e">icon</span>.<span style="color:#a6e22e">classList</span>.<span style="color:#a6e22e">add</span>(...<span style="color:#a6e22e">codiconCSSClasses</span>(<span style="color:#a6e22e">codiconId</span>), <span style="color:#e6db74">&#34;overlay-icon&#34;</span>);
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">icon</span>;
+  }
+}
+</code></pre></div><p>To improve the styling of the extension, we make use of the defined CSS classes and position the overlay on the top left of the diagram and reduce the opacity of the buttons by default.
+On hover, the buttons are fully visible.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">.<span style="color:#a6e22e">button-overlay</span> {
+  <span style="color:#66d9ef">position</span>: <span style="color:#66d9ef">absolute</span>;
+  <span style="color:#66d9ef">left</span>: <span style="color:#ae81ff">25</span><span style="color:#66d9ef">px</span>;
+  <span style="color:#66d9ef">top</span>: <span style="color:#ae81ff">25</span><span style="color:#66d9ef">px</span>;
+  <span style="color:#66d9ef">text-align</span>: <span style="color:#66d9ef">left</span>;
+  <span style="color:#66d9ef">min-width</span>: <span style="color:#ae81ff">150</span><span style="color:#66d9ef">px</span>;
+  <span style="color:#66d9ef">display</span>: <span style="color:#66d9ef">flex</span>;
+  <span style="color:#66d9ef">flex-direction</span>: <span style="color:#66d9ef">column</span>;
+  <span style="color:#66d9ef">z-index</span>: <span style="color:#ae81ff">1000</span>;
+  <span style="color:#66d9ef">font-family</span>: <span style="color:#66d9ef">sans-serif</span>;
+}
+
+.<span style="color:#a6e22e">overlay-button</span> {
+  <span style="color:#66d9ef">opacity</span>: <span style="color:#ae81ff">0.5</span>;
+  <span style="color:#66d9ef">display</span>: <span style="color:#66d9ef">flex</span>;
+}
+
+.<span style="color:#a6e22e">overlay-button</span>:<span style="color:#a6e22e">hover</span> {
+  <span style="color:#66d9ef">opacity</span>: <span style="color:#ae81ff">1</span>;
+  <span style="color:#66d9ef">cursor</span>: <span style="color:#66d9ef">pointer</span>;
+}
+
+.<span style="color:#a6e22e">overlay-icon</span> {
+  <span style="color:#66d9ef">margin-right</span>: <span style="color:#ae81ff">10</span><span style="color:#66d9ef">px</span>;
+  <span style="color:#66d9ef">padding-left</span>: <span style="color:#ae81ff">5</span><span style="color:#66d9ef">px</span>;
+  <span style="color:#66d9ef">width</span>: <span style="color:#ae81ff">16</span><span style="color:#66d9ef">px</span>;
+  <span style="color:#66d9ef">height</span>: <span style="color:#ae81ff">16</span><span style="color:#66d9ef">px</span>;
+  <span style="color:#66d9ef">text-align</span>: <span style="color:#66d9ef">center</span>;
+}
+</code></pre></div><p>To register the extension, it has to be bound as singleton and</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">bind</span>(<span style="color:#a6e22e">ButtonOverlay</span>).<span style="color:#a6e22e">toSelf</span>().<span style="color:#a6e22e">inSingletonScope</span>();
+<span style="color:#a6e22e">bind</span>(<span style="color:#a6e22e">TYPES</span>.<span style="color:#a6e22e">IUIExtension</span>).<span style="color:#a6e22e">toService</span>(<span style="color:#a6e22e">ButtonOverlay</span>);
+</code></pre></div><p>To activate our UI extension, for example, alongside the initial actions, we can dispatch the <code>SetUIExtensionVisibilityAction</code> in <a href="https://github.com/eclipse-glsp/glsp-theia-integration/blob/master/packages/theia-integration/src/browser/diagram/glsp-diagram-widget.ts">GLSPDiagramWidget#<code>dispatchInitialActions()</code></a> after a certain delay.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">dispatchInitialActions</span>()<span style="color:#f92672">:</span> <span style="color:#66d9ef">void</span> {
+  ...
+  <span style="color:#a6e22e">setTimeout</span>(() <span style="color:#f92672">=&gt;</span> {
+      <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">actionDispatcher</span>.<span style="color:#a6e22e">dispatch</span>(<span style="color:#a6e22e">SetUIExtensionVisibilityAction</span>.<span style="color:#a6e22e">create</span>({ <span style="color:#a6e22e">extensionId</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;button-overlay&#34;</span>, <span style="color:#a6e22e">visible</span>: <span style="color:#66d9ef">true</span> }));
+  }, <span style="color:#ae81ff">50</span>);
+}
+</code></pre></div><p>The outcome of this showcase is the following subtle UI overlay that offers to center the diagram or fit it to the screen:</p>
+<p><img src="./button-overlay-showcase.gif" alt="Button Overlay Showcase"></p>
 </div>
     </article>
   </div>

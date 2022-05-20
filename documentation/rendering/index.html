@@ -408,7 +408,7 @@ html {
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="navbar-collapse justify-content-end collapse show" id="navbarCollapse">
+    <div class="navbar-collapse justify-content-between collapse show" id="navbarCollapse">
       <ul class="navbar-nav"><li class="nav-item">
               <a href="/glsp/"
                   class="nav-link">
@@ -446,6 +446,21 @@ html {
               </a>
             </li>
       </ul>
+        <div class="search-container position-relative">
+          <form action="https://www.eclipse.org/glsp/search" class="my-0">
+            <div class="input-group my-0">
+              <input type="text" class="form-control py-1" id="search-query-nav" name="s" placeholder="Search...">
+              <div class="input-group-append">
+                <button class="btn btn-primary" title="Search"><i class="fa fa-search"></i></button>
+              </div>
+            </div>
+          </form>
+          <div class="search-results-container">
+            <div class="col p-0">
+              <div id="search-results-nav" class="col px-0 results"></div>
+            </div>
+          </div>
+        </div>
     </div>
   </div>
 </nav>
@@ -454,6 +469,52 @@ html {
   title="Back to top"
   ><i class="fas fa-angle-up"></i><span class="sr-only">Back to top</span>
 </div>
+
+<script id="search-empty-template-nav" type="text/x-js-template">
+  <p class="p-2">Please enter a word or phrase above</p>
+</script>
+<script id="search-no-results-template-nav" type="text/x-js-template">
+  <p class="p-2">No matches found</p>
+</script>
+<script id="search-result-template-nav" type="text/x-js-template">
+  <a href="${link}" id="summary-${key}" class="result ignore-color-change">
+    <div class="p-2">
+      <h5>${title}</h5>
+      <p class="m-0 text-body">${snippet}</p>
+      ${ isset tags }<p>Tags: ${tags}</p>${ end }
+      ${ isset categories }<p>Categories: ${categories}</p>${ end }
+    </div>
+  </a>
+</script>
+
+<script>
+  (function() {
+    var fragmentName = "nav";
+    window.syna.api.register('search', 'search-' + fragmentName, {
+      searchInput: `#search-query-${fragmentName}`,
+      resultsContainer: `#search-results-${fragmentName}`,
+      template: `#search-result-template-${fragmentName}`,
+      noResults: `#search-no-results-template-${fragmentName}`,
+      empty: `#search-empty-template-${fragmentName}`,
+    });
+
+    var resultsContainer = document.querySelector(`#${fragmentName} .search-results-container`)
+    document.querySelector(`#search-query-${fragmentName}`).addEventListener('input', function(e) {
+      if (e.target.value.length) {
+        resultsContainer.classList.add('show');
+      } else {
+        resultsContainer.classList.remove('show');
+      }
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!document.querySelector(`#${fragmentName} .search-container`).contains(e.target)) {
+        document.querySelector(`#search-query-${fragmentName}`).value = '';
+        resultsContainer.classList.remove('show');
+      }
+    });
+  })();
+</script>
 <!-- Content -->
 <section id="content" class="fragment content-fragment">
     <div class="container-fluid bg-light overlay">
@@ -616,6 +677,7 @@ html {
     <li>
       <ul>
         <li><a href="https://www.eclipse.org/glsp/documentation/rendering/#rendering">Rendering</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/rendering/#default-views">Default Views</a></li>
         <li><a href="https://www.eclipse.org/glsp/documentation/rendering/#styling">Styling</a></li>
       </ul>
     </li>
@@ -643,6 +705,32 @@ html {
       <ul>
         <li><a href="https://www.eclipse.org/glsp/documentation/clientlayouting/#layout-container">Layout Container</a></li>
         <li><a href="https://www.eclipse.org/glsp/documentation/clientlayouting/#edge-layout">Edge Layout</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+    </div>
+</section>
+</div>
+        </article><article id="list-page-ui-extensions"
+          class="col-12 px-0 mb-2">
+                <div class="col-12 pl-0 pb-1 text-body">
+                  <div data-toggle="collapse" data-target="#list-page-ui-extensions .collapse" data-add-collapse="#list-page-ui-extensions .article-title"
+                    class="row align-items-center justify-content-between mx-0 article-title">
+                      <h5 class="col px-0 m-0">
+                        <a href="https://www.eclipse.org/glsp/documentation/ui-extensions/">UI Extensions</a>
+                      </h5>
+                  </div>
+                </div><div class="collapse">
+<!--  -->
+<section id="toc" class="fragment ">
+    <div class="container p-0 ">
+<div class="toc"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="https://www.eclipse.org/glsp/documentation/ui-extensions/#register-and-activate-custom-ui-extensions">Register and activate custom UI Extensions</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/ui-extensions/#button-overlay-showcase">Button Overlay Showcase</a></li>
       </ul>
     </li>
   </ul>
@@ -746,6 +834,7 @@ html {
     <li>
       <ul>
         <li><a href="https://www.eclipse.org/glsp/documentation/rendering/#rendering">Rendering</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/rendering/#default-views">Default Views</a></li>
         <li><a href="https://www.eclipse.org/glsp/documentation/rendering/#styling">Styling</a></li>
       </ul>
     </li>
@@ -762,10 +851,12 @@ The derived SVG elements are then rendered on the canvas of the diagram widget.<
 <p>To define a new view, we have to create a class that implements the <code>IView</code> interface and register it for a specific type that is used in the graphical model.
 As an example, let’s configure that the view named <code>SLabelView</code> is used for all elements with the type “label:custom”.
 Therefore, we first need to create a dependency injection module, named <code>customDiagramModule</code> below, and configure the SLabelView for the graphical model element type “label:custom” using the <code>configureModelElement()</code> utility function:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">customDiagramModule</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">ContainerModule</span>((<span style="color:#a6e22e">bind</span>, <span style="color:#a6e22e">unbind</span>, <span style="color:#a6e22e">isBound</span>, <span style="color:#a6e22e">rebind</span>) <span style="color:#f92672">=&gt;</span> {
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">customDiagramModule</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">ContainerModule</span>(
+  (<span style="color:#a6e22e">bind</span>, <span style="color:#a6e22e">unbind</span>, <span style="color:#a6e22e">isBound</span>, <span style="color:#a6e22e">rebind</span>) <span style="color:#f92672">=&gt;</span> {
     <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">context</span> <span style="color:#f92672">=</span> { <span style="color:#a6e22e">bind</span>, <span style="color:#a6e22e">unbind</span>, <span style="color:#a6e22e">isBound</span>, <span style="color:#a6e22e">rebind</span> };
-    <span style="color:#a6e22e">configureModelElement</span>(<span style="color:#a6e22e">context</span>, <span style="color:#e6db74">&#39;label:custom&#39;</span>, <span style="color:#a6e22e">SLabel</span>, <span style="color:#a6e22e">SLabelView</span>);
-});
+    <span style="color:#a6e22e">configureModelElement</span>(<span style="color:#a6e22e">context</span>, <span style="color:#e6db74">&#34;label:custom&#34;</span>, <span style="color:#a6e22e">SLabel</span>, <span style="color:#a6e22e">SLabelView</span>);
+  }
+);
 </code></pre></div><p>The <code>configureModeElement()</code> function takes the inversify binding context, the graphical model type, its model class and its associated view as input. Under the hood this function sets up the necessary bindings so that the <em>GLSP client</em> knows that</p>
 <ul>
 <li>Graphical model elements (received from the GLSP Server) with type ‘label:custom’ are deserialized to instances of <code>SLabel</code></li>
@@ -775,7 +866,7 @@ Therefore, we first need to create a dependency injection module, named <code>cu
 With that, every element of type “label:custom” will be rendered with the view implementation <code>SLabelView</code>.</p>
 <p>Views themselves are typically implemented with <a href="https://www.typescriptlang.org/docs/handbook/jsx.html">JSX</a>, which simplifies the definition of SVG elements in Typescript. Therefore, the following generic imports are required in any module declaring a view to enable declaration of svg elements with JSX:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#75715e">/** @jsx svg */</span>
-<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">VNode</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#39;snabbdom&#39;</span>;
+<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">VNode</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;snabbdom&#34;</span>;
 <span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">RenderingContext</span>, <span style="color:#a6e22e">svg</span> } <span style="color:#66d9ef">from</span> <span style="color:#960050;background-color:#1e0010">‘</span><span style="color:#66d9ef">@eclipse</span><span style="color:#f92672">-</span><span style="color:#a6e22e">glsp</span><span style="color:#f92672">/</span><span style="color:#a6e22e">client</span><span style="color:#960050;background-color:#1e0010">’</span>;
 </code></pre></div><p>In addition, make sure that the following options are set in the <code>tsconfig.json</code> file of your project:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
@@ -786,24 +877,172 @@ With that, every element of type “label:custom” will be rendered with the vi
 </code></pre></div><p>With that, we can implement a view as follows:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-tsx" data-lang="tsx"><span style="color:#66d9ef">@injectable</span>()
 <span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SLabelView</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">ShapeView</span> {
-    <span style="color:#a6e22e">render</span>(<span style="color:#a6e22e">label</span>: <span style="color:#66d9ef">Readonly</span>&lt;<span style="color:#f92672">SLabel</span>&gt;, <span style="color:#a6e22e">context</span>: <span style="color:#66d9ef">RenderingContext</span>)<span style="color:#f92672">:</span> <span style="color:#a6e22e">VNode</span> <span style="color:#f92672">|</span> <span style="color:#66d9ef">undefined</span> {
-        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">isEdgeLayoutable</span>(<span style="color:#a6e22e">label</span>) <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span><span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">isVisible</span>(<span style="color:#a6e22e">label</span>, <span style="color:#a6e22e">context</span>)) {
-            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">undefined</span>;
-        }
-        <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">vnode</span> <span style="color:#f92672">=</span> &lt;<span style="color:#f92672">text</span> <span style="color:#a6e22e">class</span><span style="color:#960050;background-color:#1e0010">-</span><span style="color:#a6e22e">sprotty</span><span style="color:#960050;background-color:#1e0010">-</span><span style="color:#a6e22e">label</span><span style="color:#f92672">=</span>{<span style="color:#66d9ef">true</span>}&gt;{<span style="color:#a6e22e">label</span>.<span style="color:#a6e22e">text</span>}&lt;/<span style="color:#f92672">text</span>&gt;;
-        <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">subType</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">getSubType</span>(<span style="color:#a6e22e">label</span>);
-        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">subType</span>) {
-            <span style="color:#a6e22e">setAttr</span>(<span style="color:#a6e22e">vnode</span>, <span style="color:#e6db74">&#39;class&#39;</span>, <span style="color:#a6e22e">subType</span>);
-        }
-        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">vnode</span>;
+  <span style="color:#a6e22e">render</span>(
+    <span style="color:#a6e22e">label</span>: <span style="color:#66d9ef">Readonly</span>&lt;<span style="color:#f92672">SLabel</span>&gt;,
+    <span style="color:#a6e22e">context</span>: <span style="color:#66d9ef">RenderingContext</span>
+  )<span style="color:#f92672">:</span> <span style="color:#a6e22e">VNode</span> <span style="color:#f92672">|</span> <span style="color:#66d9ef">undefined</span> {
+    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">isEdgeLayoutable</span>(<span style="color:#a6e22e">label</span>) <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span><span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">isVisible</span>(<span style="color:#a6e22e">label</span>, <span style="color:#a6e22e">context</span>)) {
+      <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">undefined</span>;
     }
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">vnode</span> <span style="color:#f92672">=</span> &lt;<span style="color:#f92672">text</span> <span style="color:#a6e22e">class</span><span style="color:#960050;background-color:#1e0010">-</span><span style="color:#a6e22e">sprotty</span><span style="color:#960050;background-color:#1e0010">-</span><span style="color:#a6e22e">label</span><span style="color:#f92672">=</span>{<span style="color:#66d9ef">true</span>}&gt;{<span style="color:#a6e22e">label</span>.<span style="color:#a6e22e">text</span>}&lt;/<span style="color:#f92672">text</span>&gt;;
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">subType</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">getSubType</span>(<span style="color:#a6e22e">label</span>);
+    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">subType</span>) {
+      <span style="color:#a6e22e">setAttr</span>(<span style="color:#a6e22e">vnode</span>, <span style="color:#e6db74">&#34;class&#34;</span>, <span style="color:#a6e22e">subType</span>);
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">vnode</span>;
+  }
 }
 </code></pre></div><p>Every view has to implement the <code>render(</code>) method.
 The <code>render(</code>) method takes the graphical model element as input and returns the corresponding SVG element as virtual DOM node.
 The viewer queries all registered views and creates a new virtual DOM which is then used to patch the current DOM of the diagram widget.</p>
 <p>Note that the <code>SLabelView</code> also checks whether the given element is visible and skips the SVG generation if the element is not visible in the diagram canvas.
-This check is optional but it’s highly recommended to implement it in your custom views as it heavily improves the rendering performance.
-</br></br></p>
+This check is optional but it’s highly recommended to implement it in your custom views as it heavily improves the rendering performance.</p>
+<h3 id="default-views">Default Views</h3>
+<p>The following sections give an overview of available default views in Sprotty and GLSP and how to configure them.</p>
+<h4 id="default-sprotty-views">Default Sprotty Views</h4>
+<p>The following views are provided by the base framework <a href="https://github.com/eclipse/sprotty">Sprotty</a>.</p>
+<h5 id="circularnodeviewhttpsgithubcomeclipsesprottyblobmasterpackagessprottysrclibsvg-viewstsx"><a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/lib/svg-views.tsx">CircularNodeView</a></h5>
+<p>A <code>CircularNodeView</code> creates a round shape with a radius computed from the shape&rsquo;s size (by default it computes the radius by the minimum of the shape&rsquo;s width or height and divides that by 2).
+The computation of the radius can be overridden and adapted to custom needs.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">configureModelElement</span>(
+  <span style="color:#a6e22e">context</span>,
+  <span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">NODE_CIRCLE</span>,
+  <span style="color:#a6e22e">CircularNode</span>,
+  <span style="color:#a6e22e">CircularNodeView</span>
+);
+</code></pre></div><h5 id="diamondnodeviewhttpsgithubcomeclipsesprottyblobmasterpackagessprottysrclibsvg-viewstsx"><a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/lib/svg-views.tsx">DiamondNodeView</a></h5>
+<p>A <code>DiamondNodeView</code> creates a rhombus shape based on the shape&rsquo;s size.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">configureModelElement</span>(
+  <span style="color:#a6e22e">context</span>,
+  <span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">NODE_DIAMOND</span>,
+  <span style="color:#a6e22e">DiamondNode</span>,
+  <span style="color:#a6e22e">DiamondNodeView</span>
+);
+</code></pre></div><h5 id="expandbuttonviewhttpsgithubcomeclipsesprottyblobmasterpackagessprottysrcfeaturesexpandviewstsx"><a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/features/expand/views.tsx">ExpandButtonView</a></h5>
+<p>The <code>ExpandButtonView</code> renders a SVG element in the shape of a triangle that allows expandable parent elements to trigger expansion, for example to display further element information.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">configureModelElement</span>(
+  <span style="color:#a6e22e">context</span>,
+  <span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">BUTTON_EXPAND</span>,
+  <span style="color:#a6e22e">SButton</span>,
+  <span style="color:#a6e22e">ExpandButtonView</span>
+);
+</code></pre></div><h5 id="foreignobjectviewhttpsgithubcomeclipsesprottyblobmasterpackagessprottysrclibgeneric-viewstsx"><a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/lib/generic-views.tsx">ForeignObjectView</a></h5>
+<p>The <code>ForeignObjectView</code> renders elements that are foreign to SVG, such as HTML, MathML, etc. as specified in their <code>namespace</code> and <code>code</code> property.
+Usually such an element is contained by a node view that enables features, such as resizing and moving of the element.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">configureModelElement</span>(
+  <span style="color:#a6e22e">context</span>,
+  <span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">FOREIGN_OBJECT</span>,
+  <span style="color:#a6e22e">ForeignObjectElement</span>,
+  <span style="color:#a6e22e">ForeignObjectView</span>,
+  {
+    <span style="color:#a6e22e">disable</span><span style="color:#f92672">:</span> [<span style="color:#a6e22e">selectFeature</span>, <span style="color:#a6e22e">moveFeature</span>],
+  }
+);
+</code></pre></div><details><summary>Example implementation</summary>
+<p>A common example use case for using a <code>ForeignObjectView</code> is to benefit from word wrapping support of HTML to show multiline text box.
+Therefore we would create a custom text node (which extends the <code>ForeignObjectElement</code>) which also implements the <code>EditableLabel</code> interface.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MultiLineTextNode</span>
+  <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">ForeignObjectElement</span>
+  <span style="color:#66d9ef">implements</span> <span style="color:#a6e22e">EditableLabel</span>
+{
+  <span style="color:#66d9ef">readonly</span> <span style="color:#66d9ef">is</span>;
+  <span style="color:#a6e22e">text</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>;
+  <span style="color:#66d9ef">set</span> <span style="color:#a6e22e">bounds</span>(<span style="color:#a6e22e">bounds</span>: <span style="color:#66d9ef">Bounds</span>) {
+    <span style="color:#75715e">/* ignore set bounds, always use the parent&#39;s bounds */</span>
+  }
+  <span style="color:#66d9ef">get</span> <span style="color:#a6e22e">bounds</span>()<span style="color:#f92672">:</span> <span style="color:#a6e22e">Bounds</span> {
+    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">isBoundsAware</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">parent</span>)) {
+      <span style="color:#66d9ef">return</span> {
+        <span style="color:#a6e22e">x</span>: <span style="color:#66d9ef">this.position.x</span>,
+        <span style="color:#a6e22e">y</span>: <span style="color:#66d9ef">this.position.y</span>,
+        <span style="color:#a6e22e">width</span>: <span style="color:#66d9ef">this.parent.bounds.width</span>,
+        <span style="color:#a6e22e">height</span>: <span style="color:#66d9ef">this.parent.bounds.height</span>,
+      };
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">EMPTY_BOUNDS</span>;
+  }
+  <span style="color:#66d9ef">get</span> <span style="color:#a6e22e">code</span>()<span style="color:#f92672">:</span> <span style="color:#66d9ef">string</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">`&lt;pre&gt;</span><span style="color:#e6db74">${</span><span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">text</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&lt;/pre&gt;`</span>;
+  }
+  <span style="color:#66d9ef">get</span> <span style="color:#66d9ef">namespace</span>()<span style="color:#f92672">:</span> <span style="color:#66d9ef">string</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;http://www.w3.org/1999/xhtml&#34;</span>;
+  }
+  <span style="color:#66d9ef">get</span> <span style="color:#a6e22e">editControlDimension</span>()<span style="color:#f92672">:</span> <span style="color:#a6e22e">Dimension</span> {
+    <span style="color:#66d9ef">return</span> {
+      <span style="color:#a6e22e">width</span>: <span style="color:#66d9ef">this.bounds.width</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">4</span>,
+      <span style="color:#a6e22e">height</span>: <span style="color:#66d9ef">this.bounds.height</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">4</span>,
+    };
+  }
+}
+</code></pre></div><p>To register this node type, we configure it with <code>ForeignObjectView</code>, disable <code>moveFeature</code> and <code>selectFeature</code> (as this handled by its parent node).
+To be able to edit this multi-line comment node we need to enable the <code>editLabelFeature</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">configureModelElement</span>(
+  <span style="color:#a6e22e">context</span>,
+  <span style="color:#e6db74">&#34;comment-node&#34;</span>,
+  <span style="color:#a6e22e">MultiLineTextNode</span>,
+  <span style="color:#a6e22e">ForeignObjectView</span>,
+  { <span style="color:#a6e22e">disable</span><span style="color:#f92672">:</span> [<span style="color:#a6e22e">moveFeature</span>, <span style="color:#a6e22e">selectFeature</span>], <span style="color:#a6e22e">enable</span><span style="color:#f92672">:</span> [<span style="color:#a6e22e">editLabelFeature</span>] }
+);
+</code></pre></div></details>
+<h5 id="prerenderedviewhttpsgithubcomeclipsesprottyblobmasterpackagessprottysrclibgeneric-viewstsx"><a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/lib/generic-views.tsx">PreRenderedView</a></h5>
+<p>The <code>PreRenderedView</code> visualizes a previously rendered piece of svg code as a separate SVG element.
+This enables putting SVG code directly in the graphical model, which may be useful for including complex images for certain use cases.
+However, usually it is recommended to create a dedicated element type and register a dedicated view, which produces custom SVG, as this yields more flexibility to take bounds, etc., into account.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">configureModelElement</span>(
+  <span style="color:#a6e22e">context</span>,
+  <span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">PRE_RENDERED</span>,
+  <span style="color:#a6e22e">PreRenderedElement</span> <span style="color:#f92672">|</span> <span style="color:#a6e22e">ShapedPreRenderedElement</span>,
+  <span style="color:#a6e22e">PreRenderedView</span>
+);
+</code></pre></div><h5 id="rectangularnodeviewhttpsgithubcomeclipsesprottyblobmasterpackagessprottysrclibsvg-viewstsx"><a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/lib/svg-views.tsx">RectangularNodeView</a></h5>
+<p>A <code>RectangularNodeView</code> creates a rectangular shape based on the shape&rsquo;s size.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">configureModelElement</span>(
+  <span style="color:#a6e22e">context</span>,
+  <span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">NODE_RECTANGLE</span>,
+  <span style="color:#a6e22e">RectangularNode</span>,
+  <span style="color:#a6e22e">RectangularNodeView</span>
+);
+</code></pre></div><h5 id="sgraphviewhttpsgithubcomeclipsesprottyblobmasterpackagessprottysrcgraphviewstsx"><a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/graph/views.tsx">SGraphView</a></h5>
+<p>The <code>SGraphView</code> renders the base SVG canvas for an SModel and triggers the rendering of its children.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">configureModelElement</span>(<span style="color:#a6e22e">context</span>, <span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">GRAPH</span>, <span style="color:#a6e22e">GLSPGraph</span>, <span style="color:#a6e22e">SGraphView</span>);
+</code></pre></div><h5 id="slabelviewhttpsgithubcomeclipsesprottyblobmasterpackagessprottysrcgraphviewstsx"><a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/graph/views.tsx">SLabelView</a></h5>
+<p>The <code>SLabelView</code> renders a text element that contains the given label text.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">configureModelElement</span>(<span style="color:#a6e22e">context</span>, <span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">LABEL</span>, <span style="color:#a6e22e">SLabel</span>, <span style="color:#a6e22e">SLabelView</span>);
+</code></pre></div><h5 id="sroutinghandleviewhttpsgithubcomeclipsesprottyblobmasterpackagessprottysrcgraphviewstsx"><a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/graph/views.tsx">SRoutingHandleView</a></h5>
+<p>A <code>SRoutingHandleView</code> renders a circle shaped element that servers as routing point for routable elements (e.g. Edges).
+Its position is computed either by a registered <code>EdgeRouterRegistry</code> or the routing arguments of the element.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">configureModelElement</span>(
+  <span style="color:#a6e22e">context</span>,
+  <span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">ROUTING_POINT</span>,
+  <span style="color:#a6e22e">SRoutingHandle</span>,
+  <span style="color:#a6e22e">SRoutingHandleView</span>
+);
+</code></pre></div><h4 id="default-glsp-views">Default GLSP Views</h4>
+<p>The following views are provided by the <a href="https://github.com/eclipse-glsp/glsp-client">GLSP client</a> framework.</p>
+<h5 id="gedgeviewhttpsgithubcomeclipse-glspglsp-clientblobmasterpackagesclientsrcviewsglsp-edge-viewtsx"><a href="https://github.com/eclipse-glsp/glsp-client/blob/master/packages/client/src/views/glsp-edge-view.tsx">GEdgeView</a></h5>
+<p>A <code>GEdgeView</code> renders a line element which is routed by the <code>EdgeRouterRegistry</code>.
+The view also triggers the rendering of additional elements (such as mouse handles) and edge children (such as edge labels or routing points).</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">configureModelElement</span>(<span style="color:#a6e22e">context</span>, <span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">EDGE</span>, <span style="color:#a6e22e">SEdge</span>, <span style="color:#a6e22e">GEdgeView</span>);
+</code></pre></div><h5 id="gissuemarkerviewhttpsgithubcomeclipse-glspglsp-clientblobmasterpackagesclientsrcviewsissue-marker-viewtsx"><a href="https://github.com/eclipse-glsp/glsp-client/blob/master/packages/client/src/views/issue-marker-view.tsx">GIssueMarkerView</a></h5>
+<p>A <code>GIssueMarkerView</code> renders an issue marker on top of shapes. This is used to show validation results on elements (see Model Validation).
+These issue markers are elements in the shape of an information, warning or error icon based on the severity of the issue.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">configureModelElement</span>(
+  <span style="color:#a6e22e">context</span>,
+  <span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">ISSUE_MARKER</span>,
+  <span style="color:#a6e22e">SIssueMarker</span>,
+  <span style="color:#a6e22e">GIssueMarkerView</span>
+);
+</code></pre></div><h5 id="roundedcornernodeviewhttpsgithubcomeclipse-glspglsp-clientblobmasterpackagesclientsrcviewsrounded-corner-viewtsx"><a href="https://github.com/eclipse-glsp/glsp-client/blob/master/packages/client/src/views/rounded-corner-view.tsx">RoundedCornerNodeView</a></h5>
+<p>A <code>RectangularNodeView</code> creates a rectangular shape based shape&rsquo;s size and computes and renders the corners in a rounded way, based on the given options (i.e. <code>getClipPathInsets</code>).</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">configureModelElement</span>(<span style="color:#a6e22e">context</span>, <span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">NODE</span>, <span style="color:#a6e22e">SNode</span>, <span style="color:#a6e22e">RoundedCornerNodeView</span>);
+</code></pre></div><h5 id="structurecompartmentviewhttpsgithubcomeclipse-glspglsp-clientblobmasterpackagesclientsrcviewscompartmentstsx"><a href="https://github.com/eclipse-glsp/glsp-client/blob/master/packages/client/src/views/compartments.tsx">StructureCompartmentView</a></h5>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">configureModelElement</span>(
+  <span style="color:#a6e22e">context</span>,
+  <span style="color:#e6db74">&#34;struct&#34;</span>,
+  <span style="color:#a6e22e">SCompartment</span>,
+  <span style="color:#a6e22e">StructureCompartmentView</span>
+);
+</code></pre></div><p></br></br></p>
 <h3 id="styling">Styling</h3>
 <p>The style of the rendered SVG elements is controlled with plain CSS.
 CSS classes can be declared directly in the corresponding view.
@@ -813,26 +1052,24 @@ The <code>SLabelView</code>, for instance, adds the CSS class ‘sprotty-label�
 For instance, the server could send the following graphical model element:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
   <span style="color:#f92672">&#34;id&#34;</span>: <span style="color:#e6db74">&#34;myCustomLabel&#34;</span>,
-  <span style="color:#f92672">&#34;type&#34;</span>:<span style="color:#e6db74">&#34;label:custom&#34;</span>,
-  <span style="color:#f92672">&#34;cssClasses&#34;</span>:[
-    <span style="color:#e6db74">&#34;my-custom-class&#34;</span>
-  ]
+  <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;label:custom&#34;</span>,
+  <span style="color:#f92672">&#34;cssClasses&#34;</span>: [<span style="color:#e6db74">&#34;my-custom-class&#34;</span>]
 }
 </code></pre></div><p>Keeping our previous model configuration in mind, the corresponding SVG element now has two css classes applied: ‘sprotty-label’ and ‘my-custom-class’.</p>
 <p>Based on those CSS classes, we can define CSS rules:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">.<span style="color:#a6e22e">sprotty-label</span> {
-    fill: <span style="color:#66d9ef">black</span>;
-    <span style="color:#66d9ef">font-size</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">%</span>;
+  fill: <span style="color:#66d9ef">black</span>;
+  <span style="color:#66d9ef">font-size</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">%</span>;
 }
 
 .<span style="color:#a6e22e">my-custom-class</span>.<span style="color:#a6e22e">sprotty-label</span> {
-    fill: <span style="color:#66d9ef">red</span>;
+  fill: <span style="color:#66d9ef">red</span>;
 }
 </code></pre></div><p>This simple style sheet declares that elements with the class ‘sprotty-label’’ should be rendered in black.
 If “my-custom-class’’ is applied as well they are rendered in red.
 To load this stylesheet it has to be imported somewhere in the project.
 Typically this is done in the &ldquo;di.config.ts” file as it’s the entry point of the diagram DI container.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">import</span> <span style="color:#e6db74">&#39;../css/diagram.css&#39;</span>;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">import</span> <span style="color:#e6db74">&#34;../css/diagram.css&#34;</span>;
 
 <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">customDiagramModule</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">ContainerModule</span>((<span style="color:#a6e22e">bind</span>,<span style="color:#a6e22e">unbind</span>, <span style="color:#a6e22e">isBound</span>,<span style="color:#a6e22e">rebind</span>)<span style="color:#f92672">=&gt;</span>{
 <span style="color:#960050;background-color:#1e0010">…</span>
@@ -954,6 +1191,7 @@ Typically this is done in the &ldquo;di.config.ts” file as it’s the entry po
 
     <!-- Theme Code -->
       <script async defer src="/glsp/scripts/syna-main.min.68ae1ae47948304c9c224cfc1a97ffe16c57514bc587dd6140dcb82389a8d299.js"></script>
+      <script async defer src="/glsp/scripts/syna-search.min.647ab37afa752ff5b6d866ed67df267795da44cad28ceed27646bdaef99e386f.js"></script>
       <script async defer src="/glsp/scripts/syna-content.min.bf537eb5ace369e45e8b4ed41b8d235a65db92236a400ed5659f7a3c41d0f221.js"></script>
       <script async defer src="/glsp/scripts/syna-collapse.min.1f6ca6206008af133f158e2b7b650b4156b8fc33189c5a6142db3bb43c7ad8e7.js"></script>
   </body>

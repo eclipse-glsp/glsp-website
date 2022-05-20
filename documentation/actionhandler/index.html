@@ -408,7 +408,7 @@ html {
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="navbar-collapse justify-content-end collapse show" id="navbarCollapse">
+    <div class="navbar-collapse justify-content-between collapse show" id="navbarCollapse">
       <ul class="navbar-nav"><li class="nav-item">
               <a href="/glsp/"
                   class="nav-link">
@@ -446,6 +446,21 @@ html {
               </a>
             </li>
       </ul>
+        <div class="search-container position-relative">
+          <form action="https://www.eclipse.org/glsp/search" class="my-0">
+            <div class="input-group my-0">
+              <input type="text" class="form-control py-1" id="search-query-nav" name="s" placeholder="Search...">
+              <div class="input-group-append">
+                <button class="btn btn-primary" title="Search"><i class="fa fa-search"></i></button>
+              </div>
+            </div>
+          </form>
+          <div class="search-results-container">
+            <div class="col p-0">
+              <div id="search-results-nav" class="col px-0 results"></div>
+            </div>
+          </div>
+        </div>
     </div>
   </div>
 </nav>
@@ -454,6 +469,52 @@ html {
   title="Back to top"
   ><i class="fas fa-angle-up"></i><span class="sr-only">Back to top</span>
 </div>
+
+<script id="search-empty-template-nav" type="text/x-js-template">
+  <p class="p-2">Please enter a word or phrase above</p>
+</script>
+<script id="search-no-results-template-nav" type="text/x-js-template">
+  <p class="p-2">No matches found</p>
+</script>
+<script id="search-result-template-nav" type="text/x-js-template">
+  <a href="${link}" id="summary-${key}" class="result ignore-color-change">
+    <div class="p-2">
+      <h5>${title}</h5>
+      <p class="m-0 text-body">${snippet}</p>
+      ${ isset tags }<p>Tags: ${tags}</p>${ end }
+      ${ isset categories }<p>Categories: ${categories}</p>${ end }
+    </div>
+  </a>
+</script>
+
+<script>
+  (function() {
+    var fragmentName = "nav";
+    window.syna.api.register('search', 'search-' + fragmentName, {
+      searchInput: `#search-query-${fragmentName}`,
+      resultsContainer: `#search-results-${fragmentName}`,
+      template: `#search-result-template-${fragmentName}`,
+      noResults: `#search-no-results-template-${fragmentName}`,
+      empty: `#search-empty-template-${fragmentName}`,
+    });
+
+    var resultsContainer = document.querySelector(`#${fragmentName} .search-results-container`)
+    document.querySelector(`#search-query-${fragmentName}`).addEventListener('input', function(e) {
+      if (e.target.value.length) {
+        resultsContainer.classList.add('show');
+      } else {
+        resultsContainer.classList.remove('show');
+      }
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!document.querySelector(`#${fragmentName} .search-container`).contains(e.target)) {
+        document.querySelector(`#search-query-${fragmentName}`).value = '';
+        resultsContainer.classList.remove('show');
+      }
+    });
+  })();
+</script>
 <!-- Content -->
 <section id="content" class="fragment content-fragment">
     <div class="container-fluid bg-light overlay">
@@ -616,6 +677,7 @@ html {
     <li>
       <ul>
         <li><a href="https://www.eclipse.org/glsp/documentation/rendering/#rendering">Rendering</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/rendering/#default-views">Default Views</a></li>
         <li><a href="https://www.eclipse.org/glsp/documentation/rendering/#styling">Styling</a></li>
       </ul>
     </li>
@@ -643,6 +705,32 @@ html {
       <ul>
         <li><a href="https://www.eclipse.org/glsp/documentation/clientlayouting/#layout-container">Layout Container</a></li>
         <li><a href="https://www.eclipse.org/glsp/documentation/clientlayouting/#edge-layout">Edge Layout</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+    </div>
+</section>
+</div>
+        </article><article id="list-page-ui-extensions"
+          class="col-12 px-0 mb-2">
+                <div class="col-12 pl-0 pb-1 text-body">
+                  <div data-toggle="collapse" data-target="#list-page-ui-extensions .collapse" data-add-collapse="#list-page-ui-extensions .article-title"
+                    class="row align-items-center justify-content-between mx-0 article-title">
+                      <h5 class="col px-0 m-0">
+                        <a href="https://www.eclipse.org/glsp/documentation/ui-extensions/">UI Extensions</a>
+                      </h5>
+                  </div>
+                </div><div class="collapse">
+<!--  -->
+<section id="toc" class="fragment ">
+    <div class="container p-0 ">
+<div class="toc"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="https://www.eclipse.org/glsp/documentation/ui-extensions/#register-and-activate-custom-ui-extensions">Register and activate custom UI Extensions</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/ui-extensions/#button-overlay-showcase">Button Overlay Showcase</a></li>
       </ul>
     </li>
   </ul>
@@ -798,12 +886,10 @@ Besides, adopters can replace and extend existing, or add additional action hand
 </code></pre></div></details>
 <details open><summary>GLSP Client/Node GLSP Server</summary>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyCustomAction</span> <span style="color:#66d9ef">implements</span> <span style="color:#a6e22e">Action</span> {
-    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">readonly</span> <span style="color:#a6e22e">KIND</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;myCustomKind&#39;</span>;
-    <span style="color:#a6e22e">kind</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">MyCustomAction</span>.<span style="color:#a6e22e">KIND</span>;
+  <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">readonly</span> <span style="color:#a6e22e">KIND</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;myCustomKind&#34;</span>;
+  <span style="color:#a6e22e">kind</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">MyCustomAction</span>.<span style="color:#a6e22e">KIND</span>;
 
-    <span style="color:#66d9ef">constructor</span>(<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">readonly</span> <span style="color:#a6e22e">additionalInformation</span>: <span style="color:#66d9ef">string</span>) {
-        
-    }
+  <span style="color:#66d9ef">constructor</span>(<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">readonly</span> <span style="color:#a6e22e">additionalInformation</span>: <span style="color:#66d9ef">string</span>) {}
 }
 </code></pre></div></details>
 </br>
@@ -832,11 +918,16 @@ In addition, references to graphical model elements should be done by id.</p>
 <span style="color:#f92672">}</span>
 </code></pre></div></details>
 <details open><summary>GLSP Client/Node GLSP Server</summary>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyCustomRequestAction</span> <span style="color:#66d9ef">implements</span> <span style="color:#a6e22e">RequestAction</span>&lt;<span style="color:#f92672">MyCustomResponseAction</span>&gt; {
-    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">readonly</span> <span style="color:#a6e22e">KIND</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;myCustomRequest&#39;</span>;
-    <span style="color:#a6e22e">kind</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">MyCustomRequestAction</span>.<span style="color:#a6e22e">KIND</span>;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyCustomRequestAction</span>
+  <span style="color:#66d9ef">implements</span> <span style="color:#a6e22e">RequestAction</span>&lt;<span style="color:#f92672">MyCustomResponseAction</span>&gt;
+{
+  <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">readonly</span> <span style="color:#a6e22e">KIND</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;myCustomRequest&#34;</span>;
+  <span style="color:#a6e22e">kind</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">MyCustomRequestAction</span>.<span style="color:#a6e22e">KIND</span>;
 
-    <span style="color:#66d9ef">constructor</span>(<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">readonly</span> <span style="color:#a6e22e">additionalInformation</span>: <span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">readonly</span> <span style="color:#a6e22e">requestId</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>) {}
+  <span style="color:#66d9ef">constructor</span>(
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">readonly</span> <span style="color:#a6e22e">additionalInformation</span>: <span style="color:#66d9ef">string</span>,
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">readonly</span> <span style="color:#a6e22e">requestId</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>
+  ) {}
 }
 </code></pre></div></details>
 </br>
@@ -853,12 +944,11 @@ Of course, the response action specification has to be specified as well:</p>
 </code></pre></div></details>
 <details open><summary>GLSP Client/Node GLSP Server</summary>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyCustomResponseAction</span> <span style="color:#66d9ef">implements</span> <span style="color:#a6e22e">ResponseAction</span> {
-    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">readonly</span> <span style="color:#a6e22e">KIND</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;myCustomResponse&#39;</span>;
-    <span style="color:#a6e22e">kind</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">MyCustomResponseAction</span>.<span style="color:#a6e22e">KIND</span>;
+  <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">readonly</span> <span style="color:#a6e22e">KIND</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;myCustomResponse&#34;</span>;
+  <span style="color:#a6e22e">kind</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">MyCustomResponseAction</span>.<span style="color:#a6e22e">KIND</span>;
 
-    <span style="color:#66d9ef">constructor</span>(<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">responseId</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>) {}
+  <span style="color:#66d9ef">constructor</span>(<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">responseId</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>) {}
 }
-
 </code></pre></div></details>
 </br>
 <p>The client can dispatch a request action either in blocking fashion awaiting the response:</p>
@@ -876,7 +966,7 @@ Of course, the response action specification has to be specified as well:</p>
 <p>To create a new action handler, a class that implements the <code>ActionHandler</code> interface has to be created.
 In general, an action handler can handle one or more action kinds.
 However, handling multiple action kinds is typically reserved for rather uncommon edge cases.
-Therefore, the Java GLSP server provides an abstract base class that is designed for the single-action-kind-per-hanlder use case.</p>
+Therefore, the Java GLSP server provides an abstract base class that is designed for the single-action-kind-per-handler use case.</p>
 <details open><summary>Java GLSP Server</summary>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyCustomActionHandler</span> <span style="color:#66d9ef">extends</span> AbstractActionHandler<span style="color:#f92672">&lt;</span>MyCustomResponseAction<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
 
@@ -894,15 +984,15 @@ Therefore, the Java GLSP server provides an abstract base class that is designed
 <details><summary>Node GLSP Server</summary>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">@injectable</span>()
 <span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyCustomActionHandler</span> <span style="color:#66d9ef">implements</span> <span style="color:#a6e22e">ActionHandler</span> {
-    <span style="color:#a6e22e">actionKinds</span> <span style="color:#f92672">=</span> [<span style="color:#a6e22e">MyCustomRequestAction</span>.<span style="color:#a6e22e">KIND</span>];
+  <span style="color:#a6e22e">actionKinds</span> <span style="color:#f92672">=</span> [<span style="color:#a6e22e">MyCustomRequestAction</span>.<span style="color:#a6e22e">KIND</span>];
 
-    <span style="color:#a6e22e">execute</span>(<span style="color:#a6e22e">action</span>: <span style="color:#66d9ef">MyCustomRequestAction</span>)<span style="color:#f92672">:</span> <span style="color:#a6e22e">MaybePromise</span>&lt;<span style="color:#f92672">Action</span><span style="color:#960050;background-color:#1e0010">[]</span>&gt; {
-        <span style="color:#75715e">// implement your custom logic to handle the action
+  <span style="color:#a6e22e">execute</span>(<span style="color:#a6e22e">action</span>: <span style="color:#66d9ef">MyCustomRequestAction</span>)<span style="color:#f92672">:</span> <span style="color:#a6e22e">MaybePromise</span>&lt;<span style="color:#f92672">Action</span><span style="color:#960050;background-color:#1e0010">[]</span>&gt; {
+    <span style="color:#75715e">// implement your custom logic to handle the action
 </span><span style="color:#75715e"></span>
-        <span style="color:#75715e">// Finally issue response actions
-</span><span style="color:#75715e"></span>        <span style="color:#75715e">// If no response actions should be issued &#39;[]&#39; can be used;
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> [<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">MyCustomResponseAction</span>()];
-    }
+    <span style="color:#75715e">// Finally issue response actions
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// If no response actions should be issued &#39;[]&#39; can be used;
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> [<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">MyCustomResponseAction</span>()];
+  }
 }
 </code></pre></div></details>
 </br>
@@ -948,11 +1038,11 @@ The action dispatcher tracks all incoming request actions and automatically inte
 <p>On the client, GLSP reuses the <code>IActionHandler</code> API of <a href="https://github.com/eclipse/sprotty">Sprotty</a>.
 Therefore, to create a new action handler, a class that implements the <code>IActionHandler</code> interface has to be created.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">@injectable</span>()
-<span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyCustomResponseActionHandler</span> <span style="color:#66d9ef">implements</span> <span style="color:#a6e22e">IActionHandler</span>{
-    <span style="color:#a6e22e">handle</span>(<span style="color:#a6e22e">action</span>: <span style="color:#66d9ef">MyCustomResponseAction</span>)<span style="color:#f92672">:</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">|</span> <span style="color:#a6e22e">Action</span> {
-        <span style="color:#75715e">// implement your custom logic to handle the action
-</span><span style="color:#75715e"></span>        <span style="color:#75715e">// Optionally issue a response action
-</span><span style="color:#75715e"></span>    }
+<span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyCustomResponseActionHandler</span> <span style="color:#66d9ef">implements</span> <span style="color:#a6e22e">IActionHandler</span> {
+  <span style="color:#a6e22e">handle</span>(<span style="color:#a6e22e">action</span>: <span style="color:#66d9ef">MyCustomResponseAction</span>)<span style="color:#f92672">:</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">|</span> <span style="color:#a6e22e">Action</span> {
+    <span style="color:#75715e">// implement your custom logic to handle the action
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// Optionally issue a response action
+</span><span style="color:#75715e"></span>  }
 }
 </code></pre></div><p>The <code>handle()</code> method has to be implemented to provide the custom logic of your action handler.
 It optionally returns a response action that should be dispatched after the handler execution.</p>
@@ -1080,6 +1170,7 @@ The GLSP server sends this information during the initialization process and the
 
     <!-- Theme Code -->
       <script async defer src="/glsp/scripts/syna-main.min.68ae1ae47948304c9c224cfc1a97ffe16c57514bc587dd6140dcb82389a8d299.js"></script>
+      <script async defer src="/glsp/scripts/syna-search.min.647ab37afa752ff5b6d866ed67df267795da44cad28ceed27646bdaef99e386f.js"></script>
       <script async defer src="/glsp/scripts/syna-content.min.bf537eb5ace369e45e8b4ed41b8d235a65db92236a400ed5659f7a3c41d0f221.js"></script>
       <script async defer src="/glsp/scripts/syna-collapse.min.1f6ca6206008af133f158e2b7b650b4156b8fc33189c5a6142db3bb43c7ad8e7.js"></script>
   </body>

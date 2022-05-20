@@ -406,7 +406,7 @@ html {
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="navbar-collapse justify-content-end collapse show" id="navbarCollapse">
+    <div class="navbar-collapse justify-content-between collapse show" id="navbarCollapse">
       <ul class="navbar-nav"><li class="nav-item">
               <a href="/glsp/"
                   class="nav-link">
@@ -444,6 +444,21 @@ html {
               </a>
             </li>
       </ul>
+        <div class="search-container position-relative">
+          <form action="https://www.eclipse.org/glsp/search" class="my-0">
+            <div class="input-group my-0">
+              <input type="text" class="form-control py-1" id="search-query-nav" name="s" placeholder="Search...">
+              <div class="input-group-append">
+                <button class="btn btn-primary" title="Search"><i class="fa fa-search"></i></button>
+              </div>
+            </div>
+          </form>
+          <div class="search-results-container">
+            <div class="col p-0">
+              <div id="search-results-nav" class="col px-0 results"></div>
+            </div>
+          </div>
+        </div>
     </div>
   </div>
 </nav>
@@ -452,6 +467,52 @@ html {
   title="Back to top"
   ><i class="fas fa-angle-up"></i><span class="sr-only">Back to top</span>
 </div>
+
+<script id="search-empty-template-nav" type="text/x-js-template">
+  <p class="p-2">Please enter a word or phrase above</p>
+</script>
+<script id="search-no-results-template-nav" type="text/x-js-template">
+  <p class="p-2">No matches found</p>
+</script>
+<script id="search-result-template-nav" type="text/x-js-template">
+  <a href="${link}" id="summary-${key}" class="result ignore-color-change">
+    <div class="p-2">
+      <h5>${title}</h5>
+      <p class="m-0 text-body">${snippet}</p>
+      ${ isset tags }<p>Tags: ${tags}</p>${ end }
+      ${ isset categories }<p>Categories: ${categories}</p>${ end }
+    </div>
+  </a>
+</script>
+
+<script>
+  (function() {
+    var fragmentName = "nav";
+    window.syna.api.register('search', 'search-' + fragmentName, {
+      searchInput: `#search-query-${fragmentName}`,
+      resultsContainer: `#search-results-${fragmentName}`,
+      template: `#search-result-template-${fragmentName}`,
+      noResults: `#search-no-results-template-${fragmentName}`,
+      empty: `#search-empty-template-${fragmentName}`,
+    });
+
+    var resultsContainer = document.querySelector(`#${fragmentName} .search-results-container`)
+    document.querySelector(`#search-query-${fragmentName}`).addEventListener('input', function(e) {
+      if (e.target.value.length) {
+        resultsContainer.classList.add('show');
+      } else {
+        resultsContainer.classList.remove('show');
+      }
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!document.querySelector(`#${fragmentName} .search-container`).contains(e.target)) {
+        document.querySelector(`#search-query-${fragmentName}`).value = '';
+        resultsContainer.classList.remove('show');
+      }
+    });
+  })();
+</script>
 <!-- Content -->
 <section id="content" class="fragment content-fragment">
     <div class="container-fluid bg-light overlay">
@@ -614,6 +675,7 @@ html {
     <li>
       <ul>
         <li><a href="https://www.eclipse.org/glsp/documentation/rendering/#rendering">Rendering</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/rendering/#default-views">Default Views</a></li>
         <li><a href="https://www.eclipse.org/glsp/documentation/rendering/#styling">Styling</a></li>
       </ul>
     </li>
@@ -641,6 +703,32 @@ html {
       <ul>
         <li><a href="https://www.eclipse.org/glsp/documentation/clientlayouting/#layout-container">Layout Container</a></li>
         <li><a href="https://www.eclipse.org/glsp/documentation/clientlayouting/#edge-layout">Edge Layout</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+    </div>
+</section>
+</div>
+        </article><article id="list-page-ui-extensions"
+          class="col-12 px-0 mb-2">
+                <div class="col-12 pl-0 pb-1 text-body">
+                  <div data-toggle="collapse" data-target="#list-page-ui-extensions .collapse" data-add-collapse="#list-page-ui-extensions .article-title"
+                    class="row align-items-center justify-content-between mx-0 article-title">
+                      <h5 class="col px-0 m-0">
+                        <a href="https://www.eclipse.org/glsp/documentation/ui-extensions/">UI Extensions</a>
+                      </h5>
+                  </div>
+                </div><div class="collapse">
+<!--  -->
+<section id="toc" class="fragment ">
+    <div class="container p-0 ">
+<div class="toc"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="https://www.eclipse.org/glsp/documentation/ui-extensions/#register-and-activate-custom-ui-extensions">Register and activate custom UI Extensions</a></li>
+        <li><a href="https://www.eclipse.org/glsp/documentation/ui-extensions/#button-overlay-showcase">Button Overlay Showcase</a></li>
       </ul>
     </li>
   </ul>
@@ -853,27 +941,27 @@ Then the corresponding <code>ModelFactory</code> could look as follows.</p>
 <details><summary>Node GLSP Server</summary>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">@injectable</span>()
 <span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyModelFactory</span> <span style="color:#66d9ef">implements</span> <span style="color:#a6e22e">GModelFactory</span> {
-    <span style="color:#66d9ef">@inject</span>(<span style="color:#a6e22e">MyModelState</span>)
-    <span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">modelState</span>: <span style="color:#66d9ef">MyModelState</span>;
+  <span style="color:#66d9ef">@inject</span>(<span style="color:#a6e22e">MyModelState</span>)
+  <span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">modelState</span>: <span style="color:#66d9ef">MyModelState</span>;
 
-    <span style="color:#a6e22e">createModel</span>()<span style="color:#f92672">:</span> <span style="color:#66d9ef">void</span> {
-        <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">entities</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">modelState</span>.<span style="color:#a6e22e">getModel</span>().<span style="color:#a6e22e">getEntities</span>();
+  <span style="color:#a6e22e">createModel</span>()<span style="color:#f92672">:</span> <span style="color:#66d9ef">void</span> {
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">entities</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">modelState</span>.<span style="color:#a6e22e">getModel</span>().<span style="color:#a6e22e">getEntities</span>();
 
-        <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">entityNodes</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">entities</span>.<span style="color:#a6e22e">map</span>(<span style="color:#a6e22e">entity</span> <span style="color:#f92672">=&gt;</span>
-            <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">GNodeBuilder</span>(<span style="color:#a6e22e">GNode</span>).<span style="color:#a6e22e">id</span>(<span style="color:#e6db74">&#39;node:entity&#39;</span>).<span style="color:#a6e22e">layout</span>(<span style="color:#e6db74">&#39;vbox&#39;</span>)
-            .<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">GLabelBuilder</span>(<span style="color:#a6e22e">GLabel</span>)
-                .<span style="color:#a6e22e">text</span>(<span style="color:#a6e22e">entity</span>.<span style="color:#a6e22e">name</span>)
-                .<span style="color:#a6e22e">build</span>())
-            .<span style="color:#a6e22e">build</span>()
-        );
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">entityNodes</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">entities</span>.<span style="color:#a6e22e">map</span>((<span style="color:#a6e22e">entity</span>) <span style="color:#f92672">=&gt;</span>
+      <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">GNodeBuilder</span>(<span style="color:#a6e22e">GNode</span>)
+        .<span style="color:#a6e22e">id</span>(<span style="color:#e6db74">&#34;node:entity&#34;</span>)
+        .<span style="color:#a6e22e">layout</span>(<span style="color:#e6db74">&#34;vbox&#34;</span>)
+        .<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">GLabelBuilder</span>(<span style="color:#a6e22e">GLabel</span>).<span style="color:#a6e22e">text</span>(<span style="color:#a6e22e">entity</span>.<span style="color:#a6e22e">name</span>).<span style="color:#a6e22e">build</span>())
+        .<span style="color:#a6e22e">build</span>()
+    );
 
-        <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">newModel</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">GGraphBuilder</span>(<span style="color:#a6e22e">GGraph</span>)
-            .<span style="color:#a6e22e">id</span>(<span style="color:#e6db74">&#39;entity-graph&#39;</span>)
-            .<span style="color:#a6e22e">addChildren</span>(...<span style="color:#a6e22e">entityNodes</span>)
-            .<span style="color:#a6e22e">build</span>();
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">newModel</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">GGraphBuilder</span>(<span style="color:#a6e22e">GGraph</span>)
+      .<span style="color:#a6e22e">id</span>(<span style="color:#e6db74">&#34;entity-graph&#34;</span>)
+      .<span style="color:#a6e22e">addChildren</span>(...<span style="color:#a6e22e">entityNodes</span>)
+      .<span style="color:#a6e22e">build</span>();
 
-        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">modelState</span>.<span style="color:#a6e22e">root</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">newModel</span>;
-    }
+    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">modelState</span>.<span style="color:#a6e22e">root</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">newModel</span>;
+  }
 }
 </code></pre></div></details>
 </br>
@@ -891,7 +979,7 @@ As an example, let’s have a look at the custom WeightedEdge element introduced
 <p>A WeightedEdge is a special edge that has an optional “probability” property.
 We can define such an element by simply subclassing the <code>SEdge</code> class:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WeightedEdge</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">SEdge</span> {
-   <span style="color:#a6e22e">probability?</span>: <span style="color:#66d9ef">string</span>;
+  <span style="color:#a6e22e">probability?</span>: <span style="color:#66d9ef">string</span>;
 }
 </code></pre></div><p>And then the new WeightedEdge type has to be configured in the diagram module (<code>di.config.ts</code>).</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">workflowDiagramModule</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">ContainerModule</span>((<span style="color:#a6e22e">bind</span>, <span style="color:#a6e22e">unbind</span>, <span style="color:#a6e22e">isBound</span>, <span style="color:#a6e22e">rebind</span>) <span style="color:#f92672">=&gt;</span> {
@@ -903,14 +991,16 @@ We can define such an element by simply subclassing the <code>SEdge</code> class
 <h4 id="node-glsp-server">Node GLSP Server</h4>
 <p>For the node <em>GLSP server</em> the new <code>WeightedEdge</code> type can be declared similar to the <em>GLSP client</em> by subclassing the <code>GEdge</code> class.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WeightedEdge</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">GEdge</span> {
-    <span style="color:#a6e22e">probability?</span>: <span style="color:#66d9ef">string</span>;
+  <span style="color:#a6e22e">probability?</span>: <span style="color:#66d9ef">string</span>;
 }
 </code></pre></div><p>To use the builder API for <code>WeightedEdge</code> creation we also have to implement a <code>WeightedEdgeBuilder</code> that extends the default <code>GEdgeBuilder</code>.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WeightedEdgeBuilder</span>&lt;<span style="color:#f92672">E</span> <span style="color:#a6e22e">extends</span> <span style="color:#a6e22e">WeightedEdge </span><span style="color:#f92672">=</span> <span style="color:#a6e22e">WeightedEdge</span>&gt; <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">GEdgeBuilder</span>&lt;<span style="color:#f92672">E</span>&gt; {
-    <span style="color:#a6e22e">probability</span>(<span style="color:#a6e22e">probability</span>: <span style="color:#66d9ef">string</span>)<span style="color:#f92672">:</span> <span style="color:#66d9ef">this</span> {
-        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">proxy</span>.<span style="color:#a6e22e">probability</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">probability</span>;
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>;
-    }
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WeightedEdgeBuilder</span><span style="color:#f92672">&lt;</span>
+  <span style="color:#a6e22e">E</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">WeightedEdge</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">WeightedEdge</span>
+<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">GEdgeBuilder</span>&lt;<span style="color:#f92672">E</span>&gt; {
+  <span style="color:#a6e22e">probability</span>(<span style="color:#a6e22e">probability</span>: <span style="color:#66d9ef">string</span>)<span style="color:#f92672">:</span> <span style="color:#66d9ef">this</span> {
+    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">proxy</span>.<span style="color:#a6e22e">probability</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">probability</span>;
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>;
+  }
 }
 </code></pre></div></br>
 <h4 id="java-glsp-server">Java GLSP Server</h4>
@@ -1055,6 +1145,7 @@ These arguments can be used as a more lightweight alternative to extending the g
 
     <!-- Theme Code -->
       <script async defer src="/glsp/scripts/syna-main.min.68ae1ae47948304c9c224cfc1a97ffe16c57514bc587dd6140dcb82389a8d299.js"></script>
+      <script async defer src="/glsp/scripts/syna-search.min.647ab37afa752ff5b6d866ed67df267795da44cad28ceed27646bdaef99e386f.js"></script>
       <script async defer src="/glsp/scripts/syna-content.min.bf537eb5ace369e45e8b4ed41b8d235a65db92236a400ed5659f7a3c41d0f221.js"></script>
       <script async defer src="/glsp/scripts/syna-collapse.min.1f6ca6206008af133f158e2b7b650b4156b8fc33189c5a6142db3bb43c7ad8e7.js"></script>
   </body>
