@@ -949,7 +949,7 @@ The layout options define a horizontal gap of <code>15</code> pixel between the 
 </code></pre></div></details>
 <details ><summary> Node GLSP Server</summary>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">GCompartment</span>.<span style="color:#a6e22e">builder</span>()
-  .<span style="color:#a6e22e">builder</span>()
+  .<span style="color:#66d9ef">type</span>(<span style="color:#e6db74">&#34;comp&#34;</span>)
   .<span style="color:#a6e22e">layout</span>(<span style="color:#e6db74">&#34;hbox&#34;</span>)
   .<span style="color:#a6e22e">addLayoutOption</span>(<span style="color:#e6db74">&#34;hGap&#34;</span>, <span style="color:#ae81ff">15</span>)
   .<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">GCompartment</span>.<span style="color:#a6e22e">builder</span>().<span style="color:#66d9ef">type</span>(<span style="color:#e6db74">&#34;icon&#34;</span>).<span style="color:#a6e22e">build</span>())
@@ -1004,7 +1004,7 @@ It adds two children labels, which are positioned vertically from top to bottom 
 </code></pre></div></details>
 <details ><summary> Node GLSP Server</summary>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">GCompartment</span>.<span style="color:#a6e22e">builder</span>()
-  .<span style="color:#a6e22e">builder</span>()
+  .<span style="color:#66d9ef">type</span>(<span style="color:#e6db74">&#34;comp&#34;</span>)
   .<span style="color:#a6e22e">layout</span>(<span style="color:#e6db74">&#34;vbox&#34;</span>)
   .<span style="color:#a6e22e">addLayoutOption</span>(<span style="color:#e6db74">&#34;hAlign&#34;</span>, <span style="color:#e6db74">&#34;center&#34;</span>)
   .<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">GCompartment</span>.<span style="color:#a6e22e">builder</span>().<span style="color:#66d9ef">type</span>(<span style="color:#e6db74">&#34;icon&#34;</span>).<span style="color:#a6e22e">build</span>())
@@ -1059,7 +1059,7 @@ The parent container defines its preferred size of <code>250 x 125</code>.</p>
   [<span style="color:#e6db74">&#34;prefWidth&#34;</span>]<span style="color:#f92672">:</span> <span style="color:#a6e22e">containerPrefSize</span>.<span style="color:#a6e22e">width</span>,
   [<span style="color:#e6db74">&#34;prefHeight&#34;</span>]<span style="color:#f92672">:</span> <span style="color:#a6e22e">containerPrefSize</span>.<span style="color:#a6e22e">height</span>,
 };
-<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">GCompartment</span>.<span style="color:#a6e22e">builder</span>()
+<span style="color:#a6e22e">GCompartment</span>.<span style="color:#a6e22e">builder</span>()
   .<span style="color:#66d9ef">type</span>(<span style="color:#e6db74">&#34;comp:structure&#34;</span>)
   .<span style="color:#a6e22e">layout</span>(<span style="color:#e6db74">&#34;freeform&#34;</span>)
   .<span style="color:#a6e22e">addLayoutOptions</span>(<span style="color:#a6e22e">layoutOptions</span>)
@@ -1118,7 +1118,7 @@ The parent container defines its preferred size of <code>250 x 125</code>.</p>
   [<span style="color:#e6db74">&#34;hAlign&#34;</span>]<span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;center&#34;</span>,
   [<span style="color:#e6db74">&#34;resizeContainer&#34;</span>]<span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span>,
 };
-<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">GCompartment</span>.<span style="color:#a6e22e">builder</span>()
+<span style="color:#a6e22e">GCompartment</span>.<span style="color:#a6e22e">builder</span>()
   .<span style="color:#66d9ef">type</span>(<span style="color:#e6db74">&#34;comp&#34;</span>)
   .<span style="color:#a6e22e">layout</span>(<span style="color:#e6db74">&#34;struct&#34;</span>)
   .<span style="color:#a6e22e">addLayoutOptions</span>(<span style="color:#a6e22e">layoutOptions</span>)

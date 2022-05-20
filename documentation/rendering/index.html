@@ -892,65 +892,291 @@ With that, every element of type “label:custom” will be rendered with the vi
     <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">vnode</span>;
   }
 }
-</code></pre></div><p>Every view has to implement the <code>render(</code>) method.
-The <code>render(</code>) method takes the graphical model element as input and returns the corresponding SVG element as virtual DOM node.
+</code></pre></div><p>Every view has to implement the <code>render()</code> method.
+The <code>render()</code> method takes the graphical model element as input and returns the corresponding SVG element as virtual DOM node.
 The viewer queries all registered views and creates a new virtual DOM which is then used to patch the current DOM of the diagram widget.</p>
 <p>Note that the <code>SLabelView</code> also checks whether the given element is visible and skips the SVG generation if the element is not visible in the diagram canvas.
 This check is optional but it’s highly recommended to implement it in your custom views as it heavily improves the rendering performance.</p>
+<p></br></br></p>
 <h3 id="default-views">Default Views</h3>
-<p>The following sections give an overview of available default views in Sprotty and GLSP and how to configure them.</p>
+<p>The following sections give an overview of available default views in Sprotty and GLSP and how to configure them.
+All of them are default model elements, which is already configured in the <a href="https://github.com/eclipse-glsp/glsp-client/blob/master/packages/client/src/views/base-view-module.ts"><code>baseViewModule</code></a>,
+but for the sake of completeness we list the configuration of the elements in the collapsible example code blocks.</p>
 <h4 id="default-sprotty-views">Default Sprotty Views</h4>
 <p>The following views are provided by the base framework <a href="https://github.com/eclipse/sprotty">Sprotty</a>.</p>
 <h5 id="circularnodeviewhttpsgithubcomeclipsesprottyblobmasterpackagessprottysrclibsvg-viewstsx"><a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/lib/svg-views.tsx">CircularNodeView</a></h5>
 <p>A <code>CircularNodeView</code> creates a round shape with a radius computed from the shape&rsquo;s size (by default it computes the radius by the minimum of the shape&rsquo;s width or height and divides that by 2).
 The computation of the radius can be overridden and adapted to custom needs.</p>
+<p align="center">
+    <img src="./circular-node-view.png" alt="circular-node-view">
+</p>
+<p  align="center">
+    <em>Circular nodes with a radius of `17.5` (1), `42.5` (2) and `7.5`.</em>
+</p>
+<details><summary>Example implementation</summary>
+<details open><summary> Java GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">new</span> GNodeBuilder<span style="color:#f92672">()</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">type</span><span style="color:#f92672">(</span>DefaultTypes<span style="color:#f92672">.</span><span style="color:#a6e22e">NODE_CIRCLE</span><span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">position</span><span style="color:#f92672">(</span>point<span style="color:#f92672">.</span><span style="color:#a6e22e">orElse</span><span style="color:#f92672">(</span>GraphUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">point</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> 0<span style="color:#f92672">)))</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span>GraphUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">dimension</span><span style="color:#f92672">(</span>15<span style="color:#f92672">,</span> 15<span style="color:#f92672">))</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+</code></pre></div></details>
+<details ><summary> Node GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">GNode</span>.<span style="color:#a6e22e">builder</span>()
+  .<span style="color:#66d9ef">type</span>(<span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">NODE_CIRCLE</span>)
+  .<span style="color:#a6e22e">position</span>(<span style="color:#a6e22e">point</span> <span style="color:#f92672">??</span> <span style="color:#a6e22e">Point</span>.<span style="color:#a6e22e">ORIGIN</span>)
+  .<span style="color:#a6e22e">size</span>(<span style="color:#ae81ff">15</span>, <span style="color:#ae81ff">15</span>)
+  .<span style="color:#a6e22e">build</span>();
+</code></pre></div></details>
+</br>
+<p>The circular node element and its view are configured as follows:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">configureModelElement</span>(
   <span style="color:#a6e22e">context</span>,
   <span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">NODE_CIRCLE</span>,
   <span style="color:#a6e22e">CircularNode</span>,
   <span style="color:#a6e22e">CircularNodeView</span>
 );
-</code></pre></div><h5 id="diamondnodeviewhttpsgithubcomeclipsesprottyblobmasterpackagessprottysrclibsvg-viewstsx"><a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/lib/svg-views.tsx">DiamondNodeView</a></h5>
+</code></pre></div></details>
+</br>
+<h5 id="diamondnodeviewhttpsgithubcomeclipsesprottyblobmasterpackagessprottysrclibsvg-viewstsx"><a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/lib/svg-views.tsx">DiamondNodeView</a></h5>
 <p>A <code>DiamondNodeView</code> creates a rhombus shape based on the shape&rsquo;s size.</p>
+<p align="center">
+    <img src="./diamond-node-view.png" alt="diamond-node-view">
+</p>
+<p  align="center">
+    <em>Diamond nodes with dimensions of `(25,25)` (1), `(20,41)` (2) and `(66,33)`.</em>
+</p>
+<details><summary>Example implementation</summary>
+<details open><summary> Java GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">new</span> GNodeBuilder<span style="color:#f92672">()</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">type</span><span style="color:#f92672">(</span>DefaultTypes<span style="color:#f92672">.</span><span style="color:#a6e22e">NODE_DIAMOND</span><span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">position</span><span style="color:#f92672">(</span>point<span style="color:#f92672">.</span><span style="color:#a6e22e">orElse</span><span style="color:#f92672">(</span>GraphUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">point</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> 0<span style="color:#f92672">)))</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span>GraphUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">dimension</span><span style="color:#f92672">(</span>25<span style="color:#f92672">,</span> 25<span style="color:#f92672">))</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+</code></pre></div></details>
+<details ><summary> Node GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">GNode</span>.<span style="color:#a6e22e">builder</span>()
+  .<span style="color:#66d9ef">type</span>(<span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">NODE_DIAMOND</span>)
+  .<span style="color:#a6e22e">position</span>(<span style="color:#a6e22e">point</span> <span style="color:#f92672">??</span> <span style="color:#a6e22e">Point</span>.<span style="color:#a6e22e">ORIGIN</span>)
+  .<span style="color:#a6e22e">size</span>(<span style="color:#ae81ff">25</span>, <span style="color:#ae81ff">25</span>)
+  .<span style="color:#a6e22e">build</span>();
+</code></pre></div></details>
+</br>
+<p>The diamond node element and its view are configured as follows:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">configureModelElement</span>(
   <span style="color:#a6e22e">context</span>,
   <span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">NODE_DIAMOND</span>,
   <span style="color:#a6e22e">DiamondNode</span>,
   <span style="color:#a6e22e">DiamondNodeView</span>
 );
-</code></pre></div><h5 id="expandbuttonviewhttpsgithubcomeclipsesprottyblobmasterpackagessprottysrcfeaturesexpandviewstsx"><a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/features/expand/views.tsx">ExpandButtonView</a></h5>
+</code></pre></div></details>
+</br>
+<h5 id="expandbuttonviewhttpsgithubcomeclipsesprottyblobmasterpackagessprottysrcfeaturesexpandviewstsx"><a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/features/expand/views.tsx">ExpandButtonView</a></h5>
 <p>The <code>ExpandButtonView</code> renders a SVG element in the shape of a triangle that allows expandable parent elements to trigger expansion, for example to display further element information.</p>
+<p align="center">
+    <img src="./expand-button-view.png" alt="expand-button-view">
+</p>
+<p  align="center">
+    <em>A rectangular node with an expandable button that renders additional elements if expanded (right).</em>
+</p>
+<details><summary>Example implementation</summary>
+<details open><summary> Java GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">new</span> GNodeBuilder<span style="color:#f92672">()</span>
+  <span style="color:#f92672">.</span><span style="color:#a6e22e">type</span><span style="color:#f92672">(</span>DefaultTypes<span style="color:#f92672">.</span><span style="color:#a6e22e">NODE</span><span style="color:#f92672">)</span>
+  <span style="color:#f92672">.</span><span style="color:#a6e22e">addCssClass</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;node-expandable&#34;</span><span style="color:#f92672">)</span>
+  <span style="color:#f92672">.</span><span style="color:#a6e22e">position</span><span style="color:#f92672">(</span>point<span style="color:#f92672">.</span><span style="color:#a6e22e">orElse</span><span style="color:#f92672">(</span>GraphUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">point</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> 0<span style="color:#f92672">)))</span>
+  <span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span>GraphUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">dimension</span><span style="color:#f92672">(</span>80<span style="color:#f92672">,</span> 20<span style="color:#f92672">))</span>
+  <span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> GCompartmentBuilder<span style="color:#f92672">()</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">type</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;comp:expandable&#34;</span><span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">layout</span><span style="color:#f92672">(</span>GConstants<span style="color:#f92672">.</span><span style="color:#a6e22e">Layout</span><span style="color:#f92672">.</span><span style="color:#a6e22e">HBOX</span><span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">layoutOptions</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> GLayoutOptions<span style="color:#f92672">().</span><span style="color:#a6e22e">hGap</span><span style="color:#f92672">(</span>15<span style="color:#f92672">))</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> GLabelBuilder<span style="color:#f92672">().</span><span style="color:#a6e22e">text</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Expand&#34;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">build</span><span style="color:#f92672">())</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> GButtonBuilder<span style="color:#f92672">()</span>
+        <span style="color:#f92672">.</span><span style="color:#a6e22e">type</span><span style="color:#f92672">(</span>DefaultTypes<span style="color:#f92672">.</span><span style="color:#a6e22e">EXPAND_BUTTON</span><span style="color:#f92672">)</span>
+        <span style="color:#f92672">.</span><span style="color:#a6e22e">addCssClass</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;button-expand&#34;</span><span style="color:#f92672">)</span>
+        <span style="color:#f92672">.</span><span style="color:#a6e22e">enabled</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">)</span>
+        <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">())</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">());</span>
+</code></pre></div></details>
+<details ><summary> Node GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">GNode</span>.<span style="color:#a6e22e">builder</span>()
+  .<span style="color:#66d9ef">type</span>(<span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">NODE</span>)
+  .<span style="color:#a6e22e">addCssClass</span>(<span style="color:#e6db74">&#34;node-expandable&#34;</span>)
+  .<span style="color:#a6e22e">position</span>(<span style="color:#a6e22e">point</span> <span style="color:#f92672">??</span> <span style="color:#a6e22e">Point</span>.<span style="color:#a6e22e">ORIGIN</span>)
+  .<span style="color:#a6e22e">size</span>(<span style="color:#ae81ff">80</span>, <span style="color:#ae81ff">20</span>)
+  .<span style="color:#a6e22e">add</span>(
+    <span style="color:#a6e22e">GCompartment</span>.<span style="color:#a6e22e">builder</span>()
+      .<span style="color:#66d9ef">type</span>(<span style="color:#e6db74">&#34;comp:expandable&#34;</span>)
+      .<span style="color:#a6e22e">layout</span>(<span style="color:#e6db74">&#34;hbox&#34;</span>)
+      .<span style="color:#a6e22e">addLayoutOption</span>(<span style="color:#e6db74">&#34;hGap&#34;</span>, <span style="color:#ae81ff">15</span>)
+      .<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">GLabel</span>.<span style="color:#a6e22e">builder</span>().<span style="color:#a6e22e">text</span>(<span style="color:#e6db74">&#34;Expand&#34;</span>).<span style="color:#a6e22e">build</span>())
+      .<span style="color:#a6e22e">add</span>(
+        <span style="color:#a6e22e">GButton</span>.<span style="color:#a6e22e">builder</span>()
+          .<span style="color:#66d9ef">type</span>(<span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">BUTTON_EXPAND</span>)
+          .<span style="color:#a6e22e">addCssClass</span>(<span style="color:#e6db74">&#34;button-expand&#34;</span>)
+          .<span style="color:#a6e22e">enabled</span>(<span style="color:#66d9ef">true</span>)
+          .<span style="color:#a6e22e">build</span>()
+      )
+      .<span style="color:#a6e22e">build</span>()
+  )
+  .<span style="color:#a6e22e">build</span>();
+</code></pre></div></details>
+</br>
+<p>The button element and its view are configured as follows:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">configureModelElement</span>(
   <span style="color:#a6e22e">context</span>,
   <span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">BUTTON_EXPAND</span>,
   <span style="color:#a6e22e">SButton</span>,
   <span style="color:#a6e22e">ExpandButtonView</span>
 );
-</code></pre></div><h5 id="foreignobjectviewhttpsgithubcomeclipsesprottyblobmasterpackagessprottysrclibgeneric-viewstsx"><a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/lib/generic-views.tsx">ForeignObjectView</a></h5>
-<p>The <code>ForeignObjectView</code> renders elements that are foreign to SVG, such as HTML, MathML, etc. as specified in their <code>namespace</code> and <code>code</code> property.
-Usually such an element is contained by a node view that enables features, such as resizing and moving of the element.</p>
+</code></pre></div><p>To be able to use this view, we need an expandable parent element as well as a corresponding view.</p>
+<p>Define the compartment element supporting the expandable feature:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ExpandableCompartment</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">SCompartment</span> <span style="color:#66d9ef">implements</span> <span style="color:#a6e22e">Expandable</span> {
+  <span style="color:#66d9ef">static</span> <span style="color:#a6e22e">override</span> <span style="color:#66d9ef">readonly</span> <span style="color:#a6e22e">DEFAULT_FEATURES</span> <span style="color:#f92672">=</span> [
+    <span style="color:#a6e22e">boundsFeature</span>,
+    <span style="color:#a6e22e">layoutContainerFeature</span>,
+    <span style="color:#a6e22e">layoutableChildFeature</span>,
+    <span style="color:#a6e22e">fadeFeature</span>,
+    <span style="color:#a6e22e">expandFeature</span>,
+  ];
+
+  <span style="color:#a6e22e">expanded</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>;
+}
+</code></pre></div><p>The expandable compartment view renders an additional text element if the element is expanded:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">@injectable</span>()
+<span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ExpandableCompartmentView</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">SCompartmentView</span> {
+  <span style="color:#a6e22e">override</span> <span style="color:#a6e22e">render</span>(
+    <span style="color:#a6e22e">compartment</span>: <span style="color:#66d9ef">Readonly</span>&lt;<span style="color:#f92672">ExpandableCompartment</span>&gt;,
+    <span style="color:#a6e22e">context</span>: <span style="color:#66d9ef">RenderingContext</span>,
+    <span style="color:#a6e22e">args?</span>: <span style="color:#66d9ef">IViewArgs</span>
+  )<span style="color:#f92672">:</span> <span style="color:#a6e22e">VNode</span> <span style="color:#f92672">|</span> <span style="color:#66d9ef">undefined</span> {
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">translate</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">`translate(</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">compartment</span>.<span style="color:#a6e22e">bounds</span>.<span style="color:#a6e22e">x</span><span style="color:#e6db74">}</span><span style="color:#e6db74">, </span><span style="color:#e6db74">${</span><span style="color:#a6e22e">compartment</span>.<span style="color:#a6e22e">bounds</span>.<span style="color:#a6e22e">y</span><span style="color:#e6db74">}</span><span style="color:#e6db74">)`</span>;
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">vnode</span>: <span style="color:#66d9ef">VNode</span> <span style="color:#f92672">=</span> (
+      &lt;<span style="color:#f92672">g</span> <span style="color:#a6e22e">transform</span><span style="color:#f92672">=</span>{<span style="color:#a6e22e">translate</span>} <span style="color:#a6e22e">class</span><span style="color:#960050;background-color:#1e0010">-</span><span style="color:#a6e22e">sprotty</span><span style="color:#960050;background-color:#1e0010">-</span><span style="color:#a6e22e">comp</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{true}&#34;</span>&gt;
+        {<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">renderChildren</span>(<span style="color:#a6e22e">compartment</span>)}
+      &lt;/<span style="color:#f92672">g</span>&gt;
+    );
+    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">compartment</span>.<span style="color:#a6e22e">expanded</span>) {
+      <span style="color:#a6e22e">vnode</span>.<span style="color:#a6e22e">children</span><span style="color:#f92672">?</span>.<span style="color:#a6e22e">push</span>(
+        &lt;<span style="color:#f92672">text</span> <span style="color:#a6e22e">x</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;50&#34;</span> <span style="color:#a6e22e">y</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;45&#34;</span>&gt;
+          <span style="color:#a6e22e">More</span> <span style="color:#a6e22e">information</span>
+        &lt;/<span style="color:#f92672">text</span>&gt;
+      );
+    }
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">subType</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">getSubType</span>(<span style="color:#a6e22e">compartment</span>);
+    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">subType</span>) {
+      <span style="color:#a6e22e">setAttr</span>(<span style="color:#a6e22e">vnode</span>, <span style="color:#e6db74">&#34;class&#34;</span>, <span style="color:#a6e22e">subType</span>);
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">vnode</span>;
+  }
+}
+</code></pre></div><p>Putting those together, we can configure an expandable compartment element and view for the type <code>&quot;comp:expandable&quot;</code>:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">configureModelElement</span>(
   <span style="color:#a6e22e">context</span>,
-  <span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">FOREIGN_OBJECT</span>,
-  <span style="color:#a6e22e">ForeignObjectElement</span>,
-  <span style="color:#a6e22e">ForeignObjectView</span>,
-  {
-    <span style="color:#a6e22e">disable</span><span style="color:#f92672">:</span> [<span style="color:#a6e22e">selectFeature</span>, <span style="color:#a6e22e">moveFeature</span>],
-  }
+  <span style="color:#e6db74">&#34;comp:expandable&#34;</span>,
+  <span style="color:#a6e22e">ExpandableCompartment</span>,
+  <span style="color:#a6e22e">ExpandableCompartmentView</span>
 );
-</code></pre></div><details><summary>Example implementation</summary>
+</code></pre></div><p>Finally, to handle the expansion toggle of the button, we register an <code>IActionHandler</code> for the respective <a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/features/expand/expand.ts">sprotty action <code>CollapseExpandAction</code></a>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">bind</span>(<span style="color:#a6e22e">ExpandHandler</span>).<span style="color:#a6e22e">toSelf</span>().<span style="color:#a6e22e">inSingletonScope</span>();
+<span style="color:#a6e22e">configureActionHandler</span>(<span style="color:#a6e22e">context</span>, <span style="color:#a6e22e">CollapseExpandAction</span>.<span style="color:#a6e22e">KIND</span>, <span style="color:#a6e22e">ExpandHandler</span>);
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">@injectable</span>()
+<span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ExpandHandler</span> <span style="color:#66d9ef">implements</span> <span style="color:#a6e22e">IActionHandler</span> {
+  <span style="color:#66d9ef">@inject</span>(<span style="color:#a6e22e">TYPES</span>.<span style="color:#a6e22e">SelectionService</span>)
+  <span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">selectionService</span>: <span style="color:#66d9ef">SelectionService</span>;
+
+  <span style="color:#a6e22e">expansionState</span><span style="color:#f92672">:</span> { [<span style="color:#a6e22e">key</span>: <span style="color:#66d9ef">string</span>]<span style="color:#f92672">:</span> <span style="color:#66d9ef">boolean</span> } <span style="color:#f92672">=</span> {};
+
+  <span style="color:#a6e22e">handle</span>(<span style="color:#a6e22e">action</span>: <span style="color:#66d9ef">Action</span>)<span style="color:#f92672">:</span> <span style="color:#66d9ef">void</span> {
+    <span style="color:#66d9ef">switch</span> (<span style="color:#a6e22e">action</span>.<span style="color:#a6e22e">kind</span>) {
+      <span style="color:#66d9ef">case</span> <span style="color:#a6e22e">CollapseExpandAction.KIND</span>:
+        <span style="color:#66d9ef">this.handleCollapseExpandAction</span>(<span style="color:#a6e22e">action</span> <span style="color:#66d9ef">as</span> <span style="color:#a6e22e">CollapseExpandAction</span>);
+        <span style="color:#66d9ef">break</span>;
+    }
+  }
+
+  <span style="color:#66d9ef">get</span> <span style="color:#a6e22e">modelRoot</span>()<span style="color:#f92672">:</span> <span style="color:#a6e22e">Readonly</span>&lt;<span style="color:#f92672">SModelRoot</span>&gt; {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">selectionService</span>.<span style="color:#a6e22e">getModelRoot</span>();
+  }
+
+  <span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">handleCollapseExpandAction</span>(<span style="color:#a6e22e">action</span>: <span style="color:#66d9ef">CollapseExpandAction</span>)<span style="color:#f92672">:</span> <span style="color:#66d9ef">void</span> {
+    <span style="color:#a6e22e">action</span>.<span style="color:#a6e22e">expandIds</span>.<span style="color:#a6e22e">forEach</span>((<span style="color:#a6e22e">id</span>) <span style="color:#f92672">=&gt;</span> (<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">expansionState</span>[<span style="color:#a6e22e">id</span>] <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>));
+    <span style="color:#a6e22e">action</span>.<span style="color:#a6e22e">collapseIds</span>.<span style="color:#a6e22e">forEach</span>((<span style="color:#a6e22e">id</span>) <span style="color:#f92672">=&gt;</span> (<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">expansionState</span>[<span style="color:#a6e22e">id</span>] <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>));
+    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">applyExpansionState</span>();
+  }
+
+  <span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">applyExpansionState</span>()<span style="color:#f92672">:</span> <span style="color:#66d9ef">void</span> {
+    <span style="color:#75715e">// eslint-disable-next-line guard-for-in
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">id</span> <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">expansionState</span>) {
+      <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">element</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">modelRoot</span>.<span style="color:#a6e22e">index</span>.<span style="color:#a6e22e">getById</span>(<span style="color:#a6e22e">id</span>);
+      <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">element</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">element</span> <span style="color:#66d9ef">instanceof</span> <span style="color:#a6e22e">SParentElement</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">element</span>.<span style="color:#a6e22e">children</span>) {
+        <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">expanded</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">expansionState</span>[<span style="color:#a6e22e">id</span>];
+        (<span style="color:#a6e22e">element</span> <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">any</span>).<span style="color:#a6e22e">expanded</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">expanded</span>;
+      }
+    }
+  }
+}
+</code></pre></div></details>
+</br>
+<h5 id="foreignobjectviewhttpsgithubcomeclipsesprottyblobmasterpackagessprottysrclibgeneric-viewstsx"><a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/lib/generic-views.tsx">ForeignObjectView</a></h5>
+<p>The <code>ForeignObjectView</code> renders elements that are foreign to SVG, such as HTML, MathML, etc. as specified in their <code>namespace</code> and <code>code</code> property.
+Usually such an element is contained by a node view that enables features, such as resizing and moving of the element.</p>
+<p align="center">
+    <img src="./foreign-object-view.png" alt="foreign-object-view">
+</p>
+<p  align="center">
+    <em>Multi line text box, using xhtml.</em>
+</p>
+<details><summary>Example implementation</summary>
 <p>A common example use case for using a <code>ForeignObjectView</code> is to benefit from word wrapping support of HTML to show multiline text box.
-Therefore we would create a custom text node (which extends the <code>ForeignObjectElement</code>) which also implements the <code>EditableLabel</code> interface.</p>
+Therefore we would create a custom text node (which extends the <code>ForeignObjectElement</code>) which is contained by a parent node (hence we will configure both as node types in the diagram configuration).</p>
+<details open><summary> Java GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">  String multiLineComment <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n&#34;</span>
+      <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;Nam at tellus quis lacus auctor congue vel sit amet lectus.\n&#34;</span>
+      <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;Cras interdum lectus vel enim mollis maximus.&#34;</span><span style="color:#f92672">;</span>
+
+  <span style="color:#66d9ef">new</span> GNodeBuilder<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;comment-node-parent&#34;</span><span style="color:#f92672">)</span>
+      <span style="color:#f92672">.</span><span style="color:#a6e22e">addCssClass</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;comment-node-parent&#34;</span><span style="color:#f92672">)</span>
+      <span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span>GraphUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">dimension</span><span style="color:#f92672">(</span>720<span style="color:#f92672">,</span> 125<span style="color:#f92672">))</span>
+      <span style="color:#f92672">.</span><span style="color:#a6e22e">position</span><span style="color:#f92672">(</span>point<span style="color:#f92672">.</span><span style="color:#a6e22e">orElse</span><span style="color:#f92672">(</span>GraphUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">point</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> 0<span style="color:#f92672">)))</span>
+      <span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> GNodeBuilder<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;comment-node&#34;</span><span style="color:#f92672">)</span>
+          <span style="color:#f92672">.</span><span style="color:#a6e22e">addArgument</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;text&#34;</span><span style="color:#f92672">,</span> multiLineComment<span style="color:#f92672">)</span>
+          <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">())</span>
+      <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+</code></pre></div></details>
+<details ><summary> Node GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">multiLineComment</span> <span style="color:#f92672">=</span>
+  <span style="color:#e6db74">&#34;Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n&#34;</span> <span style="color:#f92672">+</span>
+  <span style="color:#e6db74">&#34;Nam at tellus quis lacus auctor congue vel sit amet lectus.\n&#34;</span> <span style="color:#f92672">+</span>
+  <span style="color:#e6db74">&#34;Cras interdum lectus vel enim mollis maximus.&#34;</span>;
+
+<span style="color:#a6e22e">GNode</span>.<span style="color:#a6e22e">builder</span>()
+  .<span style="color:#66d9ef">type</span>(<span style="color:#e6db74">&#34;comment-node-parent&#34;</span>)
+  .<span style="color:#a6e22e">addCssClass</span>(<span style="color:#e6db74">&#34;comment-node-parent&#34;</span>)
+  .<span style="color:#a6e22e">size</span>(<span style="color:#ae81ff">720</span>, <span style="color:#ae81ff">125</span>)
+  .<span style="color:#a6e22e">position</span>(<span style="color:#a6e22e">point</span> <span style="color:#f92672">??</span> <span style="color:#a6e22e">Point</span>.<span style="color:#a6e22e">ORIGIN</span>)
+  .<span style="color:#a6e22e">add</span>(
+    <span style="color:#a6e22e">GNode</span>.<span style="color:#a6e22e">builder</span>()
+      .<span style="color:#66d9ef">type</span>(<span style="color:#e6db74">&#34;comment-node&#34;</span>)
+      .<span style="color:#a6e22e">addArg</span>(<span style="color:#e6db74">&#34;text&#34;</span>, <span style="color:#a6e22e">multiLineComment</span>)
+      .<span style="color:#a6e22e">build</span>()
+  )
+  .<span style="color:#a6e22e">build</span>();
+</code></pre></div></details>
+</br>
+<p>We create the custom node element as follows:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MultiLineTextNode</span>
   <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">ForeignObjectElement</span>
-  <span style="color:#66d9ef">implements</span> <span style="color:#a6e22e">EditableLabel</span>
+  <span style="color:#66d9ef">implements</span> <span style="color:#a6e22e">SArgumentable</span>
 {
-  <span style="color:#66d9ef">readonly</span> <span style="color:#66d9ef">is</span>;
-  <span style="color:#a6e22e">text</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>;
-  <span style="color:#66d9ef">set</span> <span style="color:#a6e22e">bounds</span>(<span style="color:#a6e22e">bounds</span>: <span style="color:#66d9ef">Bounds</span>) {
+  <span style="color:#66d9ef">readonly</span> <span style="color:#a6e22e">isMultiLine</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+  <span style="color:#66d9ef">readonly</span> <span style="color:#a6e22e">args</span>: <span style="color:#66d9ef">Args</span>;
+
+  <span style="color:#a6e22e">override</span> <span style="color:#66d9ef">set</span> <span style="color:#a6e22e">bounds</span>(<span style="color:#a6e22e">bounds</span>: <span style="color:#66d9ef">Bounds</span>) {
     <span style="color:#75715e">/* ignore set bounds, always use the parent&#39;s bounds */</span>
   }
-  <span style="color:#66d9ef">get</span> <span style="color:#a6e22e">bounds</span>()<span style="color:#f92672">:</span> <span style="color:#a6e22e">Bounds</span> {
+
+  <span style="color:#a6e22e">override</span> <span style="color:#66d9ef">get</span> <span style="color:#a6e22e">bounds</span>()<span style="color:#f92672">:</span> <span style="color:#a6e22e">Bounds</span> {
     <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">isBoundsAware</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">parent</span>)) {
       <span style="color:#66d9ef">return</span> {
         <span style="color:#a6e22e">x</span>: <span style="color:#66d9ef">this.position.x</span>,
@@ -959,90 +1185,288 @@ Therefore we would create a custom text node (which extends the <code>ForeignObj
         <span style="color:#a6e22e">height</span>: <span style="color:#66d9ef">this.parent.bounds.height</span>,
       };
     }
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">EMPTY_BOUNDS</span>;
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">Bounds</span>.<span style="color:#a6e22e">EMPTY</span>;
   }
-  <span style="color:#66d9ef">get</span> <span style="color:#a6e22e">code</span>()<span style="color:#f92672">:</span> <span style="color:#66d9ef">string</span> {
-    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">`&lt;pre&gt;</span><span style="color:#e6db74">${</span><span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">text</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&lt;/pre&gt;`</span>;
+
+  <span style="color:#75715e">// @ts-expect-error Arguments are set in the element
+</span><span style="color:#75715e"></span>  <span style="color:#a6e22e">override</span> <span style="color:#66d9ef">get</span> <span style="color:#a6e22e">code</span>()<span style="color:#f92672">:</span> <span style="color:#66d9ef">string</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">`&lt;pre&gt;</span><span style="color:#e6db74">${</span><span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">args</span>[<span style="color:#e6db74">&#34;text&#34;</span>]<span style="color:#e6db74">}</span><span style="color:#e6db74">&lt;/pre&gt;`</span>;
   }
-  <span style="color:#66d9ef">get</span> <span style="color:#66d9ef">namespace</span>()<span style="color:#f92672">:</span> <span style="color:#66d9ef">string</span> {
-    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;http://www.w3.org/1999/xhtml&#34;</span>;
-  }
-  <span style="color:#66d9ef">get</span> <span style="color:#a6e22e">editControlDimension</span>()<span style="color:#f92672">:</span> <span style="color:#a6e22e">Dimension</span> {
-    <span style="color:#66d9ef">return</span> {
-      <span style="color:#a6e22e">width</span>: <span style="color:#66d9ef">this.bounds.width</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">4</span>,
-      <span style="color:#a6e22e">height</span>: <span style="color:#66d9ef">this.bounds.height</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">4</span>,
-    };
-  }
+
+  <span style="color:#a6e22e">override</span> <span style="color:#66d9ef">namespace</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;http://www.w3.org/1999/xhtml&#34;</span>;
 }
 </code></pre></div><p>To register this node type, we configure it with <code>ForeignObjectView</code>, disable <code>moveFeature</code> and <code>selectFeature</code> (as this handled by its parent node).
 To be able to edit this multi-line comment node we need to enable the <code>editLabelFeature</code>:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">configureModelElement</span>(
   <span style="color:#a6e22e">context</span>,
+  <span style="color:#e6db74">&#34;comment-node-parent&#34;</span>,
+  <span style="color:#a6e22e">SNode</span>,
+  <span style="color:#a6e22e">RoundedCornerNodeView</span>
+);
+<span style="color:#a6e22e">configureModelElement</span>(
+  <span style="color:#a6e22e">context</span>,
   <span style="color:#e6db74">&#34;comment-node&#34;</span>,
   <span style="color:#a6e22e">MultiLineTextNode</span>,
   <span style="color:#a6e22e">ForeignObjectView</span>,
-  { <span style="color:#a6e22e">disable</span><span style="color:#f92672">:</span> [<span style="color:#a6e22e">moveFeature</span>, <span style="color:#a6e22e">selectFeature</span>], <span style="color:#a6e22e">enable</span><span style="color:#f92672">:</span> [<span style="color:#a6e22e">editLabelFeature</span>] }
+  {
+    <span style="color:#a6e22e">disable</span><span style="color:#f92672">:</span> [<span style="color:#a6e22e">moveFeature</span>, <span style="color:#a6e22e">selectFeature</span>],
+    <span style="color:#a6e22e">enable</span><span style="color:#f92672">:</span> [<span style="color:#a6e22e">editLabelFeature</span>],
+  }
 );
+</code></pre></div><p>To style the parent node, we add this simple CSS :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">.<span style="color:#a6e22e">comment-node-parent</span> .<span style="color:#a6e22e">sprotty-node</span> {
+  fill: <span style="color:#66d9ef">lightgray</span>;
+}
+</code></pre></div><p>The resulting diagram element is shown above and the corresponding HTML element code looks like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">g</span> <span style="color:#a6e22e">transform</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;scale(...) translate(...)&#34;</span>&gt;
+  &lt;<span style="color:#f92672">g</span>
+    <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;workflow-diagram_0_...&#34;</span>
+    <span style="color:#a6e22e">transform</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;translate(...)&#34;</span>
+    <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;comment-node-parent&#34;</span>
+  &gt;
+    &lt;<span style="color:#f92672">rect</span> <span style="color:#a6e22e">x</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;0&#34;</span> <span style="color:#a6e22e">y</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;0&#34;</span> <span style="color:#a6e22e">width</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;720&#34;</span> <span style="color:#a6e22e">height</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;125&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;sprotty-node&#34;</span>&gt;&lt;/<span style="color:#f92672">rect</span>&gt;
+    &lt;<span style="color:#f92672">g</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;comment-node&#34;</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;workflow-diagram_0_...&#34;</span>&gt;
+      &lt;<span style="color:#f92672">foreignObject</span>
+        <span style="color:#a6e22e">requiredFeatures</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;</span>
+        <span style="color:#a6e22e">height</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;125&#34;</span>
+        <span style="color:#a6e22e">width</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;720&#34;</span>
+        <span style="color:#a6e22e">x</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;0&#34;</span>
+        <span style="color:#a6e22e">y</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;0&#34;</span>
+      &gt;
+        &lt;<span style="color:#f92672">pre</span>&gt;
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Nam at tellus quis lacus auctor congue vel sit amet lectus.
+        Cras interdum lectus vel enim mollis maximus.
+        &lt;/<span style="color:#f92672">pre</span>&gt;
+      &lt;/<span style="color:#f92672">foreignObject</span>&gt;
+    &lt;/<span style="color:#f92672">g</span>&gt;
+  &lt;/<span style="color:#f92672">g</span>&gt;
+&lt;/<span style="color:#f92672">g</span>&gt;
 </code></pre></div></details>
+</br>
 <h5 id="prerenderedviewhttpsgithubcomeclipsesprottyblobmasterpackagessprottysrclibgeneric-viewstsx"><a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/lib/generic-views.tsx">PreRenderedView</a></h5>
 <p>The <code>PreRenderedView</code> visualizes a previously rendered piece of svg code as a separate SVG element.
 This enables putting SVG code directly in the graphical model, which may be useful for including complex images for certain use cases.
 However, usually it is recommended to create a dedicated element type and register a dedicated view, which produces custom SVG, as this yields more flexibility to take bounds, etc., into account.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">configureModelElement</span>(
-  <span style="color:#a6e22e">context</span>,
-  <span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">PRE_RENDERED</span>,
-  <span style="color:#a6e22e">PreRenderedElement</span> <span style="color:#f92672">|</span> <span style="color:#a6e22e">ShapedPreRenderedElement</span>,
-  <span style="color:#a6e22e">PreRenderedView</span>
-);
-</code></pre></div><h5 id="rectangularnodeviewhttpsgithubcomeclipsesprottyblobmasterpackagessprottysrclibsvg-viewstsx"><a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/lib/svg-views.tsx">RectangularNodeView</a></h5>
-<p>A <code>RectangularNodeView</code> creates a rectangular shape based on the shape&rsquo;s size.</p>
+<p>The implementation here is rather similar to the <code>ForeignObjectElement</code>, is a sub-class of <code>ShapedPreRenderedElement</code>. Please see ForeignObjectElement&rsquo;s example implementation.</p>
+<h5 id="rectangularnodeviewhttpsgithubcomeclipsesprottyblobmasterpackagessprottysrclibsvg-viewstsx"><a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/lib/svg-views.tsx">RectangularNodeView</a></h5>
+<p>A <code>RectangularNodeView</code> creates a rectangular shape based on the shape element&rsquo;s size.</p>
+<p align="center">
+    <img src="./rectangular-node-view.png" alt="rectangular-node-view">
+</p>
+<p  align="center">
+    <em>Rectangular nodes with dimensions of `(25,25)` (1), `(35,15)` (2) and `(5,40)`.</em>
+</p>
+<details><summary>Example implementation</summary>
+<details open><summary> Java GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">new</span> GNodeBuilder<span style="color:#f92672">()</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">type</span><span style="color:#f92672">(</span>DefaultTypes<span style="color:#f92672">.</span><span style="color:#a6e22e">NODE_RECTANGLE</span><span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">position</span><span style="color:#f92672">(</span>point<span style="color:#f92672">.</span><span style="color:#a6e22e">orElse</span><span style="color:#f92672">(</span>GraphUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">point</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> 0<span style="color:#f92672">)))</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span>GraphUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">dimension</span><span style="color:#f92672">(</span>25<span style="color:#f92672">,</span> 25<span style="color:#f92672">))</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+</code></pre></div></details>
+<details ><summary> Node GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">GNode</span>.<span style="color:#a6e22e">builder</span>()
+  .<span style="color:#66d9ef">type</span>(<span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">NODE_RECTANGLE</span>)
+  .<span style="color:#a6e22e">position</span>(<span style="color:#a6e22e">point</span> <span style="color:#f92672">??</span> <span style="color:#a6e22e">Point</span>.<span style="color:#a6e22e">ORIGIN</span>)
+  .<span style="color:#a6e22e">size</span>(<span style="color:#ae81ff">25</span>, <span style="color:#ae81ff">25</span>)
+  .<span style="color:#a6e22e">build</span>();
+</code></pre></div></details>
+</br>
+<p>The rectangular node element and its view are configured as follows:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">configureModelElement</span>(
   <span style="color:#a6e22e">context</span>,
   <span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">NODE_RECTANGLE</span>,
   <span style="color:#a6e22e">RectangularNode</span>,
   <span style="color:#a6e22e">RectangularNodeView</span>
 );
-</code></pre></div><h5 id="sgraphviewhttpsgithubcomeclipsesprottyblobmasterpackagessprottysrcgraphviewstsx"><a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/graph/views.tsx">SGraphView</a></h5>
+</code></pre></div></details>
+</br>
+<h5 id="sgraphviewhttpsgithubcomeclipsesprottyblobmasterpackagessprottysrcgraphviewstsx"><a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/graph/views.tsx">SGraphView</a></h5>
 <p>The <code>SGraphView</code> renders the base SVG canvas for an SModel and triggers the rendering of its children.</p>
+<details><summary>Example implementation</summary>
+<details open><summary> Java GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">new</span> GGraphBuilder<span style="color:#f92672">().</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+</code></pre></div></details>
+<details ><summary> Node GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">GGraph</span>.<span style="color:#a6e22e">builder</span>().<span style="color:#a6e22e">build</span>();
+</code></pre></div></details>
+</br>
+<p>The graph element and its view are configured as follows:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">configureModelElement</span>(<span style="color:#a6e22e">context</span>, <span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">GRAPH</span>, <span style="color:#a6e22e">GLSPGraph</span>, <span style="color:#a6e22e">SGraphView</span>);
-</code></pre></div><h5 id="slabelviewhttpsgithubcomeclipsesprottyblobmasterpackagessprottysrcgraphviewstsx"><a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/graph/views.tsx">SLabelView</a></h5>
+</code></pre></div></details>
+</br>
+<h5 id="slabelviewhttpsgithubcomeclipsesprottyblobmasterpackagessprottysrcgraphviewstsx"><a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/graph/views.tsx">SLabelView</a></h5>
 <p>The <code>SLabelView</code> renders a text element that contains the given label text.</p>
+<p align="center">
+    <img src="./label-view.png" alt="label-view">
+</p>
+<p  align="center">
+    <em>A label view with the text "Label 1" added to a rectangular node.</em>
+</p>
+<details><summary>Example implementation</summary>
+<details open><summary> Java GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">new</span> GNodeBuilder<span style="color:#f92672">()</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">type</span><span style="color:#f92672">(</span>DefaultTypes<span style="color:#f92672">.</span><span style="color:#a6e22e">NODE_RECTANGLE</span><span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">position</span><span style="color:#f92672">(</span>point<span style="color:#f92672">.</span><span style="color:#a6e22e">orElse</span><span style="color:#f92672">(</span>GraphUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">point</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> 0<span style="color:#f92672">)))</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span>GraphUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">dimension</span><span style="color:#f92672">(</span>50<span style="color:#f92672">,</span> 35<span style="color:#f92672">))</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> GLabelBuilder<span style="color:#f92672">().</span><span style="color:#a6e22e">text</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Label 1&#34;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">build</span><span style="color:#f92672">())</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+</code></pre></div></details>
+<details ><summary> Node GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">GNode</span>.<span style="color:#a6e22e">builder</span>()
+  .<span style="color:#66d9ef">type</span>(<span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">NODE_RECTANGLE</span>)
+  .<span style="color:#a6e22e">position</span>(<span style="color:#a6e22e">point</span> <span style="color:#f92672">??</span> <span style="color:#a6e22e">Point</span>.<span style="color:#a6e22e">ORIGIN</span>)
+  .<span style="color:#a6e22e">size</span>(<span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">35</span>)
+  .<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">GLabel</span>.<span style="color:#a6e22e">builder</span>().<span style="color:#a6e22e">text</span>(<span style="color:#e6db74">&#34;Label 1&#34;</span>).<span style="color:#a6e22e">build</span>())
+  .<span style="color:#a6e22e">build</span>();
+</code></pre></div></details>
+</br>
+<p>The label element and its view are configured as follows:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">configureModelElement</span>(<span style="color:#a6e22e">context</span>, <span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">LABEL</span>, <span style="color:#a6e22e">SLabel</span>, <span style="color:#a6e22e">SLabelView</span>);
-</code></pre></div><h5 id="sroutinghandleviewhttpsgithubcomeclipsesprottyblobmasterpackagessprottysrcgraphviewstsx"><a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/graph/views.tsx">SRoutingHandleView</a></h5>
-<p>A <code>SRoutingHandleView</code> renders a circle shaped element that servers as routing point for routable elements (e.g. Edges).
+</code></pre></div></details>
+</br>
+<h5 id="sroutinghandleviewhttpsgithubcomeclipsesprottyblobmasterpackagessprottysrcgraphviewstsx"><a href="https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/graph/views.tsx">SRoutingHandleView</a></h5>
+<p>A <code>SRoutingHandleView</code> renders a circle shaped element that serves as routing point for routable elements (e.g. Edges).
 Its position is computed either by a registered <code>EdgeRouterRegistry</code> or the routing arguments of the element.</p>
+<p align="center">
+    <img src="./routing-handle-view.png" alt="routing-handle-vie">
+</p>
+<p  align="center">
+    <em>A manually added routing point (dark gray), at position `(0,100)`.</em>
+</p>
+<details><summary>Example implementation</summary>
+<details open><summary> Java GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">new</span> GEdgeBuilder<span style="color:#f92672">()</span>
+      <span style="color:#f92672">.</span><span style="color:#a6e22e">source</span><span style="color:#f92672">(</span>source<span style="color:#f92672">)</span> <span style="color:#75715e">// source node element
+</span><span style="color:#75715e"></span>      <span style="color:#f92672">.</span><span style="color:#a6e22e">target</span><span style="color:#f92672">(</span>target<span style="color:#f92672">)</span> <span style="color:#75715e">// target node element
+</span><span style="color:#75715e"></span>      <span style="color:#f92672">.</span><span style="color:#a6e22e">addRoutingPoint</span><span style="color:#f92672">(</span>GraphUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">point</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> 100<span style="color:#f92672">))</span>
+      <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+</code></pre></div></details>
+<details ><summary> Node GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">GEdge</span>.<span style="color:#a6e22e">builder</span>()
+  .<span style="color:#a6e22e">source</span>(<span style="color:#a6e22e">source</span>) <span style="color:#75715e">// source node element
+</span><span style="color:#75715e"></span>  .<span style="color:#a6e22e">target</span>(<span style="color:#a6e22e">target</span>) <span style="color:#75715e">// target node element
+</span><span style="color:#75715e"></span>  .<span style="color:#a6e22e">addRoutingPoint</span>(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">100</span>)
+  .<span style="color:#a6e22e">build</span>();
+</code></pre></div></details>
+</br>
+<p>The routing handle element and its view are configured as follows:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">configureModelElement</span>(
   <span style="color:#a6e22e">context</span>,
   <span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">ROUTING_POINT</span>,
   <span style="color:#a6e22e">SRoutingHandle</span>,
   <span style="color:#a6e22e">SRoutingHandleView</span>
 );
-</code></pre></div><h4 id="default-glsp-views">Default GLSP Views</h4>
+</code></pre></div></details>
+</br>
+<h4 id="default-glsp-views">Default GLSP Views</h4>
 <p>The following views are provided by the <a href="https://github.com/eclipse-glsp/glsp-client">GLSP client</a> framework.</p>
 <h5 id="gedgeviewhttpsgithubcomeclipse-glspglsp-clientblobmasterpackagesclientsrcviewsglsp-edge-viewtsx"><a href="https://github.com/eclipse-glsp/glsp-client/blob/master/packages/client/src/views/glsp-edge-view.tsx">GEdgeView</a></h5>
 <p>A <code>GEdgeView</code> renders a line element which is routed by the <code>EdgeRouterRegistry</code>.
 The view also triggers the rendering of additional elements (such as mouse handles) and edge children (such as edge labels or routing points).</p>
+<p align="center">
+    <img src="./gedge-view.png" alt="gedge-view">
+</p>
+<p  align="center">
+    <em>A GEdge connection two nodes.</em>
+</p>
+<details><summary>Example implementation</summary>
+<details open><summary> Java GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">new</span> GEdgeBuilder<span style="color:#f92672">()</span>
+      <span style="color:#f92672">.</span><span style="color:#a6e22e">source</span><span style="color:#f92672">(</span>source<span style="color:#f92672">)</span> <span style="color:#75715e">// source node element
+</span><span style="color:#75715e"></span>      <span style="color:#f92672">.</span><span style="color:#a6e22e">target</span><span style="color:#f92672">(</span>target<span style="color:#f92672">)</span> <span style="color:#75715e">// target node element
+</span><span style="color:#75715e"></span>      <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+</code></pre></div></details>
+<details ><summary> Node GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">GEdge</span>.<span style="color:#a6e22e">builder</span>()
+  .<span style="color:#a6e22e">source</span>(<span style="color:#a6e22e">source</span>) <span style="color:#75715e">// source node element
+</span><span style="color:#75715e"></span>  .<span style="color:#a6e22e">target</span>(<span style="color:#a6e22e">target</span>) <span style="color:#75715e">// target node element
+</span><span style="color:#75715e"></span>  .<span style="color:#a6e22e">build</span>();
+</code></pre></div></details>
+</br>
+<p>The edge element and its view are configured as follows:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">configureModelElement</span>(<span style="color:#a6e22e">context</span>, <span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">EDGE</span>, <span style="color:#a6e22e">SEdge</span>, <span style="color:#a6e22e">GEdgeView</span>);
-</code></pre></div><h5 id="gissuemarkerviewhttpsgithubcomeclipse-glspglsp-clientblobmasterpackagesclientsrcviewsissue-marker-viewtsx"><a href="https://github.com/eclipse-glsp/glsp-client/blob/master/packages/client/src/views/issue-marker-view.tsx">GIssueMarkerView</a></h5>
+</code></pre></div></details>
+</br>
+<h5 id="gissuemarkerviewhttpsgithubcomeclipse-glspglsp-clientblobmasterpackagesclientsrcviewsissue-marker-viewtsx"><a href="https://github.com/eclipse-glsp/glsp-client/blob/master/packages/client/src/views/issue-marker-view.tsx">GIssueMarkerView</a></h5>
 <p>A <code>GIssueMarkerView</code> renders an issue marker on top of shapes. This is used to show validation results on elements (see Model Validation).
 These issue markers are elements in the shape of an information, warning or error icon based on the severity of the issue.</p>
+<p align="center">
+    <img src="./gissue-view.png" alt="gissue-view">
+</p>
+<p  align="center">
+    <em>A GIssue info marker placed at top left corner of a rectangular node.</em>
+</p>
+<details><summary>Example implementation</summary>
+<details open><summary> Java GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">new</span> GNodeBuilder<span style="color:#f92672">()</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">type</span><span style="color:#f92672">(</span>DefaultTypes<span style="color:#f92672">.</span><span style="color:#a6e22e">NODE_RECTANGLE</span><span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">position</span><span style="color:#f92672">(</span>point<span style="color:#f92672">.</span><span style="color:#a6e22e">orElse</span><span style="color:#f92672">(</span>GraphUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">point</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> 0<span style="color:#f92672">)))</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span>GraphUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">dimension</span><span style="color:#f92672">(</span>50<span style="color:#f92672">,</span> 35<span style="color:#f92672">))</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> GIssueMarkerBuilder<span style="color:#f92672">()</span>
+      <span style="color:#f92672">.</span><span style="color:#a6e22e">addIssue</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> GIssueBuilder<span style="color:#f92672">()</span>
+          <span style="color:#f92672">.</span><span style="color:#a6e22e">severity</span><span style="color:#f92672">(</span>GSeverity<span style="color:#f92672">.</span><span style="color:#a6e22e">INFO</span><span style="color:#f92672">)</span>
+          <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">())</span>
+      <span style="color:#f92672">.</span><span style="color:#a6e22e">position</span><span style="color:#f92672">(</span>GraphUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">point</span><span style="color:#f92672">(-</span>8<span style="color:#f92672">,</span> <span style="color:#f92672">-</span>8<span style="color:#f92672">))</span>
+      <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">());</span>
+</code></pre></div></details>
+<details ><summary> Node GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">GNode</span>.<span style="color:#a6e22e">builder</span>()
+  .<span style="color:#66d9ef">type</span>(<span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">NODE_RECTANGLE</span>)
+  .<span style="color:#a6e22e">position</span>(<span style="color:#a6e22e">point</span> <span style="color:#f92672">??</span> <span style="color:#a6e22e">Point</span>.<span style="color:#a6e22e">ORIGIN</span>)
+  .<span style="color:#a6e22e">size</span>(<span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">35</span>)
+  .<span style="color:#a6e22e">add</span>(
+    <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">GIssueMarkerBuilder</span>()
+      .<span style="color:#a6e22e">addIssue</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">GIssue</span>().<span style="color:#a6e22e">severity</span>(<span style="color:#e6db74">&#34;info&#34;</span>).<span style="color:#a6e22e">build</span>())
+      .<span style="color:#a6e22e">position</span>(<span style="color:#f92672">-</span><span style="color:#ae81ff">8</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">8</span>)
+      .<span style="color:#a6e22e">build</span>()
+  )
+  .<span style="color:#a6e22e">build</span>();
+</code></pre></div></details>
+</br>
+<p>The issue marker element and its view are configured as follows:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">configureModelElement</span>(
   <span style="color:#a6e22e">context</span>,
   <span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">ISSUE_MARKER</span>,
   <span style="color:#a6e22e">SIssueMarker</span>,
   <span style="color:#a6e22e">GIssueMarkerView</span>
 );
-</code></pre></div><h5 id="roundedcornernodeviewhttpsgithubcomeclipse-glspglsp-clientblobmasterpackagesclientsrcviewsrounded-corner-viewtsx"><a href="https://github.com/eclipse-glsp/glsp-client/blob/master/packages/client/src/views/rounded-corner-view.tsx">RoundedCornerNodeView</a></h5>
-<p>A <code>RectangularNodeView</code> creates a rectangular shape based shape&rsquo;s size and computes and renders the corners in a rounded way, based on the given options (i.e. <code>getClipPathInsets</code>).</p>
+</code></pre></div></details>
+</br>
+<h5 id="roundedcornernodeviewhttpsgithubcomeclipse-glspglsp-clientblobmasterpackagesclientsrcviewsrounded-corner-viewtsx"><a href="https://github.com/eclipse-glsp/glsp-client/blob/master/packages/client/src/views/rounded-corner-view.tsx">RoundedCornerNodeView</a></h5>
+<p>A <code>RoundedCornerNodeView</code> creates a rectangular shape based shape&rsquo;s size and computes and renders the corners in a rounded way, based on the corner radius argument. By default, the rounded corner radius defaults to <code>0</code>.</p>
+<p align="center">
+    <img src="./rounded-corner-node-view.png" alt="rounded-corner-node-view">
+</p>
+<p  align="center">
+    <em>A rectangular node with corner radius `0` (1), `3` (2) and `15` (3).</em>
+</p>
+<details><summary>Example implementation</summary>
+<details open><summary> Java GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">new</span> GNodeBuilder<span style="color:#f92672">()</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">type</span><span style="color:#f92672">(</span>DefaultTypes<span style="color:#f92672">.</span><span style="color:#a6e22e">NODE</span><span style="color:#f92672">)</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">position</span><span style="color:#f92672">(</span>point<span style="color:#f92672">.</span><span style="color:#a6e22e">orElse</span><span style="color:#f92672">(</span>GraphUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">point</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> 0<span style="color:#f92672">)))</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span>GraphUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">dimension</span><span style="color:#f92672">(</span>50<span style="color:#f92672">,</span> 35<span style="color:#f92672">))</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">addArguments</span><span style="color:#f92672">(</span>GArguments<span style="color:#f92672">.</span><span style="color:#a6e22e">cornerRadius</span><span style="color:#f92672">(</span>3<span style="color:#f92672">))</span>
+    <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+</code></pre></div></details>
+<details ><summary> Node GLSP Server</summary>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">GNode</span>.<span style="color:#a6e22e">builder</span>()
+  .<span style="color:#66d9ef">type</span>(<span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">NODE</span>)
+  .<span style="color:#a6e22e">position</span>(<span style="color:#a6e22e">point</span> <span style="color:#f92672">??</span> <span style="color:#a6e22e">Point</span>.<span style="color:#a6e22e">ORIGIN</span>)
+  .<span style="color:#a6e22e">size</span>(<span style="color:#ae81ff">50</span>, <span style="color:#ae81ff">35</span>)
+  .<span style="color:#a6e22e">addArgs</span>(<span style="color:#a6e22e">ArgsUtil</span>.<span style="color:#a6e22e">cornerRadius</span>(<span style="color:#ae81ff">3</span>))
+  .<span style="color:#a6e22e">build</span>();
+</code></pre></div></details>
+</br>
+<p>A node element and its rounded corner node view are configured as follows:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">configureModelElement</span>(<span style="color:#a6e22e">context</span>, <span style="color:#a6e22e">DefaultTypes</span>.<span style="color:#a6e22e">NODE</span>, <span style="color:#a6e22e">SNode</span>, <span style="color:#a6e22e">RoundedCornerNodeView</span>);
-</code></pre></div><h5 id="structurecompartmentviewhttpsgithubcomeclipse-glspglsp-clientblobmasterpackagesclientsrcviewscompartmentstsx"><a href="https://github.com/eclipse-glsp/glsp-client/blob/master/packages/client/src/views/compartments.tsx">StructureCompartmentView</a></h5>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#a6e22e">configureModelElement</span>(
-  <span style="color:#a6e22e">context</span>,
-  <span style="color:#e6db74">&#34;struct&#34;</span>,
-  <span style="color:#a6e22e">SCompartment</span>,
-  <span style="color:#a6e22e">StructureCompartmentView</span>
-);
-</code></pre></div><p></br></br></p>
+</code></pre></div></details>
+</br>
+<h5 id="structurecompartmentviewhttpsgithubcomeclipse-glspglsp-clientblobmasterpackagesclientsrcviewscompartmentstsx"><a href="https://github.com/eclipse-glsp/glsp-client/blob/master/packages/client/src/views/compartments.tsx">StructureCompartmentView</a></h5>
+<p>The <code>StructureCompartmentView</code> allows to contain children if using the <code>freeform</code> Layout. For more details please see the section about <a href="/glsp/documentation/clientlayouting/">freeform</a> Layout.</p>
+</br>
 <h3 id="styling">Styling</h3>
 <p>The style of the rendered SVG elements is controlled with plain CSS.
 CSS classes can be declared directly in the corresponding view.
