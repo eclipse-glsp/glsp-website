@@ -912,11 +912,22 @@ Besides, adopters can replace and extend existing, or add additional action hand
 <span style="color:#f92672">}</span>
 </code></pre></div></details>
 <details open><summary>GLSP Client/Node GLSP Server</summary>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyCustomAction</span> <span style="color:#66d9ef">implements</span> <span style="color:#a6e22e">Action</span> {
-  <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">readonly</span> <span style="color:#a6e22e">KIND</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;myCustomKind&#34;</span>;
-  <span style="color:#a6e22e">kind</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">MyCustomAction</span>.<span style="color:#a6e22e">KIND</span>;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">MyCustomAction</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">Action</span> {
+    <span style="color:#a6e22e">kind</span>: <span style="color:#66d9ef">typeof</span> <span style="color:#a6e22e">MyCustomAction</span>.<span style="color:#a6e22e">KIND</span>;
+    <span style="color:#a6e22e">additionalInformation</span>: <span style="color:#66d9ef">string</span>;
+}
 
-  <span style="color:#66d9ef">constructor</span>(<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">readonly</span> <span style="color:#a6e22e">additionalInformation</span>: <span style="color:#66d9ef">string</span>) {}
+<span style="color:#66d9ef">export</span> <span style="color:#66d9ef">namespace</span> <span style="color:#a6e22e">MyCustomAction</span> {
+    <span style="color:#66d9ef">export</span> <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">KIND</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;myCustomKind&#39;</span>;
+    <span style="color:#66d9ef">export</span> <span style="color:#66d9ef">function</span> <span style="color:#66d9ef">is</span>(<span style="color:#66d9ef">object</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">any</span>)<span style="color:#f92672">:</span> <span style="color:#66d9ef">object</span> <span style="color:#66d9ef">is</span> <span style="color:#a6e22e">MyCustomAction</span> {
+      <span style="color:#66d9ef">return</span> (<span style="color:#a6e22e">Action</span>.<span style="color:#a6e22e">hasKind</span>(<span style="color:#66d9ef">object</span>, <span style="color:#a6e22e">KIND</span>) <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">hasStringProp</span>(<span style="color:#66d9ef">object</span>, <span style="color:#e6db74">&#39;additionalInformation&#39;</span>));
+    }
+    <span style="color:#66d9ef">export</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">create</span>(<span style="color:#a6e22e">options</span><span style="color:#f92672">:</span> { <span style="color:#a6e22e">additionalInformation?</span>: <span style="color:#66d9ef">string</span> })<span style="color:#f92672">:</span> <span style="color:#a6e22e">MyCustomAction</span> {
+      <span style="color:#66d9ef">return</span> {
+          <span style="color:#a6e22e">kind</span>: <span style="color:#66d9ef">KIND</span>,
+          ...<span style="color:#a6e22e">options</span>
+      };
+    }
 }
 </code></pre></div></details>
 </br>
@@ -945,16 +956,23 @@ In addition, references to graphical model elements should be done by id.</p>
 <span style="color:#f92672">}</span>
 </code></pre></div></details>
 <details open><summary>GLSP Client/Node GLSP Server</summary>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyCustomRequestAction</span>
-  <span style="color:#66d9ef">implements</span> <span style="color:#a6e22e">RequestAction</span>&lt;<span style="color:#f92672">MyCustomResponseAction</span>&gt;
-{
-  <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">readonly</span> <span style="color:#a6e22e">KIND</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;myCustomRequest&#34;</span>;
-  <span style="color:#a6e22e">kind</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">MyCustomRequestAction</span>.<span style="color:#a6e22e">KIND</span>;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">MyCustomAction</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">RequestAction</span>&lt;<span style="color:#f92672">MyCustomResponseAction</span>&gt; {
+    <span style="color:#a6e22e">kind</span>: <span style="color:#66d9ef">typeof</span> <span style="color:#a6e22e">MyCustomAction</span>.<span style="color:#a6e22e">KIND</span>;
+    <span style="color:#a6e22e">additionalInformation</span>: <span style="color:#66d9ef">string</span>;
+}
 
-  <span style="color:#66d9ef">constructor</span>(
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">readonly</span> <span style="color:#a6e22e">additionalInformation</span>: <span style="color:#66d9ef">string</span>,
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">readonly</span> <span style="color:#a6e22e">requestId</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>
-  ) {}
+<span style="color:#66d9ef">export</span> <span style="color:#66d9ef">namespace</span> <span style="color:#a6e22e">MyCustomAction</span> {
+    <span style="color:#66d9ef">export</span> <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">KIND</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;myCustomKind&#39;</span>;
+    <span style="color:#66d9ef">export</span> <span style="color:#66d9ef">function</span> <span style="color:#66d9ef">is</span>(<span style="color:#66d9ef">object</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">any</span>)<span style="color:#f92672">:</span> <span style="color:#66d9ef">object</span> <span style="color:#66d9ef">is</span> <span style="color:#a6e22e">MyCustomAction</span> {
+      <span style="color:#66d9ef">return</span> (<span style="color:#a6e22e">RequestAction</span>.<span style="color:#a6e22e">hasKind</span>(<span style="color:#66d9ef">object</span>, <span style="color:#a6e22e">KIND</span>) <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">hasStringProp</span>(<span style="color:#66d9ef">object</span>, <span style="color:#e6db74">&#39;additionalInformation&#39;</span>));
+    }
+    <span style="color:#66d9ef">export</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">create</span>(<span style="color:#a6e22e">options</span><span style="color:#f92672">:</span> { <span style="color:#a6e22e">additionalInformation?</span>: <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">requestId?</span>: <span style="color:#66d9ef">string</span> })<span style="color:#f92672">:</span> <span style="color:#a6e22e">MyCustomAction</span> {
+      <span style="color:#66d9ef">return</span> {
+          <span style="color:#a6e22e">kind</span>: <span style="color:#66d9ef">KIND</span>,
+          <span style="color:#a6e22e">requestId</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;&#39;</span>,
+          ...<span style="color:#a6e22e">options</span>
+      };
+    }
 }
 </code></pre></div></details>
 </br>
@@ -970,23 +988,36 @@ Of course, the response action specification has to be specified as well:</p>
 <span style="color:#f92672">}</span>
 </code></pre></div></details>
 <details open><summary>GLSP Client/Node GLSP Server</summary>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyCustomResponseAction</span> <span style="color:#66d9ef">implements</span> <span style="color:#a6e22e">ResponseAction</span> {
-  <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">readonly</span> <span style="color:#a6e22e">KIND</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;myCustomResponse&#34;</span>;
-  <span style="color:#a6e22e">kind</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">MyCustomResponseAction</span>.<span style="color:#a6e22e">KIND</span>;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">MyCustomResponseAction</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">ResponseAction</span> {
+    <span style="color:#a6e22e">kind</span>: <span style="color:#66d9ef">typeof</span> <span style="color:#a6e22e">MyCustomResponseAction</span>.<span style="color:#a6e22e">KIND</span>;
+}
 
-  <span style="color:#66d9ef">constructor</span>(<span style="color:#66d9ef">public</span> <span style="color:#a6e22e">responseId</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>) {}
+<span style="color:#66d9ef">export</span> <span style="color:#66d9ef">namespace</span> <span style="color:#a6e22e">MyCustomResponseAction</span> {
+    <span style="color:#66d9ef">export</span> <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">KIND</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;myCustomResponse&#39;</span>;
+
+    <span style="color:#66d9ef">export</span> <span style="color:#66d9ef">function</span> <span style="color:#66d9ef">is</span>(<span style="color:#66d9ef">object</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">any</span>)<span style="color:#f92672">:</span> <span style="color:#66d9ef">object</span> <span style="color:#66d9ef">is</span> <span style="color:#a6e22e">SetContextActions</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">Action</span>.<span style="color:#a6e22e">hasKind</span>(<span style="color:#66d9ef">object</span>, <span style="color:#a6e22e">KIND</span>);
+    }
+
+    <span style="color:#66d9ef">export</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">create</span>(<span style="color:#a6e22e">options</span><span style="color:#f92672">:</span> { <span style="color:#a6e22e">responseId?</span>: <span style="color:#66d9ef">string</span> } <span style="color:#f92672">=</span> {})<span style="color:#f92672">:</span> <span style="color:#a6e22e">SetContextActions</span> {
+        <span style="color:#66d9ef">return</span> {
+            <span style="color:#a6e22e">kind</span>: <span style="color:#66d9ef">KIND</span>,
+            <span style="color:#a6e22e">responseId</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;&#39;</span>,
+            ...<span style="color:#a6e22e">options</span>
+        };
+    }
 }
 </code></pre></div></details>
 </br>
 <p>The client can dispatch a request action either in blocking fashion awaiting the response:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">@inject</span>(<span style="color:#a6e22e">TYPES</span>.<span style="color:#a6e22e">IActionDispatcher</span>) <span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">actionDispatcher</span>: <span style="color:#66d9ef">GLSPActionDispatcher</span>;
 <span style="color:#960050;background-color:#1e0010">…</span>
-<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">response</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">actionDispatcher</span>.<span style="color:#a6e22e">request</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">MyCustomRequestAction</span>(<span style="color:#960050;background-color:#1e0010">“</span><span style="color:#a6e22e">info</span><span style="color:#960050;background-color:#1e0010">”</span>));
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">response</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">actionDispatcher</span>.<span style="color:#a6e22e">request</span>(<span style="color:#a6e22e">MyCustomRequestAction</span>.<span style="color:#a6e22e">create</span>({ <span style="color:#a6e22e">additionalInformation</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;info&#34;</span> }));
 <span style="color:#75715e">// response is of type MyCustomResponseAction
 </span></code></pre></div><p>or simply dispatch the action as non-blocking notification:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ts" data-lang="ts"><span style="color:#66d9ef">@inject</span>(<span style="color:#a6e22e">TYPES</span>.<span style="color:#a6e22e">IActionDispatcher</span>) <span style="color:#66d9ef">protected</span> <span style="color:#a6e22e">actionDispatcher</span>: <span style="color:#66d9ef">GLSPActionDispatcher</span>;
 <span style="color:#960050;background-color:#1e0010">…</span>
-<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">actionDispatcher</span>.<span style="color:#a6e22e">dispatch</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">MyCustomRequestAction</span>(<span style="color:#960050;background-color:#1e0010">“</span><span style="color:#a6e22e">info</span><span style="color:#960050;background-color:#1e0010">”</span>));
+<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">actionDispatcher</span>.<span style="color:#a6e22e">dispatch</span>(<span style="color:#a6e22e">MyCustomRequestAction</span>.<span style="color:#a6e22e">create</span>({ <span style="color:#a6e22e">additionalInformation</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;info&#34;</span> }));
 </code></pre></div><p>Response actions don’t necessarily have to be part of a response-request action pair and can also be dispatched without a preceding request action.
 </br></p>
 <h3 id="implementing-an-action-handler-glsp-server">Implementing an Action Handler (GLSP Server)</h3>
