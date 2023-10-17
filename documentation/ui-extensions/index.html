@@ -22,69 +22,60 @@ document.querySelector(`#search-query-${fragmentName}`).addEventListener('input'
 This super class provides a base HTML element (<code>containerElement</code>) which is then the base for the custom UI elements.
 It also provides utility methods for showing/hiding or handling focus of the extension.
 To add the actual UI elements to the DOM, the abstract method <code>initializeContents</code> must be implemented.</p><p>The <a href=https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/base/ui-extensions/ui-extension-registry.ts>UIExtensionRegistry</a> allows to register multiple UIExtensions per diagram.</p><p>To enable a UI Extension a <a href=https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/base/ui-extensions/ui-extension-registry.ts><code>SetUIExtensionVisibilityAction</code></a> or <a href=https://github.com/eclipse/sprotty/blob/master/packages/sprotty/src/base/ui-extensions/ui-extension-registry.ts><code>SetUIExtensionVisibilityCommand</code></a> with the respective UI Extension ID needs to be invoked.</p><p>As already mentioned, there is a broad use case for UI extensions, hence also their trigger events can of course vary.
-UI extensions can be enabled practically with any event that can dispatch an action, e.g. via context menu entries, mouse click events, keyboard events or changes of the diagram itself, for example the change of the diagram&rsquo;s <code>EditMode</code>.</p><p>For example:</p><ul><li>The GLSP <code>ToolPalette</code> is opened via the GLSP Action <code>EnableToolPalette</code> right after the model was requested in <a href=https://github.com/eclipse-glsp/glsp-theia-integration/blob/master/packages/theia-integration/src/browser/diagram/glsp-diagram-widget.ts>GLSPDiagramWidget#<code>dispatchInitialActions()</code></a>.</li><li>The <code>CommandPalette</code> is opened via the keyboard shortcut <kbd>Ctrl</kbd>+<kbd>Space</kbd>.</li><li>The <code>EditLabelUI</code> is opened via a double click on an editable Label (e.g. a Category or Task node in the Workflow example).</li><li>The <code>TaskEditor</code> in the Workflow example is opened via a context menu entry (<code>Direct Edit Task</code>) for the Task node.</li></ul><p>The following GIF shows the different triggers of the the mentioned extensions:</p><p><img src=./ui-extension-triggers.gif alt="UI Extension Triggers"></p><h3 id=button-overlay-showcase>Button Overlay Showcase</h3><p>The following section gives an overview of the necessary bits to create a very simple UI Extension that provides two buttons to center a diagram or fit it to the screen.
+UI extensions can be enabled practically with any event that can dispatch an action, e.g. via context menu entries, mouse click events, keyboard events or changes of the diagram itself, for example the change of the diagram&rsquo;s <code>EditMode</code>.</p><p>For example:</p><ul><li>The GLSP <code>ToolPalette</code> is opened via a <a href=https://github.com/eclipse-glsp/glsp-client/blob/12ca7983757966419ca1c15cdc333cefdf56558f/packages/client/src/features/tool-palette/tool-palette.ts#L398><code>IDiagramStartup</code> hook</a> right before the initial model is requested</li><li>The <code>CommandPalette</code> is opened via the keyboard shortcut <kbd>Ctrl</kbd>+<kbd>Space</kbd>.</li><li>The <code>EditLabelUI</code> is opened via a double click on an editable Label (e.g. a Category or Task node in the Workflow example).</li><li>The <code>TaskEditor</code> in the Workflow example is opened via a context menu entry (<code>Direct Edit Task</code>) for the Task node.</li></ul><p>The following GIF shows the different triggers of the the mentioned extensions:</p><p><img src=./ui-extension-triggers.gif alt="UI Extension Triggers"></p><h3 id=button-overlay-showcase>Button Overlay Showcase</h3><p>The following section gives an overview of the necessary bits to create a very simple UI Extension that provides two buttons to center a diagram or fit it to the screen.
 This showcase is implemented on top of the Workflow example in the <code>glsp-client</code> and <code>glsp-theia-integration</code>.</p><p>At first, the UI extension needs to be defined, in this case we want the provided base HTML element (<code>containerElement</code>) to contain our buttons.
 Those buttons should show an icon as well as a descriptive text label and should trigger the respective GLSP Action on click of either one of them.
-Therefore we create for each button a <code>&lt;div></code> which contains the icon <code>&lt;i></code> and the description as adjacent text.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ts data-lang=ts><span style=color:#66d9ef>@injectable</span>()
-<span style=color:#66d9ef>export</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>ButtonOverlay</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>AbstractUIExtension</span> {
-  <span style=color:#66d9ef>@inject</span>(<span style=color:#a6e22e>TYPES</span>.<span style=color:#a6e22e>IActionDispatcher</span>)
-  <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>readonly</span> <span style=color:#a6e22e>actionDispatcher</span>: <span style=color:#66d9ef>IActionDispatcher</span>;
+Therefore we create for each button a <code>&lt;div></code> which contains the icon <code>&lt;i></code> and the description as adjacent text.
+The Button overlay should become visible after the initial model has been loaded.
+Therefore we implement the <code>IDiagramStartup</code> interface and trigger the <code>show()</code> method
+in the <code>postModelInitialization</code> hook.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ts data-lang=ts><span style=color:#66d9ef>@injectable</span>()
+<span style=color:#66d9ef>export</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>ButtonOverlay</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>AbstractUIExtension</span> <span style=color:#66d9ef>implements</span> <span style=color:#a6e22e>IDiagramStartup</span> {
+    <span style=color:#66d9ef>@inject</span>(<span style=color:#a6e22e>TYPES</span>.<span style=color:#a6e22e>IActionDispatcher</span>)
+    <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>readonly</span> <span style=color:#a6e22e>actionDispatcher</span>: <span style=color:#66d9ef>IActionDispatcher</span>;
 
-  <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>readonly</span> <span style=color:#a6e22e>ID</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;button-overlay&#34;</span>;
+    <span style=color:#66d9ef>@inject</span>(<span style=color:#a6e22e>EditorContextService</span>)
+    <span style=color:#66d9ef>protected</span> <span style=color:#a6e22e>editorContext</span>: <span style=color:#66d9ef>EditorContextService</span>;
 
-  <span style=color:#a6e22e>id() {</span>
-    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>ButtonOverlay</span>.<span style=color:#a6e22e>ID</span>;
-  }
+    <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>readonly</span> <span style=color:#a6e22e>ID</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;button-overlay&#39;</span>;
 
-  <span style=color:#a6e22e>containerClass() {</span>
-    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>ButtonOverlay</span>.<span style=color:#a6e22e>ID</span>;
-  }
-
-  <span style=color:#66d9ef>protected</span> <span style=color:#a6e22e>initializeContents</span>(<span style=color:#a6e22e>containerElement</span>: <span style=color:#66d9ef>HTMLElement</span>)<span style=color:#f92672>:</span> <span style=color:#66d9ef>void</span> {
-    <span style=color:#a6e22e>containerElement</span>.<span style=color:#a6e22e>appendChild</span>(
-      <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>createButton</span>(
-        <span style=color:#e6db74>&#34;btn_center_diagram&#34;</span>,
-        <span style=color:#e6db74>&#34;Center&#34;</span>,
-        <span style=color:#e6db74>&#34;screen-normal&#34;</span>,
-        <span style=color:#a6e22e>CenterAction</span>.<span style=color:#a6e22e>create</span>([])
-      )
-    );
-    <span style=color:#a6e22e>containerElement</span>.<span style=color:#a6e22e>appendChild</span>(
-      <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>createButton</span>(
-        <span style=color:#e6db74>&#34;btn_fit_diagram&#34;</span>,
-        <span style=color:#e6db74>&#34;Fit to screen&#34;</span>,
-        <span style=color:#e6db74>&#34;screen-full&#34;</span>,
-        <span style=color:#a6e22e>FitToScreenAction</span>.<span style=color:#a6e22e>create</span>([])
-      )
-    );
-  }
-
-  <span style=color:#66d9ef>protected</span> <span style=color:#a6e22e>createButton</span>(
-    <span style=color:#a6e22e>id</span>: <span style=color:#66d9ef>string</span>,
-    <span style=color:#a6e22e>label</span>: <span style=color:#66d9ef>string</span>,
-    <span style=color:#a6e22e>codiconId</span>: <span style=color:#66d9ef>string</span>,
-    <span style=color:#a6e22e>action</span>: <span style=color:#66d9ef>Action</span>
-  )<span style=color:#f92672>:</span> <span style=color:#a6e22e>HTMLElement</span> {
-    <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>baseDiv</span> <span style=color:#f92672>=</span> document.<span style=color:#a6e22e>getElementById</span>(<span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>options</span>.<span style=color:#a6e22e>baseDiv</span>);
-    <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>baseDiv</span>) {
-      <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>button</span> <span style=color:#f92672>=</span> document.<span style=color:#a6e22e>createElement</span>(<span style=color:#e6db74>&#34;div&#34;</span>);
-      <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>insertedDiv</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>baseDiv</span>.<span style=color:#a6e22e>insertBefore</span>(<span style=color:#a6e22e>button</span>, <span style=color:#a6e22e>baseDiv</span>.<span style=color:#a6e22e>firstChild</span>);
-      <span style=color:#a6e22e>button</span>.<span style=color:#a6e22e>id</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>id</span>;
-      <span style=color:#a6e22e>button</span>.<span style=color:#a6e22e>classList</span>.<span style=color:#a6e22e>add</span>(<span style=color:#e6db74>&#34;overlay-button&#34;</span>);
-      <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>icon</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>createIcon</span>(<span style=color:#a6e22e>codiconId</span>);
-      <span style=color:#a6e22e>insertedDiv</span>.<span style=color:#a6e22e>appendChild</span>(<span style=color:#a6e22e>icon</span>);
-      <span style=color:#a6e22e>insertedDiv</span>.<span style=color:#a6e22e>onclick</span> <span style=color:#f92672>=</span> () <span style=color:#f92672>=&gt;</span> <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>actionDispatcher</span>.<span style=color:#a6e22e>dispatch</span>(<span style=color:#a6e22e>action</span>);
-      <span style=color:#a6e22e>insertedDiv</span>.<span style=color:#a6e22e>insertAdjacentText</span>(<span style=color:#e6db74>&#34;beforeend&#34;</span>, <span style=color:#a6e22e>label</span>);
-      <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>button</span>;
+    <span style=color:#a6e22e>id() {</span>
+        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>ButtonOverlay</span>.<span style=color:#a6e22e>ID</span>;
     }
-    <span style=color:#66d9ef>return</span> document.<span style=color:#a6e22e>createElement</span>(<span style=color:#e6db74>&#34;div&#34;</span>);
-  }
 
-  <span style=color:#66d9ef>protected</span> <span style=color:#a6e22e>createIcon</span>(<span style=color:#a6e22e>codiconId</span>: <span style=color:#66d9ef>string</span>)<span style=color:#f92672>:</span> <span style=color:#a6e22e>HTMLElement</span> {
-    <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>icon</span> <span style=color:#f92672>=</span> document.<span style=color:#a6e22e>createElement</span>(<span style=color:#e6db74>&#34;i&#34;</span>);
-    <span style=color:#a6e22e>icon</span>.<span style=color:#a6e22e>classList</span>.<span style=color:#a6e22e>add</span>(...<span style=color:#a6e22e>codiconCSSClasses</span>(<span style=color:#a6e22e>codiconId</span>), <span style=color:#e6db74>&#34;overlay-icon&#34;</span>);
-    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>icon</span>;
-  }
+    <span style=color:#a6e22e>containerClass() {</span>
+        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>ButtonOverlay</span>.<span style=color:#a6e22e>ID</span>;
+    }
+
+    <span style=color:#66d9ef>protected</span> <span style=color:#a6e22e>initializeContents</span>(<span style=color:#a6e22e>containerElement</span>: <span style=color:#66d9ef>HTMLElement</span>)<span style=color:#f92672>:</span> <span style=color:#66d9ef>void</span> {
+        <span style=color:#a6e22e>containerElement</span>.<span style=color:#a6e22e>appendChild</span>(<span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>createButton</span>(<span style=color:#e6db74>&#39;btn_center_diagram&#39;</span>, <span style=color:#e6db74>&#39;Center&#39;</span>, <span style=color:#e6db74>&#39;screen-normal&#39;</span>, <span style=color:#a6e22e>CenterAction</span>.<span style=color:#a6e22e>create</span>([])));
+        <span style=color:#a6e22e>containerElement</span>.<span style=color:#a6e22e>appendChild</span>(<span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>createButton</span>(<span style=color:#e6db74>&#39;btn_fit_diagram&#39;</span>, <span style=color:#e6db74>&#39;Fit to screen&#39;</span>, <span style=color:#e6db74>&#39;screen-full&#39;</span>, <span style=color:#a6e22e>FitToScreenAction</span>.<span style=color:#a6e22e>create</span>([])));
+    }
+
+    <span style=color:#66d9ef>protected</span> <span style=color:#a6e22e>createButton</span>(<span style=color:#a6e22e>id</span>: <span style=color:#66d9ef>string</span>, <span style=color:#a6e22e>label</span>: <span style=color:#66d9ef>string</span>, <span style=color:#a6e22e>codiconId</span>: <span style=color:#66d9ef>string</span>, <span style=color:#a6e22e>action</span>: <span style=color:#66d9ef>Action</span>)<span style=color:#f92672>:</span> <span style=color:#a6e22e>HTMLElement</span> {
+        <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>baseDiv</span> <span style=color:#f92672>=</span> document.<span style=color:#a6e22e>getElementById</span>(<span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>options</span>.<span style=color:#a6e22e>baseDiv</span>);
+        <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>baseDiv</span>) {
+            <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>button</span> <span style=color:#f92672>=</span> document.<span style=color:#a6e22e>createElement</span>(<span style=color:#e6db74>&#39;div&#39;</span>);
+            <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>insertedDiv</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>baseDiv</span>.<span style=color:#a6e22e>insertBefore</span>(<span style=color:#a6e22e>button</span>, <span style=color:#a6e22e>baseDiv</span>.<span style=color:#a6e22e>firstChild</span>);
+            <span style=color:#a6e22e>button</span>.<span style=color:#a6e22e>id</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>id</span>;
+            <span style=color:#a6e22e>button</span>.<span style=color:#a6e22e>classList</span>.<span style=color:#a6e22e>add</span>(<span style=color:#e6db74>&#39;overlay-button&#39;</span>);
+            <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>icon</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>createIcon</span>(<span style=color:#a6e22e>codiconId</span>);
+            <span style=color:#a6e22e>insertedDiv</span>.<span style=color:#a6e22e>appendChild</span>(<span style=color:#a6e22e>icon</span>);
+            <span style=color:#a6e22e>insertedDiv</span>.<span style=color:#a6e22e>onclick</span> <span style=color:#f92672>=</span> () <span style=color:#f92672>=&gt;</span> <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>actionDispatcher</span>.<span style=color:#a6e22e>dispatch</span>(<span style=color:#a6e22e>action</span>);
+            <span style=color:#a6e22e>insertedDiv</span>.<span style=color:#a6e22e>insertAdjacentText</span>(<span style=color:#e6db74>&#39;beforeend&#39;</span>, <span style=color:#a6e22e>label</span>);
+            <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>button</span>;
+        }
+        <span style=color:#66d9ef>return</span> document.<span style=color:#a6e22e>createElement</span>(<span style=color:#e6db74>&#39;div&#39;</span>);
+    }
+
+    <span style=color:#66d9ef>protected</span> <span style=color:#a6e22e>createIcon</span>(<span style=color:#a6e22e>codiconId</span>: <span style=color:#66d9ef>string</span>)<span style=color:#f92672>:</span> <span style=color:#a6e22e>HTMLElement</span> {
+        <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>icon</span> <span style=color:#f92672>=</span> document.<span style=color:#a6e22e>createElement</span>(<span style=color:#e6db74>&#39;i&#39;</span>);
+        <span style=color:#a6e22e>icon</span>.<span style=color:#a6e22e>classList</span>.<span style=color:#a6e22e>add</span>(...<span style=color:#a6e22e>codiconCSSClasses</span>(<span style=color:#a6e22e>codiconId</span>), <span style=color:#e6db74>&#39;overlay-icon&#39;</span>);
+        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>icon</span>;
+    }
+
+    <span style=color:#a6e22e>postModelInitialization</span>()<span style=color:#f92672>:</span> <span style=color:#a6e22e>MaybePromise</span>&lt;<span style=color:#f92672>void</span>&gt; {
+        <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>show</span>(<span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>editorContext</span>.<span style=color:#a6e22e>modelRoot</span>);
+    }
 }
 </code></pre></div><p>To improve the styling of the extension, we make use of the defined CSS classes and position the overlay on the top left of the diagram and reduce the opacity of the buttons by default.
 On hover, the buttons are fully visible.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-css data-lang=css>.<span style=color:#a6e22e>button-overlay</span> {
@@ -118,15 +109,7 @@ On hover, the buttons are fully visible.</p><div class=highlight><pre style=colo
 }
 </code></pre></div><p>To register the extension, it has to be bound as singleton and</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ts data-lang=ts><span style=color:#a6e22e>bind</span>(<span style=color:#a6e22e>ButtonOverlay</span>).<span style=color:#a6e22e>toSelf</span>().<span style=color:#a6e22e>inSingletonScope</span>();
 <span style=color:#a6e22e>bind</span>(<span style=color:#a6e22e>TYPES</span>.<span style=color:#a6e22e>IUIExtension</span>).<span style=color:#a6e22e>toService</span>(<span style=color:#a6e22e>ButtonOverlay</span>);
-</code></pre></div><p>To activate our UI extension, for example, alongside the initial actions, we can dispatch the <code>SetUIExtensionVisibilityAction</code> in <a href=https://github.com/eclipse-glsp/glsp-theia-integration/blob/master/packages/theia-integration/src/browser/diagram/glsp-diagram-widget.ts>GLSPDiagramWidget#<code>dispatchInitialActions()</code></a> after a certain delay.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ts data-lang=ts><span style=color:#66d9ef>export</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>MyGLSPDiagramWidget</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>GLSPDiagramWidget</span> {
-    ...
-    <span style=color:#66d9ef>protected</span> <span style=color:#66d9ef>async</span> <span style=color:#a6e22e>dispatchInitialActions</span>()<span style=color:#f92672>:</span> <span style=color:#a6e22e>Promise</span>&lt;<span style=color:#f92672>void</span>&gt; {
-        <span style=color:#66d9ef>super</span>.<span style=color:#a6e22e>dispatchInitialActions</span>();
-        <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>actionDispatcher</span>.<span style=color:#a6e22e>onceModelInitialized</span>().<span style=color:#a6e22e>then</span>(() <span style=color:#f92672>=&gt;</span>
-            <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>actionDispatcher</span>.<span style=color:#a6e22e>dispatch</span>(<span style=color:#a6e22e>SetUIExtensionVisibilityAction</span>.<span style=color:#a6e22e>create</span>({ <span style=color:#a6e22e>extensionId</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;button-overlay&#34;</span>, <span style=color:#a6e22e>visible</span>: <span style=color:#66d9ef>true</span> }))
-        );
-    }
-}
+<span style=color:#a6e22e>bind</span>(<span style=color:#a6e22e>TYPES</span>.<span style=color:#a6e22e>IDiagramStartup</span>).<span style=color:#a6e22e>toService</span>(<span style=color:#a6e22e>ButtonOverlay</span>);
 </code></pre></div><p>The outcome of this showcase is the following subtle UI overlay that offers to center the diagram or fit it to the screen:</p><p><img src=./button-overlay-showcase.gif alt="Button Overlay Showcase"></p></div></article></div></div></div></section><section id=footer class=fragment><div class="container-fluid bg-light"><div class="container py-5"><div class=row><div class="col-md m-2 text-body"><h4></h4><a href=#><img src=/glsp/images/logo.png class="img-fluid w-50" alt=GLSP></a><div class="row justify-content-left ml-0"><span class="fa-stack fa-2x mt-3 mr-1" title=twitter><a href=https://twitter.com/eclipseglsp class=ignore-color-change><i class="fas fa-circle fa-stack-2x"></i><i class="fab fa-twitter fa-stack-1x fa-fw text-light"></i><span class=sr-only>twitter</span></a></span>
 <span class="fa-stack fa-2x mt-3 mr-1" title=github><a href=https://github.com/eclipse-glsp/glsp class=ignore-color-change><i class="fas fa-circle fa-stack-2x"></i><i class="fab fa-github fa-stack-1x fa-fw text-light"></i><span class=sr-only>github</span></a></span>
 <span class="fa-stack fa-2x mt-3 mr-1" title=github-discussions><a href=https://github.com/eclipse-glsp/glsp/discussions class=ignore-color-change><i class="fas fa-circle fa-stack-2x"></i><i class="far fa-comments fa-stack-1x fa-fw text-light"></i><span class=sr-only>github-discussions</span></a></span></div></div><div class="col-md m-2 text-body"><h4>Related Projects</h4><ul class="nav flex-column"><li class=nav-item><a class="nav-link p-0 display-5" href=https://sprotty.org>Eclipse Sprotty</a></li><li class=nav-item><a class="nav-link p-0 display-5" href=https://www.eclipse.dev/emfcloud>Eclipse EMF.cloud</a></li><li class=nav-item><a class="nav-link p-0 display-5" href=https://eclipsesource.com/technology/eclipse-theia>Eclipse Theia IDE</a></li><li class=nav-item><a class="nav-link p-0 display-5" href=https://eclipse.dev/che>Eclipse Che</a></li></ul></div><div class="col-md m-2 text-body"><div><h4 id=eclipse-glsp>Eclipse GLSP</h4><p>The Eclipse Graphical Language Server Platform is a project hosted at the <a href=https://www.eclipse.org>Eclipse Foundation</a>, led by <a href=https://projects.eclipse.org/projects/ecd.glsp/who>Philip Langer & Tobias Ortmayr</a>, organized within the <a href=https://projects.eclipse.org/projects/ecd>Eclipse Cloud Development</a> project.</p><p>Gefördert durch: <img src=/glsp/images/BMBF_Logo.svg alt="BMBF Logo"></p></div></div></div></div></div></section><footer class="overlay fragment container-fluid bg-secondary" id=copyright><div class=container><div class="row py-3"><div class=col-md><div class="row mx-0 my-2 justify-content-center text-center text-lg-none text-black-50"><div class="row mx-0 mr-lg-auto justify-content-center"><div class="col-auto px-1 copyright-legal">© Copyright&nbsp;2023</div><div class="col-auto px-0 copyright-by">by Eclipse Foundation</div></div></div></div><div class=col-md><div class="row mx-0 my-2 justify-content-center"><ul class="nav ml-lg-auto"><li class=nav-item><a class="nav-link py-0" href=https://projects.eclipse.org/projects/ecd.glsp>About</a></li><li class=nav-item><a class="nav-link py-0" href=https://www.eclipse.org/legal/privacy.php>Privacy Policy</a></li><li class=nav-item><a class="nav-link py-0" href=https://www.eclipse.org/legal/termsofuse.php>Terms of Use</a></li><li class=nav-item><a class="nav-link py-0" href=https://www.eclipse.org/legal/copyright.php>Copyright</a></li><li class=nav-item><a class="nav-link py-0" href=https://www.eclipse.org/legal/>Legal</a></li></ul></div></div></div></div></footer><div id=react></div><script async defer src=/glsp/scripts/syna-main.min.065c23d84ca56793a8ee2be9d091a50028dc3505b5e4962af6444d641ed77ff5.js></script><script async defer src=/glsp/scripts/syna-search.min.be96fcdb5b1bfc9ff80f633ea20d203a74487d142ebbe9095a9478b2479d4203.js></script><script async defer src=/glsp/scripts/syna-content.min.3f176160ef27cbeeb1c26d718677d4e66e40b70421d8745f6d667dcad23a6850.js></script><script async defer src=/glsp/scripts/syna-collapse.min.e53f62e26af14c1839865c3eb2f19520509399d957f5520e410b1f11ffee93c1.js></script></body></html>

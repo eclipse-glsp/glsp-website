@@ -29,7 +29,8 @@ document.querySelector(`#search-query-${fragmentName}`).addEventListener('input'
 
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * Initializes the client and the server connection. During the start procedure the client is in the
-</span><span style=color:#75715e>     * `Starting` state and will transition to either `Running` or `StartFailed`.
+</span><span style=color:#75715e>     * `Starting` state and will transition to either `Running` or `StartFailed`. Calling this method
+</span><span style=color:#75715e>     *  if the client is already running has no effect.
 </span><span style=color:#75715e>     *
 </span><span style=color:#75715e>     * @returns A promise that resolves if the startup was successful.
 </span><span style=color:#75715e>     */</span>
@@ -37,7 +38,10 @@ document.querySelector(`#search-query-${fragmentName}`).addEventListener('input'
 
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * Send an `initialize` request to the server. The server needs to be initialized in order to accept and
-</span><span style=color:#75715e>     * process other requests and notifications.
+</span><span style=color:#75715e>     * process other requests and notifications. The {@link InitializeResult} ist cached and can be retrieved
+</span><span style=color:#75715e>     * via the {@link GLSPClient.initializeResult} property.
+</span><span style=color:#75715e>     * Only the first method invocation actually sends a request to the server. Subsequent invocations simply
+</span><span style=color:#75715e>     * return the cached result.
 </span><span style=color:#75715e>     *
 </span><span style=color:#75715e>     * @param params Initialize parameters
 </span><span style=color:#75715e>     * @returns A promise of the {@link InitializeResult}.
@@ -45,9 +49,20 @@ document.querySelector(`#search-query-${fragmentName}`).addEventListener('input'
     <span style=color:#a6e22e>initializeServer</span>(<span style=color:#a6e22e>params</span>: <span style=color:#66d9ef>InitializeParameters</span>)<span style=color:#f92672>:</span> <span style=color:#a6e22e>Promise</span>&lt;<span style=color:#f92672>InitializeResult</span>&gt;;
 
     <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * The cached {@link {InitializeResult}. Is `undefined` if the server has not been initialized yet via
+</span><span style=color:#75715e>     * the {@link GLSPClient.initializeServer} method.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#66d9ef>readonly</span> <span style=color:#a6e22e>initializeResult</span>: <span style=color:#66d9ef>InitializeResult</span> <span style=color:#f92672>|</span> <span style=color:#66d9ef>undefined</span>;
+
+    <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * Event that is fired once the first invocation of {@link GLSPClient.initializeServer} has been completed.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#66d9ef>readonly</span> <span style=color:#a6e22e>onServerInitialized</span>: <span style=color:#66d9ef>Event</span>&lt;<span style=color:#f92672>InitializeResult</span>&gt;;
+
+    <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * Send an `initializeClientSession` request to the server. One client application may open several session.
 </span><span style=color:#75715e>     * Each individual diagram on the client side counts as one session and has to provide
-</span><span style=color:#75715e>     * a unique clientSessionId.
+</span><span style=color:#75715e>     * a unique clientId.
 </span><span style=color:#75715e>     *
 </span><span style=color:#75715e>     * @param params InitializeClientSession parameters
 </span><span style=color:#75715e>     * @returns A promise that resolves if the initialization was successful
@@ -69,7 +84,7 @@ document.querySelector(`#search-query-${fragmentName}`).addEventListener('input'
     <span style=color:#a6e22e>shutdownServer</span>()<span style=color:#f92672>:</span> <span style=color:#66d9ef>void</span>;
 
     <span style=color:#75715e>/**
-</span><span style=color:#75715e>     * Stops the client and disposes any resources. During the stop procedure the client is in the `Stopping` state and will
+</span><span style=color:#75715e>     * Stops the client and disposes unknown resources. During the stop procedure the client is in the `Stopping` state and will
 </span><span style=color:#75715e>     * transition to either `Stopped` or `ServerError`.
 </span><span style=color:#75715e>     *
 </span><span style=color:#75715e>     * @returns A promise that resolves after the server was stopped and disposed.
@@ -85,10 +100,13 @@ document.querySelector(`#search-query-${fragmentName}`).addEventListener('input'
 
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * Sets a handler/listener for action messages received from the server.
+</span><span style=color:#75715e>     * Can be scoped to a particular client session by passing the corresponding `clientId`.
 </span><span style=color:#75715e>     *
 </span><span style=color:#75715e>     * @param handler The action message handler
+</span><span style=color:#75715e>     * @param clientId If passed given action message handler will only be invoked for action messages with this client id.
+</span><span style=color:#75715e>     * @returns A {@link Disposable} that can be used to unregister the handler
 </span><span style=color:#75715e>     */</span>
-    <span style=color:#a6e22e>onActionMessage</span>(<span style=color:#a6e22e>handler</span>: <span style=color:#66d9ef>ActionMessageHandler</span>)<span style=color:#f92672>:</span> <span style=color:#66d9ef>void</span>;
+    <span style=color:#a6e22e>onActionMessage</span>(<span style=color:#a6e22e>handler</span>: <span style=color:#66d9ef>ActionMessageHandler</span>, <span style=color:#a6e22e>clientId?</span>: <span style=color:#66d9ef>string</span>)<span style=color:#f92672>:</span> <span style=color:#a6e22e>Disposable</span>;
 }
 
 <span style=color:#66d9ef>export</span> <span style=color:#66d9ef>enum</span> <span style=color:#a6e22e>ClientState</span> {
@@ -177,6 +195,12 @@ document.querySelector(`#search-query-${fragmentName}`).addEventListener('input'
     <span style=color:#a6e22e>diagramType</span>: <span style=color:#66d9ef>string</span>;
 
     <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * The set of action kinds that can be handled by the client.
+</span><span style=color:#75715e>     * Used by the server to know which dispatched actions should be forwarded to the client.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#a6e22e>clientActionKinds</span>: <span style=color:#66d9ef>string</span>[];
+
+    <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * Additional custom arguments.
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>args?</span>: <span style=color:#66d9ef>Args</span>;
@@ -192,10 +216,7 @@ document.querySelector(`#search-query-${fragmentName}`).addEventListener('input'
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>args?</span>: <span style=color:#66d9ef>Args</span>;
 }
-</code></pre></div></details><p><strong>Shutdown Notification</strong></p><p>If the client disconnects from the server, it may send a <code>shutdown</code> notification to give the server a chance to clean up any resources dedicated to the client. The shutdown request does not have any parameters as the server is already aware of the client.</p><p><strong>Action Messages</strong></p><p>Any communication that is performed between initialization and shutdown is handled by sending action messages, either from the client to the server or from the server to the client. This is the core part of the Graphical Language Server Protocol.</p><h2 id=2-graphical-language-server-protocol>2. Graphical Language Server Protocol</h2><p>The graphical language server protocol defines how the client and the server communicate and which actions are sent between them. It heavily builds on the client-server protocol defined in <a href=https://github.com/eclipse/sprotty>Sprotty</a> but adds additional actions to enable editing and other capabilities. Actions that are re-used from Sprotty are marked as such in their code and we re-use their documentation where applicable. Additional information regarding the lifecycle of some action messages can be found in the <a href=https://github.com/eclipse/sprotty/wiki/Client-Server-Protocol>Sprotty documentation</a>.</p><p>Please note that there are several actions that are used purely on the client side. Such actions are not part of this protocol.</p><h3 id=21-base-protocol>2.1. Base Protocol</h3><p>The base protocol describes the structure of the messages that are sent between the server and the client.</p><h4 id=211-actionmessage>2.1.1. ActionMessage</h4><p>A general message serves as an envelope carrying an action to be transmitted between the client and the server via a DiagramServer.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s ActionMessage.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>ActionMessage</span>&lt;<span style=color:#f92672>A</span> <span style=color:#a6e22e>extends</span> <span style=color:#a6e22e>Action </span><span style=color:#f92672>=</span> <span style=color:#a6e22e>Action</span>&gt; {
+</code></pre></div></details><p><strong>Shutdown Notification</strong></p><p>If the client disconnects from the server, it may send a <code>shutdown</code> notification to give the server a chance to clean up any resources dedicated to the client. The shutdown request does not have any parameters as the server is already aware of the client.</p><p><strong>Action Messages</strong></p><p>Any communication that is performed between initialization and shutdown is handled by sending action messages, either from the client to the server or from the server to the client. This is the core part of the Graphical Language Server Protocol.</p><h2 id=2-graphical-language-server-protocol>2. Graphical Language Server Protocol</h2><p>The graphical language server protocol defines how the client and the server communicate and which actions are sent between them. It heavily builds on the client-server protocol defined in <a href=https://github.com/eclipse/sprotty>Sprotty</a> but adds additional actions to enable editing and other capabilities. Additional information regarding the lifecycle of some action messages can be found in the <a href=https://github.com/eclipse/sprotty/wiki/Client-Server-Protocol>Sprotty documentation</a>.</p><p>Please note that there are several actions that are used purely on the client side. Such actions are not part of this protocol.</p><h3 id=21-base-protocol>2.1. Base Protocol</h3><p>The base protocol describes the structure of the messages that are sent between the server and the client.</p><h4 id=211-actionmessage>2.1.1. ActionMessage</h4><p>A general message serves as an envelope carrying an action to be transmitted between the client and the server via a DiagramServer.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>ActionMessage</span>&lt;<span style=color:#f92672>A</span> <span style=color:#a6e22e>extends</span> <span style=color:#a6e22e>Action </span><span style=color:#f92672>=</span> <span style=color:#a6e22e>Action</span>&gt; {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * Used to identify a specific client session.
 </span><span style=color:#75715e>     */</span>
@@ -206,37 +227,25 @@ document.querySelector(`#search-query-${fragmentName}`).addEventListener('input'
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>Action</span>: <span style=color:#66d9ef>A</span>;
 }
-</code></pre></div></details><h4 id=212-action>2.1.2. Action</h4><p>An action is a declarative description of a behavior that shall be invoked by the receiver upon receipt of the action. It is a plain data structure, and as such transferable between server and client. Actions contained in action messages are identified by their <code>kind</code> attribute. This attribute is required for all actions. Certain actions are meant to be sent from the client to the server or vice versa, while other actions can be sent both ways, by the client or the server. All actions must extend the default action interface.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s Action.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>Action</span> {
+</code></pre></div></details><h4 id=212-action>2.1.2. Action</h4><p>An action is a declarative description of a behavior that shall be invoked by the receiver upon receipt of the action. It is a plain data structure, and as such transferable between server and client. Actions contained in action messages are identified by their <code>kind</code> attribute. This attribute is required for all actions. Certain actions are meant to be sent from the client to the server or vice versa, while other actions can be sent both ways, by the client or the server. All actions must extend the default action interface.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>Action</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * Unique identifier specifying the kind of action to process.
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>kind</span>: <span style=color:#66d9ef>string</span>;
 }
-</code></pre></div></details><h5 id=2121-requestaction>2.1.2.1. RequestAction</h5><p>A request action is tied to the expectation of receiving a corresponding response action. The <code>requestId</code> property is used to match the received response with the original request.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s RequestAction.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>RequestAction</span>&lt;<span style=color:#f92672>Res</span> <span style=color:#a6e22e>extends</span> <span style=color:#a6e22e>ResponseAction</span>&gt; <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Action</span> {
+</code></pre></div></details><h5 id=2121-requestaction>2.1.2.1. RequestAction</h5><p>A request action is tied to the expectation of receiving a corresponding response action. The <code>requestId</code> property is used to match the received response with the original request.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>RequestAction</span>&lt;<span style=color:#f92672>Res</span> <span style=color:#a6e22e>extends</span> <span style=color:#a6e22e>ResponseAction</span>&gt; <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Action</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * Unique id for this request. In order to match a response to this request, the response needs to have the same id.
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>requestId</span>: <span style=color:#66d9ef>string</span>;
 }
-</code></pre></div></details><h5 id=2122-responseaction>2.1.2.2. ResponseAction</h5><p>A response action is sent to respond to a request action. The <code>responseId</code> must match the <code>requestId</code> of the preceding request. In case the <code>responseId</code> is empty or undefined, the action is handled as standalone, i.e. it was fired without a preceding request.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s ResponseAction.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>ResponseAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Action</span> {
+</code></pre></div></details><h5 id=2122-responseaction>2.1.2.2. ResponseAction</h5><p>A response action is sent to respond to a request action. The <code>responseId</code> must match the <code>requestId</code> of the preceding request. In case the <code>responseId</code> is empty or undefined, the action is handled as standalone, i.e. it was fired without a preceding request.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>ResponseAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Action</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * Id corresponding to the request this action responds to.
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>responseId</span>: <span style=color:#66d9ef>string</span>;
 }
-</code></pre></div></details><h5 id=2123-rejectaction>2.1.2.3. RejectAction</h5><p>A reject action is a response fired to indicate that a request must be rejected.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s RejectAction.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>RejectAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>ResponseAction</span> {
+</code></pre></div></details><h5 id=2123-rejectaction>2.1.2.3. RejectAction</h5><p>A reject action is a response fired to indicate that a request must be rejected.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>RejectAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>ResponseAction</span> {
     <span style=color:#a6e22e>kind</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;rejectRequest&#39;</span>;
 
     <span style=color:#75715e>/**
@@ -271,10 +280,7 @@ document.querySelector(`#search-query-${fragmentName}`).addEventListener('input'
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>operationList</span>: <span style=color:#66d9ef>Operation</span>[];
 }
-</code></pre></div></details><h3 id=22-model-structure>2.2. Model Structure</h3><p>The basic structure in Sprotty is called an <code>SModel</code>. Such a model consists of <code>SModelElements</code> conforming to an <code>SModelElementSchema</code>.</p><p>Based on those classes Sprotty already defines a graph-like model called <code>SGraph</code> conforming to the <code>SGraphSchema</code>. This graph consists nodes, edges, compartments, labels, and ports.</p><h4 id=221-smodelelementschema>2.2.1. SModelElementSchema</h4><p>The schema of an <code>SModelElement</code> describes its serializable form. The actual model is created from its schema with an <code>IModelFactory</code>. Each model element must have a unique ID and a type that is used to look up its view, i.e., the graphical representation.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s SModelElementSchema.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>SModelElementSchema</span> {
+</code></pre></div></details><h3 id=22-model-structure>2.2. Model Structure</h3><p>The basic model structure in GLSP is called a <code>GModel</code>. Such a model consists of <code>GModelElements</code> conforming to an <code>GModelElementSchema</code>.</p><p>Sprotty already defines a similar, graph-like model called <code>SGraph</code> conforming to the <code>SGraphSchema</code>. This graph consists nodes, edges, compartments, labels, and ports. The <code>GModel</code>is an extension of the sprotty graph model.</p><h4 id=221-gmodelelementschema>2.2.1. GModelElementSchema</h4><p>The schema of an <code>GModelElement</code> describes its serializable form. The actual class-based model is created from its schema in a deserialization step on client and server side. Each model element must have a unique ID and a type that is used to look up its view, i.e., the graphical representation.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>GModelElementSchema</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * Unique identifier for this element.
 </span><span style=color:#75715e>     */</span>
@@ -288,17 +294,14 @@ document.querySelector(`#search-query-${fragmentName}`).addEventListener('input'
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * Children of this element.
 </span><span style=color:#75715e>     */</span>
-    <span style=color:#a6e22e>children?</span>: <span style=color:#66d9ef>SModelElementSchema</span>[];
+    <span style=color:#a6e22e>children?</span>: <span style=color:#66d9ef>GModelElementSchema</span>[];
 
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * CSS classes that should be applied on this element.
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>cssClasses?</span>: <span style=color:#66d9ef>string</span>[];
 }
-</code></pre></div></details><h5 id=2211-smodelrootschema>2.2.1.1. SModelRootSchema</h5><p>Serializable schema for the root element of the model tree. Usually actions refer to elements in the graphical model via an <code>elementId</code>. However, a few actions actually need to transfer the graphical model. In such cases, the graphical model needs to be represented as a serializable <code>SModelRootSchema</code>.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s SModelRootSchema.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>SModelRootSchema</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>SModelElementSchema</span> {
+</code></pre></div></details><h5 id=2211-gmodelrootschema>2.2.1.1. GModelRootSchema</h5><p>Serializable schema for the root element of the model tree. Usually actions refer to elements in the graphical model via an <code>elementId</code>. However, a few actions actually need to transfer the graphical model. In such cases, the graphical model needs to be represented as a serializable <code>GModelRootSchema</code>.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>GModelRootSchema</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>GModelElementSchema</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * Bounds of this element in the canvas.
 </span><span style=color:#75715e>     */</span>
@@ -309,10 +312,7 @@ document.querySelector(`#search-query-${fragmentName}`).addEventListener('input'
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>revision?</span>: <span style=color:#66d9ef>number</span>;
 }
-</code></pre></div></details><h4 id=222-smodelelement>2.2.2. SModelElement</h4><p>All elements of the diagram model inherit from base class <code>SModelElement</code>. Each model element must have a unique ID and a type that is used to look up its view. Additionally, each element provides access to its root element and holds an index to speed up the model element lookup.</p><p>Each model element has a set of features. A feature is a symbol identifying some functionality that can be enabled or disabled for a model element, e.g. a <code>resizeFeature</code>. The set of supported features is determined by the <code>features</code> property.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s SModelElement.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>class</span> <span style=color:#a6e22e>SModelElement</span> {
+</code></pre></div></details><h4 id=222-gmodelelement>2.2.2. GModelElement</h4><p>All elements of the diagram model inherit from base class <code>GModelElement</code>. Each model element must have a unique ID and a type that is used to look up its view. Additionally, each element provides access to its root element and holds an index to speed up the model element lookup.</p><p>Each model element has a set of features. A feature is a symbol identifying some functionality that can be enabled or disabled for a model element, e.g. a <code>resizeFeature</code>. The set of supported features is determined by the <code>features</code> property.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>GModelElement</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * Unique identifier for this element.
 </span><span style=color:#75715e>     */</span>
@@ -336,59 +336,50 @@ document.querySelector(`#search-query-${fragmentName}`).addEventListener('input'
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * This element&#39;s root element.
 </span><span style=color:#75715e>     */</span>
-    <span style=color:#a6e22e>root</span>: <span style=color:#66d9ef>SModelRoot</span>;
+    <span style=color:#a6e22e>root</span>: <span style=color:#66d9ef>GModelRoot</span>;
 
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * Access to the model&#39;s index for faster element lookup.
 </span><span style=color:#75715e>     */</span>
-    <span style=color:#a6e22e>index</span>: <span style=color:#66d9ef>SModelIndex</span>&lt;<span style=color:#f92672>SModelElement</span>&gt;;
+    <span style=color:#a6e22e>index</span>: <span style=color:#66d9ef>GModelIndex</span>&lt;<span style=color:#f92672>GModelElement</span>&gt;;
 }
-</code></pre></div></details><h5 id=2221-sparentelement>2.2.2.1. SParentElement</h5><p>A parent element may contain child elements, thus the diagram model forms a tree.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s SParentElement.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>class</span> <span style=color:#a6e22e>SParentElement</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>SModelElement</span> {
+</code></pre></div></details><h5 id=2221-gparentelement>2.2.2.1. GParentElement</h5><p>A parent element may contain child elements, thus the diagram model forms a tree.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>GParentElement</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>GModelElement</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * Children of this element.
 </span><span style=color:#75715e>     */</span>
-    <span style=color:#66d9ef>readonly</span> <span style=color:#a6e22e>children</span>: <span style=color:#66d9ef>ReadonlyArray</span>&lt;<span style=color:#f92672>SChildElement</span>&gt;;
+    <span style=color:#66d9ef>readonly</span> <span style=color:#a6e22e>children</span>: <span style=color:#66d9ef>ReadonlyArray</span>&lt;<span style=color:#f92672>GChildElement</span>&gt;;
 
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * Adds a child element to this element.
 </span><span style=color:#75715e>     */</span>
-    <span style=color:#a6e22e>add</span>(<span style=color:#a6e22e>child</span>: <span style=color:#66d9ef>SChildElement</span>, <span style=color:#a6e22e>index?</span>: <span style=color:#66d9ef>number</span>);
+    <span style=color:#a6e22e>add</span>(<span style=color:#a6e22e>child</span>: <span style=color:#66d9ef>GChildElement</span>, <span style=color:#a6e22e>index?</span>: <span style=color:#66d9ef>number</span>);
 
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * Removes a child element from this element.
 </span><span style=color:#75715e>     */</span>
-    <span style=color:#a6e22e>remove</span>(<span style=color:#a6e22e>child</span>: <span style=color:#66d9ef>SChildElement</span>);
+    <span style=color:#a6e22e>remove</span>(<span style=color:#a6e22e>child</span>: <span style=color:#66d9ef>GChildElement</span>);
 
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * Removes all child elements from this element.
 </span><span style=color:#75715e>     */</span>
-    <span style=color:#a6e22e>removeAll</span>(<span style=color:#a6e22e>filter</span><span style=color:#f92672>?:</span> (<span style=color:#a6e22e>e</span>: <span style=color:#66d9ef>SChildElement</span>) <span style=color:#f92672>=&gt;</span> <span style=color:#66d9ef>boolean</span>);
+    <span style=color:#a6e22e>removeAll</span>(<span style=color:#a6e22e>filter</span><span style=color:#f92672>?:</span> (<span style=color:#a6e22e>e</span>: <span style=color:#66d9ef>GChildElement</span>) <span style=color:#f92672>=&gt;</span> <span style=color:#66d9ef>boolean</span>);
 
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * Moves a child element to a new index.
 </span><span style=color:#75715e>     */</span>
-    <span style=color:#a6e22e>move</span>(<span style=color:#a6e22e>child</span>: <span style=color:#66d9ef>SChildElement</span>, <span style=color:#a6e22e>newIndex</span>: <span style=color:#66d9ef>number</span>);
+    <span style=color:#a6e22e>move</span>(<span style=color:#a6e22e>child</span>: <span style=color:#66d9ef>GChildElement</span>, <span style=color:#a6e22e>newIndex</span>: <span style=color:#66d9ef>number</span>);
 }
-</code></pre></div></details><h5 id=2222-schildelement>2.2.2.2. SChildElement</h5><p>A child element is contained in a parent element. All elements except the model root are child elements. In order to keep the model class hierarchy simple, every child element is also a parent element, although for many elements the array of children is empty (i.e. they are leafs in the model element tree).</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s SChildElement.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>class</span> <span style=color:#a6e22e>SChildElement</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>SParentElement</span> {
+</code></pre></div></details><h5 id=2222-gchildelement>2.2.2.2. GChildElement</h5><p>A child element is contained in a parent element. All elements except the model root are child elements. In order to keep the model class hierarchy simple, every child element is also a parent element, although for many elements the array of children is empty (i.e. they are leafs in the model element tree).</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>GChildElement</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>GParentElement</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * Parent of this element.
 </span><span style=color:#75715e>     */</span>
-    <span style=color:#66d9ef>readonly</span> <span style=color:#a6e22e>parent</span>: <span style=color:#66d9ef>SParentElement</span>;
+    <span style=color:#66d9ef>readonly</span> <span style=color:#a6e22e>parent</span>: <span style=color:#66d9ef>GParentElement</span>;
 }
-</code></pre></div></details><h5 id=2223-smodelroot>2.2.2.3. SModelRoot</h5><p>Base class for the root element of the diagram model tree.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s SModelRoot.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>class</span> <span style=color:#a6e22e>SModelRoot</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>SParentElement</span> {
+</code></pre></div></details><h5 id=2223-gmodelroot>2.2.2.3. GModelRoot</h5><p>Base class for the root element of the diagram model tree.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>GModelRoot</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>GParentElement</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * Access to the index which is built up for faster element lookup.
 </span><span style=color:#75715e>     */</span>
-    <span style=color:#66d9ef>readonly</span> <span style=color:#a6e22e>index</span>: <span style=color:#66d9ef>SModelIndex</span>&lt;<span style=color:#f92672>SModelElement</span>&gt;;
+    <span style=color:#66d9ef>readonly</span> <span style=color:#a6e22e>index</span>: <span style=color:#66d9ef>GModelIndex</span>&lt;<span style=color:#f92672>GModelElement</span>&gt;;
 
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * Bounds of this element in the canvas.
@@ -401,10 +392,7 @@ document.querySelector(`#search-query-${fragmentName}`).addEventListener('input'
     <span style=color:#a6e22e>revision?</span>: <span style=color:#66d9ef>number</span>;
 }
 </code></pre></div></details><h3 id=23-types>2.3. Types</h3><h4 id=231-args>2.3.1. Args</h4><p>Arguments are a key-value map with the key being a string and the value being either a string, a number, or a boolean value.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Args</span> <span style=color:#f92672>=</span> { [<span style=color:#a6e22e>key</span>: <span style=color:#66d9ef>string</span>]<span style=color:#f92672>:</span> <span style=color:#66d9ef>string</span> <span style=color:#f92672>|</span> <span style=color:#66d9ef>number</span> <span style=color:#f92672>|</span> <span style=color:#66d9ef>boolean</span> };
-</code></pre></div></details><h4 id=232-point>2.3.2. Point</h4><p>A <code>Point</code> is composed of the (x,y) coordinates of an object.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s Point.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>Point</span> {
+</code></pre></div></details><h4 id=232-point>2.3.2. Point</h4><p>A <code>Point</code> is composed of the (x,y) coordinates of an object.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>Point</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * The abscissa of the point.
 </span><span style=color:#75715e>     */</span>
@@ -415,10 +403,7 @@ document.querySelector(`#search-query-${fragmentName}`).addEventListener('input'
 </span><span style=color:#75715e>     */</span>
     <span style=color:#66d9ef>readonly</span> <span style=color:#a6e22e>y</span>: <span style=color:#66d9ef>number</span>;
 }
-</code></pre></div></details><h4 id=233-dimension>2.3.3. Dimension</h4><p>The <code>Dimension</code> of an object is composed of its width and height.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s Dimension.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>Dimension</span> {
+</code></pre></div></details><h4 id=233-dimension>2.3.3. Dimension</h4><p>The <code>Dimension</code> of an object is composed of its width and height.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>Dimension</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * The width of an element.
 </span><span style=color:#75715e>     */</span>
@@ -429,14 +414,8 @@ document.querySelector(`#search-query-${fragmentName}`).addEventListener('input'
 </span><span style=color:#75715e>     */</span>
     <span style=color:#66d9ef>readonly</span> <span style=color:#a6e22e>height</span>: <span style=color:#66d9ef>number</span>;
 }
-</code></pre></div></details><h4 id=234-bounds>2.3.4. Bounds</h4><p>The bounds are the position (x, y) and dimension (width, height) of an object. As such the <code>Bounds</code> type extends both <code>Point</code> and <code>Dimension</code>.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s Bounds.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>Bounds</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Point</span>, <span style=color:#a6e22e>Dimension</span> {}
-</code></pre></div></details><h4 id=235-elementandbounds>2.3.5. ElementAndBounds</h4><p>The <code>ElementAndBounds</code> type is used to associate new bounds with a model element, which is referenced via its id.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s ElementAndBounds.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>ElementAndBounds</span> {
+</code></pre></div></details><h4 id=234-bounds>2.3.4. Bounds</h4><p>The bounds are the position (x, y) and dimension (width, height) of an object. As such the <code>Bounds</code> type extends both <code>Point</code> and <code>Dimension</code>.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>Bounds</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Point</span>, <span style=color:#a6e22e>Dimension</span> {}
+</code></pre></div></details><h4 id=235-elementandbounds>2.3.5. ElementAndBounds</h4><p>The <code>ElementAndBounds</code> type is used to associate new bounds with a model element, which is referenced via its id.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>ElementAndBounds</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * The identifier of the element.
 </span><span style=color:#75715e>     */</span>
@@ -452,10 +431,7 @@ document.querySelector(`#search-query-${fragmentName}`).addEventListener('input'
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>newPosition?</span>: <span style=color:#66d9ef>Point</span>;
 }
-</code></pre></div></details><h4 id=236-elementandalignment>2.3.6. ElementAndAlignment</h4><p>The <code>ElementAndAlignment</code> type is used to associate a new alignment with a model element, which is referenced via its id.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s ElementAndAlignment.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>ElementAndAlignment</span> {
+</code></pre></div></details><h4 id=236-elementandalignment>2.3.6. ElementAndAlignment</h4><p>The <code>ElementAndAlignment</code> type is used to associate a new alignment with a model element, which is referenced via its id.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>ElementAndAlignment</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * The identifier of an element.
 </span><span style=color:#75715e>     */</span>
@@ -493,10 +469,7 @@ document.querySelector(`#search-query-${fragmentName}`).addEventListener('input'
 </span><span style=color:#75715e>     */</span>
     <span style=color:#66d9ef>readonly</span> <span style=color:#a6e22e>args?</span>: <span style=color:#66d9ef>Args</span>;
 }
-</code></pre></div></details><h4 id=239-labeledaction>2.3.9. LabeledAction</h4><p>Labeled actions are used to denote a group of actions in a user-interface context, e.g., to define an entry in the command palette or in the context menu.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s LabeledAction.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>LabeledAction</span> {
+</code></pre></div></details><h4 id=239-labeledaction>2.3.9. LabeledAction</h4><p>Labeled actions are used to denote a group of actions in a user-interface context, e.g., to define an entry in the command palette or in the context menu.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>LabeledAction</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * Group label.
 </span><span style=color:#75715e>     */</span>
@@ -512,10 +485,7 @@ document.querySelector(`#search-query-${fragmentName}`).addEventListener('input'
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>icon?</span>: <span style=color:#66d9ef>string</span>;
 }
-</code></pre></div></details><h3 id=24-model-data>2.4 Model Data</h3><h4 id=241-requestmodelaction>2.4.1. RequestModelAction</h4><p>Sent from the client to the server in order to request a graphical model. Usually this is the first message that is sent from the client to the server, so it is also used to initiate the communication. The response is a <code>SetModelAction</code> or an <code>UpdateModelAction</code>.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s RequestModelAction.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>RequestModelAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>RequestAction</span>&lt;<span style=color:#f92672>SetModelAction</span>&gt; {
+</code></pre></div></details><h3 id=24-model-data>2.4 Model Data</h3><h4 id=241-requestmodelaction>2.4.1. RequestModelAction</h4><p>Sent from the client to the server in order to request a graphical model. Usually this is the first message that is sent from the client to the server, so it is also used to initiate the communication. The response is a <code>SetModelAction</code> or an <code>UpdateModelAction</code>.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>RequestModelAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>RequestAction</span>&lt;<span style=color:#f92672>SetModelAction</span>&gt; {
   <span style=color:#75715e>/**
 </span><span style=color:#75715e>   * The kind of the action.
 </span><span style=color:#75715e>   */</span>
@@ -526,10 +496,7 @@ document.querySelector(`#search-query-${fragmentName}`).addEventListener('input'
 </span><span style=color:#75715e>   */</span>
   <span style=color:#a6e22e>options</span><span style=color:#f92672>?:</span> { [<span style=color:#a6e22e>key</span>: <span style=color:#66d9ef>string</span>]<span style=color:#f92672>:</span> <span style=color:#66d9ef>string</span> });
 }
-</code></pre></div></details><h4 id=242-setmodelaction>2.4.2. SetModelAction</h4><p>Sent from the server to the client in order to set the model. If a model is already present, it is replaced.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s SetModelAction.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>SetModelAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>ResponseAction</span> {
+</code></pre></div></details><h4 id=242-setmodelaction>2.4.2. SetModelAction</h4><p>Sent from the server to the client in order to set the model. If a model is already present, it is replaced.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>SetModelAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>ResponseAction</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * The kind of the action.
 </span><span style=color:#75715e>     */</span>
@@ -538,12 +505,9 @@ document.querySelector(`#search-query-${fragmentName}`).addEventListener('input'
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * The new graphical model elements.
 </span><span style=color:#75715e>     */</span>
-    <span style=color:#a6e22e>newRoot</span>: <span style=color:#66d9ef>SModelRootSchema</span>;
+    <span style=color:#a6e22e>newRoot</span>: <span style=color:#66d9ef>GModelRootSchema</span>;
 }
-</code></pre></div></details><h4 id=243-updatemodelaction>2.4.3. UpdateModelAction</h4><p>Sent from the server to the client in order to update the model. If no model is present yet, this behaves the same as a <code>SetModelAction</code>. The transition from the old model to the new one can be animated.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s UpdateModelAction.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>UpdateModelAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Action</span> {
+</code></pre></div></details><h4 id=243-updatemodelaction>2.4.3. UpdateModelAction</h4><p>Sent from the server to the client in order to update the model. If no model is present yet, this behaves the same as a <code>SetModelAction</code>. The transition from the old model to the new one can be animated.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>UpdateModelAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Action</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * The kind of the action.
 </span><span style=color:#75715e>     */</span>
@@ -552,22 +516,12 @@ document.querySelector(`#search-query-${fragmentName}`).addEventListener('input'
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * The new root element of the graphical model.
 </span><span style=color:#75715e>     */</span>
-    <span style=color:#a6e22e>newRoot?</span>: <span style=color:#66d9ef>SModelRootSchema</span>;
+    <span style=color:#a6e22e>newRoot?</span>: <span style=color:#66d9ef>GModelRootSchema</span>;
 
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * Boolean flag to indicate wether updated/changed elements should be animated in the diagram.
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>animate?</span>: <span style=color:#66d9ef>boolean</span>;
-}
-
-<span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s Match.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>Match</span> {
-    <span style=color:#a6e22e>left?</span>: <span style=color:#66d9ef>SModelElementSchema</span>;
-    <span style=color:#a6e22e>right?</span>: <span style=color:#66d9ef>SModelElementSchema</span>;
-    <span style=color:#a6e22e>leftParentId?</span>: <span style=color:#66d9ef>string</span>;
-    <span style=color:#a6e22e>rightParentId?</span>: <span style=color:#66d9ef>string</span>;
 }
 </code></pre></div></details><h4 id=244-sourcemodelchangedaction>2.4.4. SourceModelChangedAction</h4><p>Sent from the server to the client in order to indicate that the source model has changed. The source model denotes the data source from which the diagram has been originally derived (such as a file, a database, etc.). Typically clients would react to such an action by asking the user whether she wants to reload the diagram or ignore the changes and continue editing. If the editor has no changes (i.e. is not dirty), clients may also choose to directly refresh the editor by sending a <a href=#251-requestmodelaction>RequestModelAction</a>.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>SourceModelChangedAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Action</span> {
     <span style=color:#75715e>/**
@@ -608,18 +562,16 @@ A new <code>fileUri</code> can be defined to save the model to a new destination
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>reason?</span>: <span style=color:#66d9ef>string</span>;
 }
-</code></pre></div></details><h4 id=253-exportsvgaction>2.5.3. ExportSvgAction</h4><p>The client (or the server) sends an <code>ExportSvgAction</code> to indicate that the diagram, which represents the current model state, should be exported in SVG format. The action only provides the diagram SVG as plain string. The expected result of executing an <code>ExportSvgAction</code> is a new file in SVG-format on the underlying filesystem. However, other details like the target destination, concrete file name, file extension etc. are not specified in the protocol. So it is the responsibility of the action handler to process this information accordingly and export the result to the underlying filesystem.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s ExportSvgAction.
-</span><span style=color:#75715e> * Note that sprotty also provides a `RequestExportSvgAction` which is currently not supported in GLSP.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>ExportSvgAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>ResponseAction</span> {
+</code></pre></div></details><h4 id=253-requestexportsvgaction>2.5.3. RequestExportSvgAction</h4><p>A <code>RequestExportSvgAction</code> is sent by the client (or the server) to initiate the SVG export of the current diagram.
+The handler of this action is expected to retrieve the diagram SVG and should send an <code>ExportSvgAction</code> as response.
+Typically the <code>ExportSvgAction</code> is handled directly on client side.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>ExportSvgAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>ResponseAction</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * The kind of the action.
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>kind</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;exportSvg&#39;</span>;
 
     <span style=color:#75715e>/**
-</span><span style=color:#75715e>     * The diagram SModel as serializable SVG.
+</span><span style=color:#75715e>     * The diagram GModel as serializable SVG.
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>svg</span>: <span style=color:#66d9ef>string</span>;
 
@@ -628,10 +580,27 @@ A new <code>fileUri</code> can be defined to save the model to a new destination
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>responseId</span>: <span style=color:#66d9ef>string</span>;
 }
-</code></pre></div></details><h3 id=26-model-layout>2.6. Model Layout</h3><p>In GLSP the server usually controls the model&rsquo;s layout by applying bounds to all elements and sending an updated model to the client (<a href=#252-setmodelaction>SetModelAction</a>, <a href=#253-updatemodelaction>UpdateModelAction</a>). However, calculating the correct bounds of each element may not be straight-forward as it may depend on certain client-side rendering properties, such as label size.</p><p>On the client-side Sprotty calculates the layout on two levels: The <code>Micro Layout</code> is responsible to layout a single element with all its labels, icons, compartments in a horizontal box, vertical box, or other layout containers. The <code>Macro Layout</code> is responsible for layouting the network of nodes and edges on the canvas. If a server needs information from the micro layout, it can send a <code>RequestBoundsAction</code> to the client who will respond with a <code>ComputedBoundsAction</code> containing all elements and their bounds.</p><h4 id=261-requestboundsaction>2.6.1. RequestBoundsAction</h4><p>Sent from the server to the client to request bounds for the given model. The model is rendered invisibly so the bounds can derived from the DOM. The response is a <code>ComputedBoundsAction</code>. This hidden rendering round-trip is necessary if the client is responsible for parts of the layout.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s RequestBoundsAction.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>RequestBoundsAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>RequestAction</span> {
+</code></pre></div></details><h4 id=254-exportsvgaction>2.5.4. ExportSvgAction</h4><p>The client sends an <code>ExportSvgAction</code> to indicate that the diagram, which represents the current model state, should be exported in SVG format.
+The action only provides the diagram SVG as plain string.
+The expected result of executing an <code>ExportSvgAction</code> is a new file in SVG-format on the underlying filesystem.
+However, other details like the target destination, concrete file name, file extension etc. are not specified in the protocol.
+So it is the responsibility of the action handler to process this information accordingly and export the result to the underlying filesystem.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>ExportSvgAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>ResponseAction</span> {
+    <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * The kind of the action.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#a6e22e>kind</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;exportSvg&#39;</span>;
+
+    <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * The diagram GModel as serializable SVG.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#a6e22e>svg</span>: <span style=color:#66d9ef>string</span>;
+
+    <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * Id corresponding to the request this action responds to.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#a6e22e>responseId</span>: <span style=color:#66d9ef>string</span>;
+}
+</code></pre></div><h3 id=26-model-layout>2.6. Model Layout</h3><p>In GLSP the server usually controls the model&rsquo;s layout by applying bounds to all elements and sending an updated model to the client (<a href=#252-setmodelaction>SetModelAction</a>, <a href=#253-updatemodelaction>UpdateModelAction</a>). However, calculating the correct bounds of each element may not be straight-forward as it may depend on certain client-side rendering properties, such as label size.</p><p>On the client-side GLSP calculates the layout on two levels: The <code>Micro Layout</code> is responsible to layout a single element with all its labels, icons, compartments in a horizontal box, vertical box, or other layout containers. The <code>Macro Layout</code> is responsible for layouting the network of nodes and edges on the canvas. If a server needs information from the micro layout, it can send a <code>RequestBoundsAction</code> to the client who will respond with a <code>ComputedBoundsAction</code> containing all elements and their bounds.</p><h4 id=261-requestboundsaction>2.6.1. RequestBoundsAction</h4><p>Sent from the server to the client to request bounds for the given model. The model is rendered invisibly so the bounds can derived from the DOM. The response is a <code>ComputedBoundsAction</code>. This hidden rendering round-trip is necessary if the client is responsible for parts of the layout.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>RequestBoundsAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>RequestAction</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * The kind of the action.
 </span><span style=color:#75715e>     */</span>
@@ -640,12 +609,9 @@ A new <code>fileUri</code> can be defined to save the model to a new destination
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * The model elements to consider to compute the new bounds.
 </span><span style=color:#75715e>     */</span>
-    <span style=color:#a6e22e>newRoot</span>: <span style=color:#66d9ef>SModelRootSchema</span>;
+    <span style=color:#a6e22e>newRoot</span>: <span style=color:#66d9ef>GModelRootSchema</span>;
 }
-</code></pre></div></details><h4 id=262-computedboundsaction>2.6.2. ComputedBoundsAction</h4><p>Sent from the client to the server to transmit the result of bounds computation as a response to a <code>RequestBoundsAction</code>. If the server is responsible for parts of the layout, it can do so after applying the computed bounds received with this action. Otherwise there is no need to send the computed bounds to the server, so they can be processed locally by the client.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s ComputedBoundsAction.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>ComputedBoundsAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>ResponseAction</span> {
+</code></pre></div></details><h4 id=262-computedboundsaction>2.6.2. ComputedBoundsAction</h4><p>Sent from the client to the server to transmit the result of bounds computation as a response to a <code>RequestBoundsAction</code>. If the server is responsible for parts of the layout, it can do so after applying the computed bounds received with this action. Otherwise there is no need to send the computed bounds to the server, so they can be processed locally by the client.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>ComputedBoundsAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>ResponseAction</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * The kind of the action.
 </span><span style=color:#75715e>     */</span>
@@ -671,10 +637,7 @@ A new <code>fileUri</code> can be defined to save the model to a new destination
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>routes?</span>: <span style=color:#66d9ef>ElementAndRoutingPoints</span>[];
 }
-</code></pre></div></details><h4 id=263-layoutoperation>2.6.3. LayoutOperation</h4><p>Request a layout of the diagram or selected elements from the server.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Layout Operation based on Sprotty&#39;s LayoutAction.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>LayoutOperation</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Operation</span> {
+</code></pre></div></details><h4 id=263-layoutoperation>2.6.3. LayoutOperation</h4><p>Request a layout of the diagram or selected elements from the server.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>LayoutOperation</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Operation</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * The kind of the action.
 </span><span style=color:#75715e>     */</span>
@@ -696,10 +659,7 @@ A new <code>fileUri</code> can be defined to save the model to a new destination
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>editMode</span>: <span style=color:#66d9ef>string</span>;
 }
-</code></pre></div></details><h3 id=28-client-side-actions>2.8. Client-Side Actions</h3><p>There are several actions that are issued and processed on the client to manipulate the view port, select elements, etc. Those actions may also be sent by the server to trigger the respective client behavior. Please note that we only list actions here that are actually used by the current default implementation of the GLSP server.</p><h4 id=281-view-port>2.8.1. View Port</h4><p>View port actions manipulate the viewport on the client-side and may be sent from the server to highlight changes or improve general usability.</p><h5 id=2811-centeraction>2.8.1.1. CenterAction</h5><p>Centers the viewport on the elements with the given identifiers. It changes the scroll setting of the viewport accordingly and resets the zoom to its default. This action can also be created on the client but it can also be sent by the server in order to perform such a viewport change remotely.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s CenterAction.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>CenterAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Action</span> {
+</code></pre></div></details><h3 id=28-client-side-actions>2.8. Client-Side Actions</h3><p>There are several actions that are issued and processed on the client to manipulate the view port, select elements, etc. Those actions may also be sent by the server to trigger the respective client behavior. Please note that we only list actions here that are actually used by the current default implementation of the GLSP server.</p><h4 id=281-view-port>2.8.1. View Port</h4><p>View port actions manipulate the viewport on the client-side and may be sent from the server to highlight changes or improve general usability.</p><h5 id=2811-centeraction>2.8.1.1. CenterAction</h5><p>Centers the viewport on the elements with the given identifiers. It changes the scroll setting of the viewport accordingly and resets the zoom to its default. This action can also be created on the client but it can also be sent by the server in order to perform such a viewport change remotely.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>CenterAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Action</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * The kind of the action.
 </span><span style=color:#75715e>     */</span>
@@ -720,10 +680,7 @@ A new <code>fileUri</code> can be defined to save the model to a new destination
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>retainZoom</span>: <span style=color:#66d9ef>boolean</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>false</span>;
 }
-</code></pre></div></details><h5 id=2812-fittoscreenaction>2.8.1.2. FitToScreenAction</h5><p>Triggers to fit all or a list of elements into the available drawing area. The resulting fit-to-screen command changes the zoom and scroll settings of the viewport so the model can be shown completely. This action can also be sent from the server to the client in order to perform such a viewport change programmatically.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s FitToScreenAction.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>FitToScreenAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Action</span> {
+</code></pre></div></details><h5 id=2812-fittoscreenaction>2.8.1.2. FitToScreenAction</h5><p>Triggers to fit all or a list of elements into the available drawing area. The resulting fit-to-screen command changes the zoom and scroll settings of the viewport so the model can be shown completely. This action can also be sent from the server to the client in order to perform such a viewport change programmatically.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>FitToScreenAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Action</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * The kind of the action.
 </span><span style=color:#75715e>     */</span>
@@ -749,19 +706,20 @@ A new <code>fileUri</code> can be defined to save the model to a new destination
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>animate</span>: <span style=color:#66d9ef>boolean</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>true</span>;
 }
-</code></pre></div></details><h4 id=282-client-notification>2.8.2. Client Notification</h4><p>In GLSP we distinguish between a status and a message which may be displayed differently on the client. For instance, in the Theia Integration status updates are shown directly on the diagram as an overlay whereas messages are shown in separate message popups.</p><h5 id=2821-spserverstatusaction>2.8.2.1. SPServerStatusAction</h5><p>This action is typically sent by the server to signal a state change. This action extends the corresponding Sprotty action to include a timeout. If a timeout is given the respective status should disappear after the timeout is reached.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Based on Sprotty&#39;s ServerStatusAction but extended with a timeout.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>ServerStatusAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Action</span> {
+</code></pre></div></details><h4 id=282-client-notification>2.8.2. Client Notification</h4><p>To notify the client about user-facing events or long running operations, the server can send a server status notification, a server message notification or progress notifications.</p><p>Status and message notifications are used to inform the user about one-time events.
+Status notifications are typically shown directly on the diagram as an overlay for a certain time.
+Status messages, on the other hand, are persistent notifications and are typically shown in a dedicated notification area until the user discards them.</p><p>Progress notifications only appear while the long running operation is running and indicate the progress of this operation with messages and optionally a progress bar.</p><h5 id=2821-statusaction>2.8.2.1. StatusAction</h5><p>This action is typically sent by the server (or the client) to signal a state change.
+If a timeout is given the respective status should disappear after the timeout is reached.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript>
+<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>StatusAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Action</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * The kind of the action.
 </span><span style=color:#75715e>     */</span>
-    <span style=color:#a6e22e>kind</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;serverStatus&#39;</span>;
+    <span style=color:#a6e22e>kind</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;status&#39;</span>;
 
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * The severity of the status.
 </span><span style=color:#75715e>     */</span>
-    <span style=color:#a6e22e>severity</span>: <span style=color:#66d9ef>ServerSeverity</span>;
+    <span style=color:#a6e22e>severity</span>: <span style=color:#66d9ef>SeverityLeel</span>;
 
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * The message describing the status.
@@ -773,16 +731,16 @@ A new <code>fileUri</code> can be defined to save the model to a new destination
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>timeout?</span>: <span style=color:#66d9ef>number</span>;
 }
-</code></pre></div></details><h5 id=2822-servermessageaction>2.8.2.2. ServerMessageAction</h5><p>This action is typically sent by the server to notify the user about something of interest.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>ServerMessageAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Action</span> {
+</code></pre></div></details><h5 id=2822-messageaction>2.8.2.2. MessageAction</h5><p>This action is typically sent by the server (or the client) to notify the user about something of interest.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>MessageAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Action</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * The kind of the action.
 </span><span style=color:#75715e>     */</span>
-    <span style=color:#a6e22e>kind</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;serverMessage&#39;</span>;
+    <span style=color:#a6e22e>kind</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;message&#39;</span>;
 
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * The severity of the message.
 </span><span style=color:#75715e>     */</span>
-    <span style=color:#a6e22e>severity</span>: <span style=color:#66d9ef>ServerSeverity</span>;
+    <span style=color:#a6e22e>severity</span>: <span style=color:#66d9ef>SeverityLevel</span>;
 
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * The message text.
@@ -793,20 +751,75 @@ A new <code>fileUri</code> can be defined to save the model to a new destination
 </span><span style=color:#75715e>     * Further details on the message.
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>details</span>: <span style=color:#66d9ef>string</span>;
-
-    <span style=color:#75715e>/**
-</span><span style=color:#75715e>     * Timeout after which a displayed message disappears.
-</span><span style=color:#75715e>     */</span>
-    <span style=color:#a6e22e>timeout?</span>: <span style=color:#66d9ef>number</span>;
 }
-</code></pre></div></details><h5 id=2823-serverseverity>2.8.2.3. ServerSeverity</h5><p>The severity of a status or message.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
+</code></pre></div></details><h5 id=2823-severitylevel>2.8.2.3. SeverityLevel</h5><p>The severity of a status or message.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
 </span><span style=color:#75715e> * The possible server status severity levels.
 </span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>type</span> <span style=color:#a6e22e>ServerSeverity</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;NONE&#39;</span> <span style=color:#f92672>|</span> <span style=color:#e6db74>&#39;INFO&#39;</span> <span style=color:#f92672>|</span> <span style=color:#e6db74>&#39;WARNING&#39;</span> <span style=color:#f92672>|</span> <span style=color:#e6db74>&#39;ERROR&#39;</span> <span style=color:#f92672>|</span> <span style=color:#e6db74>&#39;FATAL&#39;</span> <span style=color:#f92672>|</span> <span style=color:#e6db74>&#39;OK&#39;</span>;
-</code></pre></div></details><h4 id=283-element-selection>2.8.3. Element Selection</h4><h5 id=2831-selectaction>2.8.3.1. SelectAction</h5><p>Triggered when the user changes the selection, e.g. by clicking on a selectable element. The action should trigger a change in the <code>selected</code> state accordingly, so the elements can be rendered differently. The server can send such an action to the client in order to change the selection remotely.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s SelectAction.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>SelectAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Action</span> {
+<span style=color:#66d9ef>type</span> <span style=color:#a6e22e>SeverityLevel</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;NONE&#39;</span> <span style=color:#f92672>|</span> <span style=color:#e6db74>&#39;INFO&#39;</span> <span style=color:#f92672>|</span> <span style=color:#e6db74>&#39;WARNING&#39;</span> <span style=color:#f92672>|</span> <span style=color:#e6db74>&#39;ERROR&#39;</span> <span style=color:#f92672>|</span> <span style=color:#e6db74>&#39;FATAL&#39;</span> <span style=color:#f92672>|</span> <span style=color:#e6db74>&#39;OK&#39;</span>;
+</code></pre></div></details><h5 id=2824-startprogressaction>2.8.2.4. StartProgressAction</h5><p>This action is sent by the server to the client to request presenting the progress of a long running process in the UI.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>export</span> <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>StartProgressAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Action</span> {
+    <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * The kind of the action.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#a6e22e>kind</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;startProgress&#39;</span>;
+
+    <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * An ID that can be used in subsequent `updateProgress` and `endProgress` events to make them refer to the same progress reporting.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#a6e22e>progressId</span>: <span style=color:#66d9ef>string</span>;
+
+    <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * Short title of the progress reporting. Shown in the UI to describe the long running process.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#a6e22e>title</span>: <span style=color:#66d9ef>string</span>;
+
+    <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * Optional additional progress message. Shown in the UI to describe the long running process.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#a6e22e>message?</span>: <span style=color:#66d9ef>string</span>;
+
+    <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * Progress percentage to display (value range: 0 to 100). If omitted no percentage is shown.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#a6e22e>percentage?</span>: <span style=color:#66d9ef>number</span>;
+}
+</code></pre></div></details><h5 id=2825-updateprogressaction>2.8.2.5. UpdateProgressAction</h5><p>This action is sent by the server to the client to presenting an update of the progress of a long running process in the UI.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>export</span> <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>UpdateProgressAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Action</span> {
+    <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * The kind of the action.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#a6e22e>kind</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;updateProgress&#39;</span>;
+
+    <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * The ID of the progress reporting to update.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#a6e22e>progressId</span>: <span style=color:#66d9ef>string</span>;
+
+    <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * The message to show in the progress reporting.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#a6e22e>message?</span>: <span style=color:#66d9ef>string</span>;
+
+    <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * The percentage (value range: 0 to 100) to show in the progress reporting.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#a6e22e>percentage?</span>: <span style=color:#66d9ef>number</span>;
+}
+</code></pre></div></details><h5 id=2826-endprogressaction>2.8.2.6. EndProgressAction</h5><p>This action is sent by the server to the client to end the reporting of a progress.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>export</span> <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>EndProgressAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Action</span> {
+    <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * The kind of the action.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#a6e22e>kind</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;endProgress&#39;</span>;
+
+    <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * The ID of the progress reporting to update.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#a6e22e>progressId</span>: <span style=color:#66d9ef>string</span>;
+
+    <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * The message to show in the progress reporting.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#a6e22e>message?</span>: <span style=color:#66d9ef>string</span>;
+}
+</code></pre></div></details><h4 id=283-element-selection>2.8.3. Element Selection</h4><h5 id=2831-selectaction>2.8.3.1. SelectAction</h5><p>Triggered when the user changes the selection, e.g. by clicking on a selectable element. The action should trigger a change in the <code>selected</code> state accordingly, so the elements can be rendered differently. The server can send such an action to the client in order to change the selection remotely.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>SelectAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Action</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * The kind of the action.
 </span><span style=color:#75715e>     */</span>
@@ -821,11 +834,12 @@ A new <code>fileUri</code> can be defined to save the model to a new destination
 </span><span style=color:#75715e>     * The identifier of the elements to mark as not selected.
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>deselectedElementsIDs</span>: <span style=color:#66d9ef>string</span>[];
+    <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * Whether all currently selected elements should be deselected.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#a6e22e>deselectAll?</span>: <span style=color:#66d9ef>boolean</span>;
 }
-</code></pre></div></details><h5 id=2832-selectallaction>2.8.3.2. SelectAllAction</h5><p>Used for selecting or deselecting all elements.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s SelectAllAction.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>SelectAllAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Action</span> {
+</code></pre></div></details><h5 id=2832-selectallaction>2.8.3.2. SelectAllAction</h5><p>Used for selecting or deselecting all elements.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>SelectAllAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Action</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * The kind of the action.
 </span><span style=color:#75715e>     */</span>
@@ -836,10 +850,7 @@ A new <code>fileUri</code> can be defined to save the model to a new destination
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>select</span>: <span style=color:#66d9ef>boolean</span>;
 }
-</code></pre></div></details><h3 id=29-element-hover>2.9. Element Hover</h3><h4 id=291-requestpopupmodelaction>2.9.1. RequestPopupModelAction</h4><p>Triggered when the user hovers the mouse pointer over an element to get a popup with details on that element. This action is sent from the client to the server. The response is a <code>SetPopupModelAction</code>.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s RequestPopupModelAction.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>RequestPopupModelAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Action</span> {
+</code></pre></div></details><h3 id=29-element-hover>2.9. Element Hover</h3><h4 id=291-requestpopupmodelaction>2.9.1. RequestPopupModelAction</h4><p>Triggered when the user hovers the mouse pointer over an element to get a popup with details on that element. This action is sent from the client to the server. The response is a <code>SetPopupModelAction</code>.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>RequestPopupModelAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Action</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * The kind of the action.
 </span><span style=color:#75715e>     */</span>
@@ -855,10 +866,7 @@ A new <code>fileUri</code> can be defined to save the model to a new destination
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>bounds</span>: <span style=color:#66d9ef>Bounds</span>;
 }
-</code></pre></div></details><h4 id=292-setpopupmodelaction>2.9.2. SetPopupModelAction</h4><p>Sent from the server to the client to display a popup in response to a <code>RequestPopupModelAction</code>. This action can also be used to remove any existing popup by choosing <code>EMPTY_ROOT</code> as root element.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#75715e>/**
-</span><span style=color:#75715e> * Sprotty&#39;s SetPopupModelAction.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>SetPopupModelAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Action</span> {
+</code></pre></div></details><h4 id=292-setpopupmodelaction>2.9.2. SetPopupModelAction</h4><p>Sent from the server to the client to display a popup in response to a <code>RequestPopupModelAction</code>. This action can also be used to remove any existing popup by choosing <code>EMPTY_ROOT</code> as root element.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>SetPopupModelAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Action</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * The kind of the action.
 </span><span style=color:#75715e>     */</span>
@@ -867,7 +875,7 @@ A new <code>fileUri</code> can be defined to save the model to a new destination
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * The model elements composing the popup to display.
 </span><span style=color:#75715e>     */</span>
-    <span style=color:#a6e22e>newRoot</span>: <span style=color:#66d9ef>SModelRootSchema</span>;
+    <span style=color:#a6e22e>newRoot</span>: <span style=color:#66d9ef>GModelRootSchema</span>;
 }
 </code></pre></div></details><h3 id=210-element-validation>2.10. Element Validation</h3><p>Validation in GLSP is performed by using validation markers. A marker represents the validation result for a single model element:</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>Marker</span> {
     <span style=color:#75715e>/**
@@ -900,17 +908,29 @@ A new <code>fileUri</code> can be defined to save the model to a new destination
 </span><span style=color:#75715e>     * The elements for which markers are requested, may be just the root element.
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>elementsIDs</span>: <span style=color:#66d9ef>string</span>[];
+
+    <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * The reason for this request, e.g. a `batch` validation or a `live` validation.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#a6e22e>reason?</span>: <span style=color:#66d9ef>string</span>;
 }
-</code></pre></div></details><h4 id=2102-setmarkersaction>2.10.2. SetMarkersAction</h4><p>Response to the <code>RequestMarkersAction</code> containing all validation markers. Sent from the server to the client.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>SetMarkersAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>ResponseAction</span> {
+</code></pre></div></details><h4 id=2102-setmarkersaction>2.10.2. SetMarkersAction</h4><p>Response to the <code>RequestMarkersAction</code> containing all validation markers. Sent from the server to the client.
+This action always sends the entire list of markers.
+Thus, clients can replace all markers for a specific <code>reason</code> with the new ones that have been sent with the same <code>reason</code>.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>SetMarkersAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>ResponseAction</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * The kind of the action.
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>kind</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;setMarkers&#39;</span>;
 
     <span style=color:#75715e>/**
-</span><span style=color:#75715e>     * The list of markers that has been requested by the `RequestMarkersAction`.
+</span><span style=color:#75715e>     * The list of markers to be set in the diagram editor.
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>markers</span>: <span style=color:#66d9ef>Marker</span>[];
+
+    <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * The reason for this response, e.g. a `batch` validation or a `live` validation.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#a6e22e>reason?</span>: <span style=color:#66d9ef>string</span>;
 }
 </code></pre></div></details><h4 id=2103-deletemarkersaction>2.10.3. DeleteMarkersAction</h4><p>To remove markers for elements a client or server may send a <code>DeleteMarkersAction</code> with all markers that should be removed.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>DeleteMarkersAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Action</span> {
     <span style=color:#75715e>/**
@@ -1056,19 +1076,29 @@ A new <code>fileUri</code> can be defined to save the model to a new destination
 
 <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>EdgeTypeHint</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>TypeHint</span> {
     <span style=color:#75715e>/**
-</span><span style=color:#75715e>     * Specifies whether the routing of this element can be changed.
+</span><span style=color:#75715e>     * Specifies whether the routing points of the edge can be changed
+</span><span style=color:#75715e>     * i.e. edited by the user.
 </span><span style=color:#75715e>     */</span>
     <span style=color:#66d9ef>readonly</span> <span style=color:#a6e22e>routable</span>: <span style=color:#66d9ef>boolean</span>;
 
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * Allowed source element types for this edge type
+</span><span style=color:#75715e>     * If not defined unknown element can be used as source element for this edge.
 </span><span style=color:#75715e>     */</span>
-    <span style=color:#66d9ef>readonly</span> <span style=color:#a6e22e>sourceElementTypeIds</span>: <span style=color:#66d9ef>string</span>[];
+    <span style=color:#66d9ef>readonly</span> <span style=color:#a6e22e>sourceElementTypeIds?</span>: <span style=color:#66d9ef>string</span>[];
 
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * Allowed targe element types for this edge type
+</span><span style=color:#75715e>     * If not defined unknown element can be used as target element for this edge.
 </span><span style=color:#75715e>     */</span>
-    <span style=color:#66d9ef>readonly</span> <span style=color:#a6e22e>targetElementTypeIds</span>: <span style=color:#66d9ef>string</span>[];
+    <span style=color:#66d9ef>readonly</span> <span style=color:#a6e22e>targetElementTypeIds?</span>: <span style=color:#66d9ef>string</span>[];
+
+    <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * Indicates whether this type hint is dynamic or not. Dynamic edge type hints
+</span><span style=color:#75715e>     * require an additional runtime check before creating an edge, when checking
+</span><span style=color:#75715e>     * source and target element types is not sufficient.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#66d9ef>readonly</span> <span style=color:#a6e22e>dynamic?</span>: <span style=color:#66d9ef>boolean</span>;
 }
 </code></pre></div></details><h4 id=2121-requesttypehintsaction>2.12.1. RequestTypeHintsAction</h4><p>Sent from the client to the server in order to request hints on whether certain modifications are allowed for a specific element type. The <code>RequestTypeHintsAction</code> is optional, but should usually be among the first messages sent from the client to the server after receiving the model via <code>RequestModelAction</code>. The response is a <code>SetTypeHintsAction</code>.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>RequestTypeHintsAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>RequestAction</span>&lt;<span style=color:#f92672>SetTypeHintsAction</span>&gt; {
     <span style=color:#75715e>/**
@@ -1091,6 +1121,48 @@ A new <code>fileUri</code> can be defined to save the model to a new destination
 </span><span style=color:#75715e>     * The hints for edge types.
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>edgeHints</span>: <span style=color:#66d9ef>EdgeTypeHint</span>[];
+}
+</code></pre></div></details><h4 id=2123-requestcheckedgeaction>2.12.3. RequestCheckEdgeAction</h4><p>Sent from the client to the server to check wether the provided edge context information is valid i.e. creation of an edge with the given edge type and source/target element is allowed by the server.
+Typically this action is dispatched by edge creation tools in the creation phase of an edge that&rsquo;s associated with a dynamic <code>EdgeTypeHint</code>.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>RequestCheckEdgeAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>RequestAction</span>&lt;<span style=color:#f92672>CheckEdgeResultAction</span>&gt; {
+    <span style=color:#a6e22e>kind</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;requestCheckEdge&#39;</span>;
+
+    <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * The element type of the edge being created.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#a6e22e>edgeType</span>: <span style=color:#66d9ef>string</span>;
+
+    <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * The ID of the edge source element.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#a6e22e>sourceElementId</span>: <span style=color:#66d9ef>string</span>;
+
+    <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * The ID of the edge target element to check.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#a6e22e>targetElementId?</span>: <span style=color:#66d9ef>string</span>;
+}
+</code></pre></div></details><h4 id=2124-checkedgeresultaction>2.12.4. CheckEdgeResultAction</h4><p>Sent from the server to the client as a response for a {@link RequestCheckEdgeAction}.
+It provides a boolean indicating whether the edge context information provided by the corresponding request action is valid i.e. creation of an edge with the given edge type and source/target element is allowed.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>CheckEdgeResultAction</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>ResponseAction</span> {
+    <span style=color:#a6e22e>kind</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;checkEdgeTargetResult&#39;</span>;
+
+    <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * true if the selected element is a valid target for this edge,
+</span><span style=color:#75715e>     * false otherwise.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#a6e22e>isValid</span>: <span style=color:#66d9ef>boolean</span>;
+    <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * The element type of the edge that has been checked.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#a6e22e>edgeType</span>: <span style=color:#66d9ef>string</span>;
+
+    <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * The ID of the source element of the edge that has been checked.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#a6e22e>sourceElementId</span>: <span style=color:#66d9ef>string</span>;
+    <span style=color:#75715e>/**
+</span><span style=color:#75715e>     * The ID of the target element of the edge that has been checked.
+</span><span style=color:#75715e>     */</span>
+    <span style=color:#a6e22e>targetElementId?</span>: <span style=color:#66d9ef>string</span>;
 }
 </code></pre></div></details><h3 id=213-element-creation-and-deletion>2.13. Element Creation and Deletion</h3><h4 id=2131-createnodeoperation>2.13.1. CreateNodeOperation</h4><details open><summary>Code</summary><p>In order to create a node in the model the client can send a <code>CreateNodeOperation</code> with the necessary information to create that node.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>CreateNodeOperation</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>CreateOperation</span> {
     <span style=color:#75715e>/**
@@ -1285,7 +1357,7 @@ A new <code>fileUri</code> can be defined to save the model to a new destination
 </span><span style=color:#75715e>     */</span>
     <span style=color:#a6e22e>args?</span>: <span style=color:#66d9ef>Args</span>;
 }
-</code></pre></div></details><h4 id=2163-applylabeleditoperation>2.16.3. ApplyLabelEditOperation</h4><p>A very common use case in domain models is the support of labels that display textual information to the user. For instance, the <code>SGraph</code> model of Sprotty has support for labels that can be attached to a node, edge, or port, and that contain some text that is rendered in the view. To apply new text to such a label element the client may send an <code>ApplyLabelEditOperation</code> to the server.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>ApplyLabelEditOperation</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Operation</span> {
+</code></pre></div></details><h4 id=2163-applylabeleditoperation>2.16.3. ApplyLabelEditOperation</h4><p>A very common use case in domain models is the support of labels that display textual information to the user. For instance, the <code>GGraph</code> model has support for labels that can be attached to a node, edge, or port, and that contain some text that is rendered in the view. To apply new text to such a label element the client may send an <code>ApplyLabelEditOperation</code> to the server.</p><details open><summary>Code</summary><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>ApplyLabelEditOperation</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Operation</span> {
     <span style=color:#75715e>/**
 </span><span style=color:#75715e>     * The kind of the action.
 </span><span style=color:#75715e>     */</span>
